@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>lms-login</title>
+    <style media="screen">
+        *{
+          padding: 0;
+          margin: 0;
+        }
+        a{
+          text-decoration: none;
+          color: #000;
+        }
+        li{
+          list-style: none;
+        }
+        .touming{
+          width: 258px;
+          height: 248px;
+          background: #fff;
+          opacity: 0.2;
+          border-radius: 4px;
+          position: absolute;
+          left: 631px;
+          top: 37px;
+        }
+        .warp{
+          width: 980px;
+          height: 510px;
+          margin: 70px auto 0;
+          background: url(images/back-7.jpg)no-repeat;
+          background-size: cover;
+          position: relative;
+
+        }
+
+
+        .login{
+          width: 258px;
+          position: absolute;
+          top: 54px;
+          left: 648px;
+          z-index: 99;
+        }
+        .login-top{
+          padding-top: 90px;
+        }
+        .login li:first-child{
+          width: 258px;
+        }
+        .login-radio{
+          float: left;
+          width: 50%;
+        }
+        .login-radio-span{
+          font-size: 12px;
+
+        }
+        .login-radio-input{
+          vertical-align: middle;
+        }
+        .login-number{
+          color: #999;
+          width: 206px;
+          border: 1px solid #c4c4c4;
+          vertical-align: middle;
+          height: 18px;
+          padding: 10px;
+          line-height: 18px;
+          margin: 15px 0 5px;
+        }
+        .login-accounts-img{
+          background: url(images/login_user.png) no-repeat 0 0;
+          width: 12px;
+          height: 12px;
+          position: absolute;
+          top: 137px;
+          left: 572px;
+        }
+        .login-password-img{
+          background: url(images/login_user.png) no-repeat -17px 0;
+          width: 12px;
+          height: 12px;
+          position: absolute;
+          top: 197px;
+          left: 572px;
+        }
+        .clear{
+          clear: both;
+        }
+        .login-verification{
+          width: 115px;
+          float: left;
+        }
+        .login-word{
+          width: 94px;
+          height: 28px;
+          line-height: 28px;
+          float: right;
+          margin-top: 20px;
+          margin-right: 17px;
+        }
+        .word-1{
+          color: red;
+        }
+        .word-2{
+          color: black;
+        }
+        .word-3{
+          color: blue;
+        }
+        .word-4{
+          color: yellow;
+        }
+        .login-submit{
+          display: inline-block;
+          width: 228px;
+          height: 42px;
+          border: 0;
+          cursor: pointer;
+          text-decoration: none;
+          vertical-align: middle;
+          margin-top: 51px;
+          background: #CCFFCC;
+        }
+        .login-zhuce{
+          text-align: left;
+        }
+        .login-zhuce span:last-child{
+          display: inline-block;
+          margin-left: 105px;
+        }
+        .login-zhuce span a{
+          font-size:12px;
+          color: #fff;
+        }
+        .login-bottom-ul{
+          width: 80px;
+          height: 20px;
+          margin: 20px 0 0 165px;
+          display: flex;
+
+        }
+        .login-bottom-ul li{
+          flex: 1;
+        }
+        .login-bottom-ul .size{
+          width: 20px;
+          height: 20px;
+          margin: 0 auto;
+        }
+        .login-bottom-ul .qq{
+          background: url(images/qq.png) no-repeat 0 0;
+          background-size: contain;
+        }
+        .login-bottom-ul .weixin{
+          background: url(images/weixin1.png) no-repeat 0 0;
+          background-size: contain;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="warp">
+      <div class="login">
+        <ul>
+          <li>
+            <div class="login-radio">
+              <input type="radio" name="1" value="" class="login-radio-input"><span class="login-radio-span">帐号密码登录</span>
+            </div>
+            <div class="login-radio">
+              <input type="radio" name="1" value="" class="login-radio-input"><span class="login-radio-span">手机验证码登录</span>
+            </div>
+            <div class="clear"></div>
+          </li>
+          <li><input type="text" name="" value="" placeholder="邮箱/手机号/用户名" class="login-accounts login-number"></li>
+          <li><input type="text" name="" value="" placeholder="请输入密码" class="login-password login-number"></li>
+          <li><input type="text" name="" value="" placeholder="请输入验证码" class="login-verification login-number"></li>
+          <div class="login-word">
+            <span class="word-1">1</span>
+            <span class="word-2">2</span>
+            <span class="word-3">3</span>
+            <span class="word-4">4</span>
+          </div>
+          <div class="login-accounts-img"></div>
+          <div class="login-password-img"></div>
+        </ul>
+        <input type="submit" name="" value="登录" class="login-submit">
+        <div class="login-zhuce">
+          <span><a href="#">还没有帐号？</a></span><span><a href="#">忘记密码</a></span>
+        </div>
+        <div class="login-bottom">
+          <ul class="login-bottom-ul">
+            <li><a href="#"><div class="qq size">
+
+            </div></a></li>
+            <li><a href="#"><div class="weixin size">
+
+            </div></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="touming">
+
+      </div>
+    </div>
+  </body>
+</html>

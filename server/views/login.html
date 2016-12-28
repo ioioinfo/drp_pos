@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>login</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <style media="screen">
+    @media screen and (max-width:640px) {
+      *{
+        padding: 0;
+        margin: 0;
+      }
+      a{
+        color: #000;
+        text-decoration: none;
+      }
+      html,body{
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+
+
+      }
+      .warp{
+        width: 100%;
+        height: 667px;
+        background: url(images/back-5.jpg);
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+      .content{
+        height: 100%;
+      }
+      /*透明层*/
+      .toumingceng{
+        width: 80%;
+        height: 224px;
+        background:#fff;
+        opacity: 0.3;
+        position: absolute;
+        top: 213px;
+        left:10.13333%;
+        border-radius: 4px;
+      }
+      /*更改placeholder的颜色*/
+      ::-webkit-input-placeholder{
+        color: #eee;
+      }
+      :-moz-placeholder{
+        color: #eee;
+      }
+      ::-moz-placeholder{
+        color: #eee;
+      }
+      .top{
+
+      }
+      .top-center{
+        width: 100px;
+        height: 152px;
+        border-radius: 50px;
+        margin: 0 auto;
+      }
+      .top-center img{
+        width: 100px;
+        height: 110px;
+        display: block;
+        padding-top: 55px;
+      }
+      .center{
+        position: absolute;
+        top: 217px;
+        left: 50px;
+        z-index: 99;
+        width: 73.8666667%;
+      }
+      .center-top{
+        padding-top: 0;
+        padding-bottom: 0;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        opacity: 0.7;
+        line-height:60px;
+        font-size: 18px;
+        width: 100%;
+        text-indent: 55px;
+        vertical-align: middle;
+        outline: none;
+        -webkit-appearance : none ;
+        border: 0;
+        background:transparent;
+        border-bottom: 1px solid RGB(39,63,110);
+
+      }
+      .center-bottom{
+        padding-top: 0;
+        padding-bottom: 0;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        line-height:60px;
+        font-size: 18px;
+        width: 73%;
+        text-indent: 55px;
+        vertical-align: middle;
+        outline: none;
+        -webkit-appearance : none ;
+        border: 0;
+        background:transparent;
+        border-bottom: 1px solid RGB(39,63,110);
+      }
+      .top-img{
+        width: 40px;
+        height: 35px;
+        background: url(images/login1.png);
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: absolute;
+        top: 10px;
+        left: 2.53333%;
+        z-index: 99;
+      }
+      .center-img{
+        width: 40px;
+        height: 35px;
+        background: url(images/mima.png);
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: absolute;
+        top: 72px;
+        left:2.53333%;
+        z-index: 99;
+      }
+      .bottom-img{
+        width: 40px;
+        height: 35px;
+        background: url(images/yanzhengma.png);
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: absolute;
+        top: 134px;
+        left: 2.53333%;
+        z-index: 99;
+      }
+      .bottom-yanzhengma{
+        width:25.142857%;
+        height:27px;
+        line-height: 27px;
+        border: 1px solid RGB(230,230,230);
+        border-radius: 6px;
+        float: right;
+        margin-top: 20px;
+        /*opacity: 0.5;*/
+        text-align: center;
+      }
+      .login{
+        color: #fff;
+        font-size: 20px;
+        font-weight: bold;
+        width: 78%;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        border: 1px solid RGB(230,230,230);
+        /*opacity: 0.5;*/
+        margin: 298px auto 0;
+      }
+      .login-next{
+        width: 74%;
+        margin: 5px auto 0;
+        color: #f3f3f3;
+        /*opacity: 0.7;*/
+      }
+      .login-next span:last-child{
+        float: right;
+      }
+      .bottom{
+      position: fixed;
+      bottom:5px;
+      left: 0;
+      right: 0;
+      }
+      .bottom-ul{
+        width: 100%;
+        height: 40px;
+        display: flex;
+      }
+      .bottom-ul li{
+        flex: 1;
+        list-style: none;
+      }
+      .bottom-ul .bottom-ul-img{
+        width: 40px;
+        height: 40px;
+        margin: 0 auto;
+      }
+      .bottom-ul .bottom-ul-img img{
+        width: 40px;
+        height: 40px;
+      }
+    }
+    </style>
+  </head>
+  <body>
+    <div class="warp">
+      <div class="content">
+        <div class="top">
+          <div class="top-center"><img src="images/header.png" alt=""></div>
+        </div>
+
+        <div class="center">
+          <div class="top-img"></div>
+          <input type="text" name="" value="" placeholder="手机号/邮箱/会员号" class="center-top">
+          <div class="center-img"></div>
+          <input type="text" name="" value="" placeholder="请输入密码" class="center-top">
+          <div class="bottom-img"></div>
+          <input type="text" name="" value="" placeholder="请输入验证码" class="center-bottom">
+          <div class="bottom-yanzhengma">
+            <span style="color:red">1</span> <span style="color:#fff;">2</span> <span style="color:#FF9000">3</span> <span style="color:#459D72">4</span>
+          </div>
+        </div>
+        <div class="login">
+          登&nbsp&nbsp录
+        </div>
+        <div class="login-next">
+          <span>忘记密码?</span><span>申请注册</span>
+        </div>
+      </div>
+      <div class="bottom">
+        <ul class="bottom-ul">
+          <li><a href="#"><div class="bottom-ul-img"><img src="images/qq.png" alt=""></div></a></li>
+          <li><a href="#"><div class="bottom-ul-img"><img src="images/weixin1.png" alt=""></div></a></li>
+          <li><a href="#"><div class="bottom-ul-img"><img src="images/renren.png" alt=""></div></a></li>
+          <li><a href="#"><div class="bottom-ul-img"><img src="images/weibo.png" alt=""></div></a></li>
+        </ul>
+      </div>
+      <div class="toumingceng"></div>
+    </div>
+  </body>
+</html>
