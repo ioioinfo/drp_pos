@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>lms-login</title>
+	<script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+	<script src="js/lodash.min.js" type="text/javascript"></script>
+  </head>
+  <body>
+	  {% for store in store_info %}
+	  	<div>{{store.org_store_name}}</div>
+	  {% endfor %}
+	  <div>{{person_info.person.person_code}}</div>
+	  {% for company in company_info %}
+		<div>{{company.company_name}}</div>
+	  {% endfor %}
+	  条形码：<input type="text" id="barcode" value="">
+	  <div id="product_infos">
+	  </div>
+	  <script id="products" type="text/template">
+		  <% _.forEach(products, function(product) { %>
+			  <div>
+				<span><%- product.product_code %></span>
+				<span><%- product.product_name %></span>
+				<span><%- product.product_price %></span>
+				<span><%- product.product_color %></span>
+				<span><%- product.product_number %></span>
+			  </div>
+		  <% }); %>
+		  <div>总计：<%- shopping_infos.total_price %></div>
+	  </script>
+	  <script>
+	  $(function() {
+		  var shopping_infos = {"total_price":0,
+		  				"total_discount":0
+	  					};
+		  var products = [];
+
+		  $("#barcode").keypress(function(e){
+			  var barcode = $("#barcode").val();
+			  var key = e.which;
+			  if (barcode && key == 13) {
+				 $.get("/get_product_info",{"barcode":barcode},function(data){
+					 if (data.success) {
+						 var product ={};
+						 product.product_id = data.row.id;
+						 product.product_code = data.row.code;
+						 product.product_name = data.row.product_name;
+						 product.product_price = data.row.product_sale_price;
+						 product.product_stock = data.stocks;
+						 product.product_color = data.row.color;
+						 product.product_number = 1;
+						 shopping_infos.total_price = shopping_infos.total_price + data.row.product_sale_price;
+						 var add = true;
+						 for (var i = 0; i < products.length; i++) {
+							if (products[i].product_id == product.product_id) {
+								products[i].product_number = products[i].product_number +1;
+								add = false;
+								break;
+							}
+						 }
+						 if (add) {
+						 	products.push(product);
+						 }
+						 product_infos();
+						 $("#barcode").val("");
+					 }else {
+						alert(data.message);
+					 }
+				 });
+			  }
+		  });
+
+		  var product_infos = function(){
+			  var t = _.template($("#products").html());
+			  $("#product_infos").html(t({shopping_infos:shopping_infos,products:products}));
+		  };
+	  });
+	  </script>
+  </body>
+
+
+
+
+
+
+
+
+
+
+</html>
