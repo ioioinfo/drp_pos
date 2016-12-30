@@ -1,83 +1,259 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>lms-login</title>
-	<script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
-	<script src="js/lodash.min.js" type="text/javascript"></script>
-  </head>
-  <body>
-	  {% for store in store_info %}
-	  	<div>{{store.org_store_name}}</div>
-	  {% endfor %}
-	  <div>{{person_info.person.person_code}}</div>
-	  {% for company in company_info %}
+<head>
+<meta charset="utf-8">
+<title>POS</title>
+<script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+<script src="js/lodash.min.js" type="text/javascript"></script>
+<style type="text/css">
+	.weui_mask {
+		position: fixed;
+		z-index: 10;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		background: rgba(0, 0, 0, 0.6);
+	}
+	.weui_dialog {
+		position: fixed;
+		z-index: 13;
+		width: 896px;
+		top: 50%;
+		left: 53%;
+		-webkit-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
+		background-color: #FAFAFC;
+		border-radius: 3px;
+		overflow: hidden;
+	}
+	.hidden{
+		display: none;
+	}
+</style>
+</head>
+<body>
+<div>
+	{% for store in store_info %}
+		<div>{{store.org_store_name}}</div>
+	{% endfor %}
+</div>
+<div>{{person_info.person.person_code}}</div>
+<div>
+	{% for company in company_info %}
 		<div>{{company.company_name}}</div>
-	  {% endfor %}
-	  条形码：<input type="text" id="barcode" value="">
-	  <div id="product_infos">
-	  </div>
-	  <script id="products" type="text/template">
-		  <% _.forEach(products, function(product) { %>
-			  <div>
-				<span><%- product.product_code %></span>
-				<span><%- product.product_name %></span>
-				<span><%- product.product_price %></span>
-				<span><%- product.product_color %></span>
-				<span><%- product.product_number %></span>
-			  </div>
-		  <% }); %>
-		  <div>总计：<%- shopping_infos.total_price %></div>
-	  </script>
-	  <script>
-	  $(function() {
-		  var shopping_infos = {"total_price":0,
-		  				"total_discount":0
-	  					};
-		  var products = [];
-
-		  $("#barcode").keypress(function(e){
-			  var barcode = $("#barcode").val();
-			  var key = e.which;
-			  if (barcode && key == 13) {
-				 $.get("/get_product_info",{"barcode":barcode},function(data){
-					 if (data.success) {
-						 var product ={};
-						 product.product_id = data.row.id;
-						 product.product_code = data.row.code;
-						 product.product_name = data.row.product_name;
-						 product.product_price = data.row.product_sale_price;
-						 product.product_stock = data.stocks;
-						 product.product_color = data.row.color;
-						 product.product_number = 1;
-						 shopping_infos.total_price = shopping_infos.total_price + data.row.product_sale_price;
-						 var add = true;
-						 for (var i = 0; i < products.length; i++) {
+	{% endfor %}
+</div>
+<div class="member">会员</div>
+<div class="member_info" style="display:none;">
+	卡号：<input class="member_phone" type="text" value=""/>
+	姓名：<input class="member_name" type="text" value=""/>
+	等级：<input class="member_level" type="text" value=""/>
+</div>
+<div id="pay">结算</div>
+<div id="pay_info" style="display:none;">
+	<div class="weui_mask"></div>
+	<div class="weui_dialog">
+		<div style="height:600px;width:100%;">
+			<div style="width:800px;margin:20px auto;">
+				<div class="cash" style="border:1px solid #dedede;float:left;height:200px;width:100px;background-color:green">
+					<div style="font-size:24px;">现金</div>
+				</div>
+				<div class="alipay" style="border:1px solid #dedede;float:left;height:200px;width:100px;background-color:yellow">
+					<div style="font-size:24px;">支付宝</div>
+				</div>
+				<!-- <div class="member" style="border:1px solid #dedede;float:left;height:200px;width:100px;background-color:red">
+					<div style="font-size:24px;">会员卡</div>
+				</div> -->
+				<div style="clear:both;"></div>
+				<div class="pay_amount"></div>
+				<div class="cash_pay" style="display:none;">
+					现金：<input class="cash_value" type="text" value=""/>
+				</div>
+				<div class="alipay_pay" style="display:none;">
+					支付宝：<input class="alipay_value" type="text" value=""/>
+				</div>
+				<!-- <div class="member_info" style="display:none;">
+					卡号：<input class="member_phone" type="text" value=""/>
+				</div> -->
+				<div class="change" style="display:none;">
+					找零：<input class="change_value" type="text" value=""/>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div>
+	条形码：<input type="text" id="barcode" value="">
+</div>
+<div id="product_infos">
+</div>
+<div class="content" style="display:none;">
+	<div class="weui_mask"></div>
+	<div class="weui_dialog">
+		<input id="update_id" value="" style="display:none;"/>
+		<div id="update_name"></div>
+		<input id="update_price" value=""/>
+		<input id="update_number" value=""/>
+		<div class="save">保存<div>
+		<div class="close">关闭<div>
+	</div>
+</div>
+<script id="products" type="text/template">
+	<% _.forEach(products, function(product,index) { %>
+		<div class="product_line" data-id="<%- index+1 %>">
+			<%- index+1 %>
+			<span><%- product.product_code %></span>
+			<span class="product_name"><%- product.product_name %></span>
+			<span class="product_price"><%- product.product_price %></span>
+			<span><%- product.product_color %></span>
+			<span class="product_number"><%- product.product_number %></span>
+		</div>
+	<% }); %>
+	<div>总计：<%- shopping_infos.total_price %></div>
+</script>
+<script>
+	$(function() {
+		var shopping_infos = {"total_price":0,
+			"total_discount":0
+		};
+		var products = [];
+		var member;
+		$("#barcode").keypress(function(e){
+			var barcode = $("#barcode").val();
+			var key = e.which;
+			if (barcode && key == 13) {
+				$.get("/get_product_info",{"barcode":barcode},function(data){
+					if (data.success) {
+						var product ={};
+						product.product_id = data.row.id;
+						product.product_code = data.row.code;
+						product.product_name = data.row.product_name;
+						product.product_price = data.row.product_sale_price;
+						product.product_stock = data.stocks;
+						product.product_color = data.row.color;
+						product.product_number = 1;
+						product.product_brand = data.row.product_brand;
+						product.product_discount = 1;
+						var add = true;
+						for (var i = 0; i < products.length; i++) {
 							if (products[i].product_id == product.product_id) {
 								products[i].product_number = products[i].product_number +1;
 								add = false;
 								break;
 							}
-						 }
-						 if (add) {
-						 	products.push(product);
-						 }
-						 product_infos();
-						 $("#barcode").val("");
-					 }else {
+						}
+						if (add) {
+							products.push(product);
+						}
+						get_total_price();
+						product_infos();
+						//  $("#barcode").val("");
+					}else {
 						alert(data.message);
-					 }
-				 });
-			  }
-		  });
+					}
+				});
+			}
+		});
+		var get_total_price = function(){
+			shopping_infos.total_price = 0;
+			for (var i = 0; i < products.length; i++) {
+				if (member) {
+					for (var j = 0; j < member.discounts.length; j++) {
+						if (member.discounts[j].org_brand_id == products[i].product_brand) {
+							products[i].product_discount = member.discounts[j].discount;
+						}
+					}
+				}
+				shopping_infos.total_price = shopping_infos.total_price + parseFloat(products[i].product_price) * products[i].product_number * products[i].product_discount;
+			}
+		};
+		var show_one_line = function(index){
+			var product_name = products[index].product_name;
+			var product_price = products[index].product_price;
+			var product_number = products[index].product_number;
 
-		  var product_infos = function(){
-			  var t = _.template($("#products").html());
-			  $("#product_infos").html(t({shopping_infos:shopping_infos,products:products}));
-		  };
-	  });
-	  </script>
-  </body>
+			$(".content").removeAttr("style");
+
+			$("#update_id").val(index);
+			$("#update_name").html(product_name);
+			$("#update_price").val(product_price);
+			$("#update_number").val(product_number);
+
+		};
+		var save_one_line = function(){
+			var index = $("#update_id").val();
+			var update_price = $("#update_price").val();
+			var update_number =  $("#update_number").val();
+
+			products[index].product_price = update_price;
+			products[index].product_number = parseInt(update_number);
+
+			$(".content").attr("style","display:none;");
+			get_total_price();
+			product_infos();
+		}
+		var product_infos = function(){
+			var t = _.template($("#products").html());
+			$("#product_infos").html(t({shopping_infos:shopping_infos,products:products}));
+			$(".product_line").click(function(){
+				var index = $(this).data("id")-1;
+				show_one_line(index);
+			});
+		};
+		$(".close").click(function(){
+			$(".content").attr("style","display:none;");
+		});
+		$(".save").click(function(){
+			save_one_line();
+		});
+		$("#pay").click(function(){
+			$("#pay_info").removeAttr("style");
+			$(".pay_amount").html("应付："+shopping_infos.total_price);
+		});
+		$(".cash").click(function(){
+			$(".cash_pay").removeAttr("style");
+			shopping_infos.total_price = parseFloat(parseInt(shopping_infos.total_price*10)/10);
+			$(".pay_amount").html("应付："+shopping_infos.total_price);
+		});
+		$(".cash_value").keypress(function(e){
+			var cash_value = $(".cash_value").val();
+			var key = e.which;
+			if (cash_value && key == 13) {
+				$(".change").removeAttr("style");
+				var change = 0;
+				console.log('parseFloat(cash_value):'+parseFloat(cash_value));
+				console.log("shopping_infos.total_price:"+shopping_infos.total_price);
+				change = parseFloat(cash_value)-parseFloat(shopping_infos.total_price);
+				$(".change_value").val(change);
+			}
+		});
+		$(".alipay").click(function(){
+			$(".alipay_pay").removeAttr("style");
+		});
+		$(".member").click(function(){
+			$(".member_info").removeAttr("style");
+		});
+		$(".member_phone").keypress(function(e){
+			var member_phone = $(".member_phone").val();
+			var key = e.which;
+			if (member_phone && key == 13) {
+				$.get("/get_member_info",{"q":member_phone},function(data){
+					if (data.success) {
+						member = data.row;
+						$(".member_name").val(member.vip_name);
+						$(".member_level").val(member.vip_type_name);
+						get_total_price();
+					}else {
+						alert(data.message);
+					}
+				});
+			}
+		});
+
+	});
+</script>
+</body>
 
 
 

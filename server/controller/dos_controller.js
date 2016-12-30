@@ -203,14 +203,12 @@ exports.register = function(server, options, next){
 			handler: function(request, reply){
 				var cookie_id = get_cookie_id(request);
 				if (!cookie_id) {
-					return reply({"success":false});
+					return reply({"success":false,"message":"cookie_id null"});
 				}
 				var login_id = get_cookie_loginId(request);
 				if (!login_id) {
-					return reply({"success":false});
+					return reply({"success":false,"message":"login_id null"});
 				}
-
-
 
 				var ep =  eventproxy.create("person_info","store_info","company_info",
 					function(person_info,store_info,company_info){
@@ -272,27 +270,24 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/get_member_info',
 			handler: function(request, reply){
-				get_cookie_loginId(request, function(login_id){
-					if (!login_id) {
+				var q = request.query.q;
+				console.log("q:"+q);
+				var login_id = get_cookie_loginId(request);
+				if (!login_id) {
+					return reply({"success":false});
+				}
+				get_member_info(org_code, q, function(err,row){
+					if (!err) {
+						if (row.success) {
+							var member_info = row.row;
+							console.log(member_info);
+							return reply({"success":true,"row":member_info,"message":"ok"});
+						}else {
+							return reply({"success":false,"message":row.message});
+						}
+					}else {
 						return reply({"success":false});
 					}
-
-					var q = "18221036882";
-
-					get_member_info(org_code, q, function(err,row){
-						if (!err) {
-							if (row.success) {
-								var member_info = row.row;
-								console.log(member_info);
-								return reply({"success":true,"row":member_info,"message":"ok"});
-							}else {
-								return reply({"success":false,"message":row.message});
-							}
-						}else {
-							return reply({"success":false});
-						}
-					});
-
 				});
 			}
 		},
