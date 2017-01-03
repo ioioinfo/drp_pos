@@ -49,8 +49,22 @@
 	卡号：<input class="member_phone" type="text" value=""/>
 	姓名：<input class="member_name" type="text" value=""/>
 	等级：<input class="member_level" type="text" value=""/>
+	余额：<input class="member_amount" type="text" value=""/>
+	积分：<input class="member_integral" type="text" value=""/>
 </div>
 <div id="pay">结算</div>
+<div id="clear">作废</div>
+<div class="do_clear" style="display:none;">
+	<div class="weui_mask"></div>
+	<div class="weui_dialog">
+		<div style="height:100px;">
+			<div class="yes" style="border:1px solid #000;width:47%;margin:1%;float:left;">是</div>
+			<div class="no" style="border:1px solid #000;width:48%;margin:1%;float:left;">否</div>
+		</div>
+	</div>
+</div>
+<div id="put_order">挂单</div>
+<div id="get_order">取单</div>
 <div id="pay_info" style="display:none;">
 	<div class="weui_mask"></div>
 	<div class="weui_dialog">
@@ -77,8 +91,9 @@
 					卡号：<input class="member_phone" type="text" value=""/>
 				</div> -->
 				<div class="change" style="display:none;">
-					找零：<input class="change_value" type="text" value=""/>
+					找零：<input class="change_value" type="text" value="" readonly=""/>
 				</div>
+				<div class="print_invoice" style="display:none;">打印发票</div>
 			</div>
 		</div>
 	</div>
@@ -102,12 +117,13 @@
 <script id="products" type="text/template">
 	<% _.forEach(products, function(product,index) { %>
 		<div class="product_line" data-id="<%- index+1 %>">
-			<%- index+1 %>
-			<span><%- product.product_code %></span>
-			<span class="product_name"><%- product.product_name %></span>
-			<span class="product_price"><%- product.product_price %></span>
-			<span><%- product.product_color %></span>
-			<span class="product_number"><%- product.product_number %></span>
+			<span><%- index+1 %></span>
+			<span>编码：<%- product.product_code %></span>
+			<span class="product_name">名称：<%- product.product_name %></span>
+			<span class="product_price">价格：<%- product.product_price %></span>
+			<span>颜色：<%- product.product_color %></span>
+			<span class="product_number">数量：<%- product.product_number %></span>
+			<span>打折比例：<%- product.product_discount %></span>
 		</div>
 	<% }); %>
 	<div>总计：<%- shopping_infos.total_price %></div>
@@ -115,16 +131,57 @@
 <script>
 	$(function() {
 		var shopping_infos = {"total_price":0,
-			"total_discount":0
+			"total_discount":0,
+			"marketing_price":0
 		};
 		var products = [];
+		//挂单用的临时变量
+		var temp_shopping_infos ={};
+		var temp_products = [];
 		var member;
+		//初始产品信息
+		var init_product_infos = function(){
+			shopping_infos = {
+				"total_price":0,
+				"total_discount":0
+			};
+			products = [];
+			product_infos();
+			$("#barcode").val("");
+		};
+		//挂单
+		$("#put_order").click(function(){
+			if (products.length >0) {
+				temp_shopping_infos = shopping_infos;
+				temp_products = products;
+				init_product_infos();
+			}else {
+				alert("无单可挂");
+			}
+		});
+		//取单
+		$("#get_order").click(function(){
+			if (temp_products.length >0) {
+				shopping_infos = temp_shopping_infos;
+				products = temp_products
+				temp_shopping_infos ={};
+				temp_products = [];
+				product_infos();
+				$("#barcode").val("");
+			}else {
+				alert("无单可取");
+			}
+
+		});
+		//扫描条形码
 		$("#barcode").keypress(function(e){
 			var barcode = $("#barcode").val();
 			var key = e.which;
 			if (barcode && key == 13) {
 				$.get("/get_product_info",{"barcode":barcode},function(data){
 					if (data.success) {
+						$('<audio class="success"><source src="js/notify.ogg" type="audio/ogg"><source src="js/notify.mp3" type="audio/mpeg"><source src="js/notify.wav" type="audio/wav"></audio>').appendTo('body');
+						$('.success')[0].play();
 						var product ={};
 						product.product_id = data.row.id;
 						product.product_code = data.row.code;
@@ -150,11 +207,14 @@
 						product_infos();
 						//  $("#barcode").val("");
 					}else {
+						$('<audio class="fail"><source src="http://xunlei.sc.chinaz.com/Files/DownLoad/sound1/201607/7499.wav" type="audio/wav"></audio>').appendTo('body');
+						$('.fail')[0].play();
 						alert(data.message);
 					}
 				});
 			}
 		});
+		//计算总价
 		var get_total_price = function(){
 			shopping_infos.total_price = 0;
 			for (var i = 0; i < products.length; i++) {
@@ -165,9 +225,11 @@
 						}
 					}
 				}
+				shopping_infos.marketing_price = shopping_infos.total_price + parseFloat(products[i].product_price) * products[i].product_number;
 				shopping_infos.total_price = shopping_infos.total_price + parseFloat(products[i].product_price) * products[i].product_number * products[i].product_discount;
 			}
 		};
+		//修改单条商品
 		var show_one_line = function(index){
 			var product_name = products[index].product_name;
 			var product_price = products[index].product_price;
@@ -181,6 +243,7 @@
 			$("#update_number").val(product_number);
 
 		};
+		//保存单条商品信息
 		var save_one_line = function(){
 			var index = $("#update_id").val();
 			var update_price = $("#update_price").val();
@@ -193,6 +256,7 @@
 			get_total_price();
 			product_infos();
 		}
+		//商品模板信息
 		var product_infos = function(){
 			var t = _.template($("#products").html());
 			$("#product_infos").html(t({shopping_infos:shopping_infos,products:products}));
@@ -201,21 +265,43 @@
 				show_one_line(index);
 			});
 		};
+		//关闭单条信息
 		$(".close").click(function(){
 			$(".content").attr("style","display:none;");
 		});
+		//保存单条信息
 		$(".save").click(function(){
 			save_one_line();
 		});
+		//结算
 		$("#pay").click(function(){
 			$("#pay_info").removeAttr("style");
 			$(".pay_amount").html("应付："+shopping_infos.total_price);
 		});
+		//作废
+		$("#clear").click(function(){
+			if (products.length>10) {
+				$(".do_clear").removeAttr("style");
+			}else {
+				init_product_infos();
+			}
+		});
+		//作废是
+		$(".yes").click(function(){
+			init_product_infos();
+			$(".do_clear").attr("style","display:none;");
+		});
+		//作废否
+		$(".no").click(function(){
+			$(".do_clear").attr("style","display:none;");
+		});
+		//点击现金
 		$(".cash").click(function(){
 			$(".cash_pay").removeAttr("style");
 			shopping_infos.total_price = parseFloat(parseInt(shopping_infos.total_price*10)/10);
 			$(".pay_amount").html("应付："+shopping_infos.total_price);
 		});
+		//输入现金
 		$(".cash_value").keypress(function(e){
 			var cash_value = $(".cash_value").val();
 			var key = e.which;
@@ -226,25 +312,63 @@
 				console.log("shopping_infos.total_price:"+shopping_infos.total_price);
 				change = parseFloat(cash_value)-parseFloat(shopping_infos.total_price);
 				$(".change_value").val(change);
+				if (change >= 0) {
+					$(".print_invoice").removeAttr("style");
+					$.get("/save_order_detail",{"shopping_infos":JSON.stringify(shopping_infos),"products":JSON.stringify(products),"member":JSON.stringify(member)},function(data){
+						if (data.success) {
+							alert(data.info.order_id);
+							init_product_infos();
+						}else {
+
+						}
+					});
+				}
 			}
 		});
+		//支付宝点击
 		$(".alipay").click(function(){
 			$(".alipay_pay").removeAttr("style");
 		});
+		//会员点击
 		$(".member").click(function(){
 			$(".member_info").removeAttr("style");
 		});
+		//会员号码点击
 		$(".member_phone").keypress(function(e){
 			var member_phone = $(".member_phone").val();
 			var key = e.which;
 			if (member_phone && key == 13) {
 				$.get("/get_member_info",{"q":member_phone},function(data){
 					if (data.success) {
+						$('<audio class="success"><source src="js/notify.ogg" type="audio/ogg"><source src="js/notify.mp3" type="audio/mpeg"><source src="js/notify.wav" type="audio/wav"></audio>').appendTo('body');
+						$('.success')[0].play();
 						member = data.row;
 						$(".member_name").val(member.vip_name);
 						$(".member_level").val(member.vip_type_name);
+						if (!member.amount) {
+							$(".member_amount").val("0");
+						}else {
+							$(".member_amount").val(member.amount);
+						}
+						if (!member.integral) {
+							$(".member_integral").val("0");
+						}else {
+							$(".member_integral").val(member.integral);
+						}
+						for (var i = 0; i < products.length; i++) {
+							if (member) {
+								for (var j = 0; j < member.discounts.length; j++) {
+									if (member.discounts[j].org_brand_id == products[i].product_brand) {
+										products[i].product_discount = member.discounts[j].discount;
+									}
+								}
+							}
+						}
 						get_total_price();
+						product_infos();
 					}else {
+						$('<audio class="fail"><source src="http://xunlei.sc.chinaz.com/Files/DownLoad/sound1/201607/7499.wav" type="audio/wav"></audio>').appendTo('body');
+						$('.fail')[0].play();
 						alert(data.message);
 					}
 				});

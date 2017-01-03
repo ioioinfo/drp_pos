@@ -118,6 +118,11 @@ var find_stock = function(product_id,industry_id,store_id,cb){
 	url = url + product_id + "&industry_id=" + industry_id + "&store_id=" + store_id;
 	do_get_method(url,cb);
 };
+//保存订单
+var save_order = function(data,cb){
+	var url = "http://127.0.0.1:8010/add_order";
+	do_post_method(data,url,cb);
+};
 exports.register = function(server, options, next){
 	server.route([
 		//登入页面
@@ -387,7 +392,36 @@ exports.register = function(server, options, next){
 				});
 			}
 		},
-    ]);
+		//购物车订单及详细
+		{
+			method: 'GET',
+			path: '/save_order_detail',
+			handler: function(request, reply){
+				var data = {};
+				var shopping_infos = request.query.shopping_infos;
+				data.products =  request.query.products;
+				data.member = request.query.member;
+				data.actual_price = JSON.parse(shopping_infos).total_price;
+				data.marketing_price = JSON.parse(shopping_infos).marketing_price;
+				var login_id = get_cookie_loginId(request);
+				if (!login_id) {
+					return reply({"success":false});
+				}
+				data.pos_id = "pos001";
+				data.operation_system = "pos_system001";
+				data.origin = "pos_origin";
+				save_order(data,function(err, result){
+					if (!err) {
+						return reply({"success":true,"info":result});
+					}else {
+						return reply({"success":false});
+					}
+				});
+			}
+		},
+
+
+	]);
 
     next();
 };

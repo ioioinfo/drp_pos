@@ -67,7 +67,6 @@ server.register([
 	  register: require('./server/controller/dos_controller.js')
 	},
 
-
 ], function () {
     //Start the server
     server.start(function() {

@@ -24,6 +24,13 @@ exports.register = function(server, options, next){
                 directory: { path: './public/css' }
             }
         },
+		{
+			method: 'GET',
+			path: '/sound/{path*}',
+			handler: {
+				directory: { path: './public/sound' }
+			}
+		},
         {
             method: 'GET',
             path: '/js/{path*}',
