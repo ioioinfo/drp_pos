@@ -123,6 +123,12 @@ var save_order = function(data,cb){
 	var url = "http://127.0.0.1:8010/add_order";
 	do_post_method(data,url,cb);
 };
+//查询商品图片
+var get_picturesById = function(product_id,cb){
+	var url = "http://127.0.0.1:7000/get_product_pictures?product_id=";
+	url = url + product_id;
+	do_get_method(url,cb);
+}
 exports.register = function(server, options, next){
 	server.route([
 		//登入页面
@@ -324,12 +330,26 @@ exports.register = function(server, options, next){
 										console.log(product_info);
 										var industry_id = product_info.industry_id;
 
+										var ep =  eventproxy.create("stocks","picture_info",
+											function(stocks,picture_info){
+												return reply({"success":true,"row":product_info,"message":"ok","stocks":stocks,"picture_info":picture_info});
+										});
+
+
+										get_picturesById(product_id,function(err,rows){
+											if (!err) {
+												ep.emit("picture_info", rows.rows[0]);
+											}else {
+												return reply({"success":false,"message":"search product's picture fail"});
+											}
+										});
+
 										find_stock(product_id,industry_id,stock_options,function(err,row){
 											if (!err) {
 												console.log(row);
-												return reply({"success":true,"row":product_info,"message":"ok","stocks":row.stocks});
+												ep.emit("stocks", row.stocks);
 											}else {
-												return reply({"success":false});
+												return reply({"success":false,"message":"search product's stock fail"});
 											}
 										});
 
