@@ -106,9 +106,9 @@ var get_product_info = function(barcode, cb){
 	url = url + barcode;
 	do_get_method(url,cb);
 };
-//根据货物id找到商品
+//根据货物id找到pos商品
 var find_product_byId = function(product_id, cb){
-	var url = "http://127.0.0.1:7000/product_info?product_id=";
+	var url = "http://127.0.0.1:7000/get_pos_product?product_id=";
 	url = url + product_id;
 	do_get_method(url,cb);
 };
@@ -187,7 +187,7 @@ exports.register = function(server, options, next){
 							do_login(data, function(err,content){
 								if (!err) {
 									if (!content.success) {
-										return reply({"success":false,"data":"password wrong"});
+										return reply({"success":false,"message":"password wrong"});
 									}
 									var login_id = content.row.login_id;
 									var cookie = request.state.cookie;
@@ -199,7 +199,7 @@ exports.register = function(server, options, next){
 								}
 							});
 						}else {
-							return reply({"success":false,"data":"vertify wrong"});
+							return reply({"success":false,"message":"vertify wrong"});
 						}
 					}else {
 
@@ -214,11 +214,12 @@ exports.register = function(server, options, next){
 			handler: function(request, reply){
 				var cookie_id = get_cookie_id(request);
 				if (!cookie_id) {
-					return reply({"success":false,"message":"cookie_id null"});
+					return reply.redirect("/login");
 				}
 				var login_id = get_cookie_loginId(request);
 				if (!login_id) {
-					return reply({"success":false,"message":"login_id null"});
+					// return reply({"success":false,"message":"login_id null"});
+					return reply.redirect("/login");
 				}
 
 				var ep =  eventproxy.create("person_info","store_info","company_info",
@@ -228,7 +229,11 @@ exports.register = function(server, options, next){
 						if (!cookie) {
 							return reply({"success":false});
 						}
+						if (store_info.length<=0) {
+							return reply({"succss":false,"messsage":"no store_info"});
+						}
 						cookie.store_id = store_info[0].org_store_id;
+
 						return reply.view("pos",{"person_info":person_info,"store_info":store_info,"company_info":company_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
 				});
 
@@ -285,7 +290,7 @@ exports.register = function(server, options, next){
 				console.log("q:"+q);
 				var login_id = get_cookie_loginId(request);
 				if (!login_id) {
-					return reply({"success":false});
+					return reply.redirect("/login");
 				}
 				get_member_info(org_code, q, function(err,row){
 					if (!err) {
@@ -309,7 +314,7 @@ exports.register = function(server, options, next){
 			handler: function(request, reply){
 				var login_id = get_cookie_loginId(request);
 				if (!login_id) {
-					return reply({"success":false});
+					return reply.redirect("/login");
 				}
 
 				// var barcode = "11112235";
@@ -338,7 +343,12 @@ exports.register = function(server, options, next){
 
 										get_picturesById(product_id,function(err,rows){
 											if (!err) {
-												ep.emit("picture_info", rows.rows[0]);
+												if (rows.rows) {
+													ep.emit("picture_info", rows.rows[0]);
+												}else {
+													ep.emit("picture_info", {});
+												}
+
 											}else {
 												return reply({"success":false,"message":"search product's picture fail"});
 											}
@@ -377,7 +387,7 @@ exports.register = function(server, options, next){
 			handler: function(request, reply){
 				var login_id = get_cookie_loginId(request);
 				if (!login_id) {
-					return reply({"success":false,"message":"login_id null"});
+					return reply.redirect("/login");
 				}
 				var product_id = "2";
 				var stock_options = {};
@@ -425,7 +435,7 @@ exports.register = function(server, options, next){
 				data.marketing_price = JSON.parse(shopping_infos).marketing_price;
 				var login_id = get_cookie_loginId(request);
 				if (!login_id) {
-					return reply({"success":false});
+					return reply.redirect("/login");
 				}
 				data.pos_id = "pos001";
 				data.operation_system = "pos_system001";

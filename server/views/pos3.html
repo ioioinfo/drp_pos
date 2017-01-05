@@ -2,240 +2,205 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>pos</title>
+<title>lms</title>
 <script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
 <script src="js/lodash.min.js" type="text/javascript"></script>
 <style media="screen">
-      *{
-      margin: 0;
-      padding: 0
-      }
-      li{
-        list-style: none;
-      }
-      a{
-        text-decoration: none;
-        color: #fff;
-      }
-      .warp{
-        width: 1024px;
-        height: 768px;
-        margin: 0 auto;
-
-        position: relative;
-      }
-      .top{
-        width: 100%;
-        height: 73px;
-        background: url(images/header-2.jpg) no-repeat 0 0;
-        background-size: cover;
-        overflow: hidden;
-      }
-      .top-left{
-        width: 45px;
-        height: 45px;
-        background: url(images/orange.png) no-repeat 0 0;
-        background-size: contain;
-        line-height: 45px;
-        text-align: center;
-        margin-top: 12px;
-        margin-left: 19px;
-        float: left;
-      }
-      .top-center{
-        width: 216px;
-        height: 73px;
-        background: url(images/shopname.png) no-repeat 0 0;
-        background-size: contain;
-        position: absolute;
-        top: 9px;
-        left: 43%;
-        color: #fff;
-        text-align: center;
-
-      }
-      .top-center span{
-        display: inline-block;
-        padding-top: 16px;
-        font-weight: 600;
-        opacity: 0.8;
-      }
-      .top-right{
-        float: right;
-        margin-right: 19px;
-        margin-top: 12px;
-      }
-      .top-right-left{
-        width: 25px;
-        height: 25px;
-        background: url(images/header-1.png) no-repeat 0 0;
-        background-size: contain;
-      }
-
-      /*中间部分*/
-      .middle{
-        width: 100%;
-        height: 560px;
-        background: url(images/header-2.jpg) no-repeat 0 0;
-        background-size: cover;
-        overflow: hidden;
-      }
-      .middle-tiaoma{
-        width: 265px;
-        float: right;
-        position: absolute;
-        top:82px;
-        right: -30px;
-        overflow: hidden;
-      }
-      .tiaoma-left{
-        width:20px;
-        height:15px;
-        background: url(images/tiaoma.png) no-repeat 0 0;
-        background-size: cover;
-        display: inline-block;
-
-      }
-      .tiaoma-right{
-        margin-top: -2px;
-        width: 162px;
-        height: 22px;
-        display: inline-block;
-        outline: none;
-        -webkit-appearance : none ;
-        vertical-align: middle;
-        border: none;
-      }
-      .middle-product{
-        width: 944px;
-        height: 470px;
-        background: #fff;
-        margin: 0 auto;
-        margin-top: 23px;
-
-      }
-      .product-infor{
-        width: 210px;
-        height: 210px;
-        margin-top:10px;
-        margin: 10px 6px 0;
-        display: inline-block;
-
-      }
-
-      .product-infor p{
-        width: 170px;
-        margin: 0 auto;
-        font-size: 14px;
-        padding-bottom: 5px;
-        color: #6d40ae;
-      }
-      .product-img{
-        width: 176px;
-        height: 170px;
-        margin: 0 auto;
+	*{
+		margin: 0;
+		padding: 0
+	}
+	li{
+		list-style: none;
+	}
+	a{
+		text-decoration: none;
+		color: #fff;
+	}
+	.warp{
+		width: 1024px;
+		height: 768px;
+		margin: 0 auto;
+		position: relative;
+	}
+	.top{
+		width: 100%;
+		height: 73px;
+		background: url(images/header-2.jpg) no-repeat 0 0;
+		background-size: cover;
+		overflow: hidden;
+	}
+	.top-left{
+		width: 45px;
+		height: 45px;
+		background: url(images/orange.png) no-repeat 0 0;
+		background-size: contain;
+		line-height: 45px;
 		text-align: center;
-      }
-      .product-img img{
-        width: 170px;
-        height: 170px;
-      }
-      .product-infor span:first-child{
-        font-size: 18px;
-        color: red;
-        margin-left: 21px;
-      }
-      .product-infor span:last-child{
-        font-size:18px;
-        color: #FF0000;
-        float: right;
-        margin-right: 23px;
-      }
-      .product-conver{
-        /*display: none;*/
-        width: 930px;
-        margin: 0 auto;
-        overflow: auto;
-        height: 470px;
-      }
-     /*底                部*/
-     .footer{
-       background: url(images/footer.jpg) no-repeat 0 0;
-       background-size: cover;
-       overflow: hidden;
-     }
-     .footer-left{
-       width: 140px;
-       height: 130px;
-       float: left;
-
-     }
-     .footer-left p{
-       font-size: 12px;
-       font-weight: 400;
-       text-align: center;
-       line-height: 15px;
-       color: #fff;
-    }
-    .footer-left p:first-child{
-      margin-top: 47px;
-    }
-    .footer-center{
-      width: 714px;
-      height: 130px;
-      float: left;
-    }
-    .footer-center-nav{
-      display: flex;
-      margin-top: 43px;
-    }
-    .footer-center-nav li{
-      flex: 1;
-    }
-    .nav-infor{
-      width: 79px;
-      height:64px;
-      margin: 0 auto;
-    }
-    .footer-center-nav li p{
-      color: #5B5B5B;
-      font-size: 14px;
-      font-weight: 600;
-      text-align: center;
-    }
-    .nav-infor img{
-      width: 69px;
-      height:59px;
-    }
-    .footer-right{
-      float: right;
-      margin-right:10px;
-      width: 160px;
-      height: 130px;
-      background: url(images/jiesuan.png) no-repeat 0 0;
-      background-size: cover;
-    }
-    .footer-right p{
-      text-align: center;
-      color: #fff;
-    }
-    .footer-right p:first-child{
-      margin-top: 57px;
-      font-size: 18px;
-      font-weight: 600;
-    }
-    .footer-right p:last-child{
-        margin-top: 17px;
-        font-size: 14px;
-        text-align: center;
-
-    }
-    .ma-num{
-      display: inline-block;
-      padding-top: 20px;
-      margin-left: 40px;
-      color: #fff;
-    }
+		margin-top: 12px;
+		margin-left: 19px;
+		float: left;
+	}
+	.top-center{
+		width: 216px;
+		height: 73px;
+		background: url(images/top-center.png) no-repeat 0 0;
+		background-size: contain;
+		position: absolute;
+		top: 9px;
+		left: 43%;
+	}
+	.top-right{
+		float: right;
+		margin-right: 19px;
+		margin-top: 12px;
+	}
+	.top-right-left{
+		width: 25px;
+		height: 25px;
+		background: url(images/header-1.png) no-repeat 0 0;
+		background-size: contain;
+	}
+	/*中间部分*/
+	.middle{
+		width: 100%;
+		height: 560px;
+		background: url(images/header-2.jpg) no-repeat 0 0;
+		background-size: cover;
+		overflow: hidden;
+	}
+	.middle-tiaoma{
+		width: 265px;
+		height: 45px;
+		float: right;
+		position: absolute;
+		top:32px;
+		right: -20px;
+	}
+	.tiaoma-left{
+		width:20px;
+		height:15px;
+		background: url(images/tiaoma.png) no-repeat 0 0;
+		background-size: cover;
+		display: inline-block;
+	}
+	.tiaoma-right{
+		width: 167px;
+		height: 119px;
+		display: inline-block;
+		outline: none;
+		-webkit-appearance : none ;
+		background: url(images/2017.png) no-repeat 0 -7px;
+		background-size: contain;
+		border: none;
+	}
+	.middle-product{
+		width: 944px;
+		height: 491px;
+		background: #fff;
+		margin: 0 auto;
+		margin-top: 43px;
+	}
+	.product-infor{
+		width: 176px;
+		height: 210px;
+		margin-top:10px;
+		display: inline-block;
+	}
+	.product-img{
+		width: 176px;
+		height: 170px;
+	}
+	.product-img img{
+		width: 170px;
+		height: 170px;
+	}
+	.product-infor span:first-child{
+		font-size: 18px;
+		color: red;
+	}
+	.product-infor span:last-child{
+		font-size:18px;
+		color: #FF0000;
+		float: right;
+	}
+	.product-conver{
+		width: 930px;
+		margin: 0 auto;
+		overflow: auto;
+		height: 491px;
+	}
+	/*底                部*/
+	.footer{
+		background: url(images/footer.jpg) no-repeat 0 0;
+		background-size: cover;
+		overflow: hidden;
+	}
+	.footer-left{
+		width: 140px;
+		height: 130px;
+		float: left;
+	}
+	.footer-left p{
+		font-size: 12px;
+		font-weight: 400;
+		text-align: center;
+		line-height: 15px;
+		color: #fff;
+	}
+	.footer-left p:first-child{
+		margin-top: 47px;
+	}
+	.footer-center{
+		width: 714px;
+		height: 130px;
+		float: left;
+	}
+	.footer-center-nav{
+		display: flex;
+		margin-top: 43px;
+	}
+	.footer-center-nav li{
+		flex: 1;
+	}
+	.nav-infor{
+		width: 79px;
+		height:64px;
+		margin: 0 auto;
+	}
+	.footer-center-nav li p{
+		color: #5B5B5B;
+		font-size: 14px;
+		font-weight: 600;
+		text-align: center;
+	}
+	.nav-infor img{
+		width: 69px;
+		height:59px;
+	}
+	.footer-right{
+		float: right;
+		margin-right:10px;
+		width: 160px;
+		height: 130px;
+		background: url(images/jiesuan.png) no-repeat 0 0;
+		background-size: cover;
+	}
+	.footer-right p{
+		text-align: center;
+		color: #fff;
+	}
+	.footer-right p:first-child{
+		margin-top: 57px;
+		font-size: 16px;
+		font-weight: 600;
+	}
+	.footer-right p:last-child{
+		margin-top: 17px;
+		font-size: 14px;
+		text-align: right;
+		margin-right: 9px;
+	}
 	.weui_mask {
 		position: fixed;
 		z-index: 10;
@@ -248,8 +213,7 @@
 	.weui_dialog {
 		position: fixed;
 		z-index: 13;
-		width: 380px;
-    	height: 180px;
+		width: 896px;
 		top: 50%;
 		left: 53%;
 		-webkit-transform: translate(-50%, -50%);
@@ -258,91 +222,36 @@
 		border-radius: 3px;
 		overflow: hidden;
 	}
-	.curr{
-		border:1px solid #000;
-	}
-	.get_member{
-		height: 75px;
-	    margin: 30px;
-	    font-size: 24px;
-	}
-	.member_phone{
-		margin-left: 12px;
-		width: 165px;
-		padding: 2px;
-		height: 24px;
-		font-size: 16px;
-	}
-	.member_button{
-		width: 94px;
-	    font-size: 16px;
-	    height: 30px;
-	    float: left;
-	    line-height: 30px;
-	    border: 1px solid #CECECE;
-	    margin-left: 62px;
-	    cursor: pointer;
-	    text-align: center;
-	}
 </style>
-</head>
+  </head>
   <body>
-	<div class="member_info" style="display:none;">
-	  <div class="weui_mask"></div>
-	  <div class="weui_dialog">
-		  <div class="get_member">
-			  <span>会员卡号：</span> <input class="member_phone" type="text" value="" placeholder="请输入会员卡号/手机号"/>
-		  </div>
-		  <div>
-			  <div class="member_button" id="member_enter">确定</div>
-			  <div class="member_button" id="member_cancel">取消</div>
-		  </div>
-
-
-	  </div>
-	</div>
-	<div class="content" style="display:none;">
-	  <div class="weui_mask"></div>
-	  <div class="weui_dialog">
-		  <input id="update_id" value="" style="display:none;"/>
-		  <div id="update_name"></div>
-		  <input id="update_price" value=""/>
-		  <input id="update_number" value=""/>
-		  <div class="save">保存</div>
-		  <div class="close">关闭</div>
-	  </div>
-	</div>
     <div class="warp">
       <div class="top">
         <div class="top-left"><a href="#">返回</a></div>
-        <div class="top-center"><span><u>{{store_info[0].org_store_name}}</u></span></div>
+        <div class="top-center"></div>
         <div class="top-right">
           <div class="top-right-left"></div>
           <span><a href="#">{{person_info.person.person_code}}</a></span>
         </div>
       </div>
       <div class="middle">
-        <div class="ma-num">
-          机器编号：001
-        </div>
         <div class="middle-tiaoma">
           <div class="tiaoma-left"></div>
-          <input type="text" name="" value="" class="tiaoma-right" style="padding-left: 5px;" id="barcode">
+          <input type="text" name="" value="" class="tiaoma-right" id="barcode">
         </div>
 
         <!-- 商品显示 -->
         <div class="middle-product">
-
           <ul class="product-conver" id="product_infos">
-          </ul>
 
+          </ul>
         </div>
       </div>
       <div class="footer">
         <div class="footer-left">
           <p class="member_name"></p>
-          <p class="member_integral"></p>
           <p class="member_amount"></p>
+          <p class="member_integral"></p>
         </div>
         <div class="footer-center">
           <ul class="footer-center-nav">
@@ -351,9 +260,9 @@
                 <div class="nav-img">
                   <img src="images/yu.png" alt="">
                 </div>
-
+				<p >会员</p>
               </div>
-              <p>会员卡</p>
+
             </li>
             <li>
               <div class="nav-infor" id="put_order">
@@ -361,7 +270,7 @@
                   <img src="images/yuan.png" alt="">
                 </div>
               </div>
-              <p>挂单</p>
+              <p >挂单</p>
             </li>
             <li>
               <div class="nav-infor" id="get_order">
@@ -369,15 +278,7 @@
                   <img src="images/fu.png" alt="">
                 </div>
               </div>
-              <p>取单</p>
-            </li>
-            <li>
-              <div class="nav-infor" id="clear">
-                <div class="nav-img">
-                  <img src="images/jianzhi-fu.png" alt="">
-                </div>
-              </div>
-              <p>作废</p>
+              <p >取单</p>
             </li>
             <li>
               <div class="nav-infor">
@@ -387,23 +288,41 @@
               </div>
               <p>弹出钱箱</p>
             </li>
-
           </ul>
         </div>
         <div class="footer-right">
-          <p><u id="amount">￥0.00</u></p>
-          <p>结算</p>
+          <p><u id="amount">总计：￥0</u></p>
+          <p>本次积分：999</p>
         </div>
       </div>
     </div>
+	<div class="member_info" style="display:none;">
+		<div class="weui_mask"></div>
+		<div class="weui_dialog">
+			 <input class="member_phone" type="text" value="" placeholder="请输入会员卡号" style="margin-left:42px;width:80px;"/>
+		</div>
+
+		</div>
+	</div>
+	<div class="content" style="display:none;">
+		<div class="weui_mask"></div>
+		<div class="weui_dialog">
+			<input id="update_id" value="" style="display:none;"/>
+			<div id="update_name"></div>
+			<input id="update_price" value=""/>
+			<input id="update_number" value=""/>
+			<div class="save">保存</div>
+			<div class="close">关闭</div>
+		</div>
+	</div>
 	<audio class="success"><source src="js/notify.ogg" type="audio/ogg"><source src="js/notify.mp3" type="audio/mpeg"><source src="js/notify.wav" type="audio/wav"></audio>
 	<audio class="fail"><source src="js/7499.wav" type="audio/wav"></audio>
 	<script id="products" type="text/template">
 		<% _.forEach(products, function(product,index) { %>
-			<li class="product-infor product_line" data-id="<%- index+1 %>" id="<%- product.barcode %>">
-              <div class="product-img">	<% if (product.delay) { %><img src="/images/<%- product.picture %>" alt="" class="<%- product.barcode %>"><% }else{ %><img src="images/delay.gif" alt="" class="<%- product.barcode %>" data-src="/images/<%- product.picture %>" style="width:62px;height:62px;padding-top:50px;"> <% } %></div>
+			<li class="product-infor product_line" data-id="<%- index+1 %>">
+              <div class="product-img">	<% if (product.delay) { %><img src="<%- product.picture %>" alt="" id="<%- product.barcode %>"><% }else{ %><img src="images/delay.gif" alt="" id="<%- product.barcode %>" data-src="<%- product.picture %>"> <% } %></div>
               <p><%- product.product_name %></p>
-              <div class="price">
+              <div class="">
                 <span>￥<%- product.product_price %></span><span>X<%- product.product_number %></span>
               </div>
             </li>
@@ -455,13 +374,6 @@
 				}
 
 			});
-			//商品高亮
-			var highlight = function(id){
-				$("#"+id).removeClass("curr");
-				$("#"+id).addClass("curr");
-				$('div,ul').animate({scrollTop:$('#'+id).offset().top}, 800);
-				// $("."+id).removeAttr("style");
-			};
 			//扫描条形码
 			$("#barcode").keypress(function(e){
 				var barcode = $("#barcode").val();
@@ -500,7 +412,6 @@
 							get_total_price();
 							product_infos();
 							get_picture();
-							highlight(barcode);
 						}else {
 							bobang_fail();
 						}
@@ -515,12 +426,10 @@
 						product.delay = 1;
 						var oimg = new Image();
 						oimg.onload = function() {
-							var img = $("."+product.barcode);
+							var img = $("#"+product.barcode);
 							img.attr("src",img.data("src"));
-							img.attr("style","");
 						};
-						oimg.src = $("."+product.barcode).data("src");
-
+						oimg.src = $("#"+product.barcode).data("src");
 					}
 				}
 			};
@@ -584,7 +493,7 @@
 			var product_infos = function(){
 				var t = _.template($("#products").html());
 				$("#product_infos").html(t({shopping_infos:shopping_infos,products:products}));
-				$("#amount").html("￥"+shopping_infos.total_price);
+				$("#amount").html("总计：￥"+shopping_infos.total_price);
 				$(".product_line").click(function(){
 					var index = $(this).data("id")-1;
 					show_one_line(index);
@@ -658,58 +567,44 @@
 			$(".member").click(function(){
 				$(".member_info").removeAttr("style");
 			});
-			//会员取消
-			$("#member_cancel").click(function(){
-				$(".member_phone").val("");
-				$(".member_info").attr("style","display:none;");
-			});
 			//会员号码点击
-			var member_click = function(member_phone){
-				$(".member_phone").val("");
-				$.get("/get_member_info",{"q":member_phone},function(data){
-					if (data.success) {
-						bobang_success();
-						member = data.row;
-						$(".member_name").html("姓名："+member.vip_name);
-						$(".member_level").val(member.vip_type_name);
-						if (!member.amount) {
-							$(".member_amount").html("余额："+"0");
-						}else {
-							$(".member_amount").html("余额："+member.amount);
-						}
-						if (!member.integral) {
-							$(".member_integral").html("积分："+"0");
-						}else {
-							$(".member_integral").html("积分："+member.integral);
-						}
-						for (var i = 0; i < products.length; i++) {
-							if (member) {
-								for (var j = 0; j < member.discounts.length; j++) {
-									if (member.discounts[j].org_brand_id == products[i].product_brand) {
-										products[i].product_discount = member.discounts[j].discount;
-									}
-								}
-							}
-						}
-						$(".member_info").attr("style","display:none;");
-						get_total_price();
-						product_infos();
-					}else {
-						bobang_fail();
-					}
-				});
-			};
 			$(".member_phone").keypress(function(e){
 				var member_phone = $(".member_phone").val();
 				var key = e.which;
 				if (member_phone && key == 13) {
-					member_click(member_phone);
-				}
-			});
-			$("#member_enter").click(function(){
-				var member_phone = $(".member_phone").val();
-				if (member_phone) {
-					member_click(member_phone);
+					$.get("/get_member_info",{"q":member_phone},function(data){
+						if (data.success) {
+							bobang_success();
+							member = data.row;
+							$(".member_name").html("姓名："+member.vip_name);
+							$(".member_level").val(member.vip_type_name);
+							if (!member.amount) {
+								$(".member_amount").html("余额："+"0");
+							}else {
+								$(".member_amount").html("余额："+member.amount);
+							}
+							if (!member.integral) {
+								$(".member_integral").html("积分："+"0");
+							}else {
+								$(".member_integral").html("积分："+member.integral);
+							}
+							for (var i = 0; i < products.length; i++) {
+								if (member) {
+									for (var j = 0; j < member.discounts.length; j++) {
+										if (member.discounts[j].org_brand_id == products[i].product_brand) {
+											products[i].product_discount = member.discounts[j].discount;
+										}
+									}
+								}
+							}
+							$(".member_info").attr("style","display:none;");
+							get_total_price();
+							product_infos();
+						}else {
+							bobang_fail();
+							$(".member_info").attr("style","display:none;");
+						}
+					});
 				}
 			});
 
