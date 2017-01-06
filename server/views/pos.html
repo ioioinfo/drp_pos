@@ -284,6 +284,64 @@
 	    cursor: pointer;
 	    text-align: center;
 	}
+	.weui_mask2 {
+		position: fixed;
+		z-index: 10;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		background: rgba(0, 0, 0, 0.6);
+	}
+	.weui_dialog2 {
+		position: fixed;
+		z-index: 13;
+		width: 896px;
+		top: 50%;
+		left: 53%;
+		-webkit-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
+		background-color: #FAFAFC;
+		border-radius: 3px;
+		overflow: hidden;
+	}
+	#guadan_info{
+		height:600px;
+		width:100%;
+	}
+	.hover{
+		border:1px solid red;
+	}
+	.pay_table{
+		height:200px;
+		width: 800px;
+		margin: 20px auto;
+	}
+	table.pay_way_infos {
+		font-family: verdana,arial,sans-serif;
+		font-size:11px;
+		color:#333333;
+		border-width: 1px;
+		border-color: #666;
+		border-collapse: collapse;
+		width: 100%;
+	}
+	table.pay_way_infos th {
+		border-width: 1px;
+		padding: 8px;
+		border-style: solid;
+		border-color: #666666;
+		background-color: #dedede;
+		font-size: 18px;
+	}
+	table.pay_way_infos td {
+		border-width: 1px;
+		padding: 8px;
+		border-style: solid;
+		border-color: #666666;
+		background: #F7F7F7;
+		font-size: 14px;
+	}
 </style>
 </head>
   <body>
@@ -291,14 +349,12 @@
 	  <div class="weui_mask"></div>
 	  <div class="weui_dialog">
 		  <div class="get_member">
-			  <span>会员卡号：</span> <input class="member_phone" type="text" value="" placeholder="请输入会员卡号/手机号"/>
+			  <span>会员卡号：</span> <input class="member_phone" type="text" value="" placeholder="请输入会员卡号/手机号" autofocus/>
 		  </div>
 		  <div>
 			  <div class="member_button" id="member_enter">确定</div>
 			  <div class="member_button" id="member_cancel">取消</div>
 		  </div>
-
-
 	  </div>
 	</div>
 	<div class="content" style="display:none;">
@@ -312,7 +368,81 @@
 		  <div class="close">关闭</div>
 	  </div>
 	</div>
-    <div class="warp">
+	<div id="pay_info" style="display:none;">
+		<div class="weui_mask2"></div>
+		<div class="weui_dialog2">
+			<div style="height:600px;width:100%;">
+				<div style="width:800px;margin:20px auto;height:300px;">
+					<div class="cash" style="border:1px solid #dedede;float:left;height:200px;width:100px;background-color:green">
+						<div style="font-size:24px;">现金</div>
+					</div>
+					<div class="alipay" style="border:1px solid #dedede;float:left;height:200px;width:100px;background-color:yellow">
+						<div style="font-size:24px;">支付宝</div>
+					</div>
+					<div class="member_card" style="border:1px solid #dedede;float:left;height:200px;width:100px;background-color:red">
+						<div style="font-size:24px;">会员卡</div>
+					</div>
+					<div style="clear:both;"></div>
+					<div class="pay_amount"></div>
+					<div class="cash_pay" style="display:none;">
+						现金：<input class="cash_value" type="text" value=""/>
+					</div>
+					<div class="alipay_pay" style="display:none;">
+						支付宝：<input class="alipay_value" type="text" value="" data-id="1"/>
+					</div>
+					<div class="member_pay" style="display:none;">
+						卡号：<input class="member_number" type="text" value="" placeholder="会员还未登记！"/>
+						金额：<input class="member_value" type="text" value=""/>
+						支付码：<input class="member_pay_card" type="text" value=""/>
+					</div>
+					<div class="change" style="display:none;">
+						找零：<input class="change_value" type="text" value="" readonly=""/>
+					</div>
+					<div class="print_invoice" style="display:none;">打印发票</div>
+					<div class="leave" >离开</div>
+					<div style="clear:both;"></div>
+				</div>
+				<div class="pay_table">
+				</div>
+			</div>
+		</div>
+	</div>
+	<script id="pay_table_infos" type="text/template">
+		<table class="pay_way_infos">
+			<tr>
+				<th>序号</th><th>支付方式</th><th>支付金额</th><th>订单号</th><th>流水号</th>
+			</tr>
+			<% _.forEach(pay_infos, function(pay_info,index) { %>
+				<tr>
+					<td><%- index+1 %></td>
+					<td><%- pay_info.pay_way %></td>
+					<td><%- pay_info.pay_amount %></td>
+					<td><%- pay_info.order_id %></td>
+					<td><%- pay_info.fin %></td>
+				</tr>
+			<% }); %>
+			<tr>
+				<th>总共金额</th><th>已付金额</th><th>剩余金额</th><th></th><th></th>
+			</tr>
+			<tr>
+				<td><%- index+1 %></td>
+				<td><%- pay_info.pay_way %></td>
+				<td><%- pay_info.pay_amount %></td>
+				<td><%- pay_info.order_id %></td>
+				<td><%- pay_info.fin %></td>
+			</tr>
+		</table>
+	</script>
+	<div class="do_clear" style="display:none;">
+		<div class="weui_mask"></div>
+		<div class="weui_dialog">
+			<div style="height:100px;">
+				<div class="yes" style="border:1px solid #000;width:47%;margin:1%;float:left;">是</div>
+				<div class="no" style="border:1px solid #000;width:48%;margin:1%;float:left;">否</div>
+			</div>
+		</div>
+	</div>
+	<div class="warp">
       <div class="top">
         <div class="top-left"><a href="#">返回</a></div>
         <div class="top-center"><span><u>{{store_info[0].org_store_name}}</u></span></div>
@@ -390,19 +520,47 @@
 
           </ul>
         </div>
-        <div class="footer-right">
-          <p><u id="amount">￥0.00</u></p>
+        <div class="footer-right" id="pay">
+          <p><u id="amount">￥0</u></p>
           <p>结算</p>
         </div>
       </div>
     </div>
+	<div id="guadan" style="display:none;">
+		<div class="weui_mask2"></div>
+		<div class="weui_dialog2">
+			<div id="guadan_info">
+			</div>
+		</div>
+	</div>
 	<audio class="success"><source src="js/notify.ogg" type="audio/ogg"><source src="js/notify.mp3" type="audio/mpeg"><source src="js/notify.wav" type="audio/wav"></audio>
 	<audio class="fail"><source src="js/7499.wav" type="audio/wav"></audio>
+	<script id="qudan" type="text/template">
+		<div>挂单信息</div>
+		<% _.forEach(temp_products, function(order,index) { %>
+		<div class="qudan_line" data-id="<%- index %>">
+			<%- index+1 %>
+			<div>时间：<%- order.products.guadan_time %></div>
+			<% _.forEach(order.products, function(product) { %>
+				<div>商品名称：<%- product.product_name %>
+					价格：<%- product.product_price %>
+					数量：<%- product.product_number %>
+				</div>
+			<% }); %>
+		</div>
+		<% }); %>
+	</script>
 	<script id="products" type="text/template">
 		<% _.forEach(products, function(product,index) { %>
 			<li class="product-infor product_line" data-id="<%- index+1 %>" id="<%- product.barcode %>">
               <div class="product-img">	<% if (product.delay) { %><img src="/images/<%- product.picture %>" alt="" class="<%- product.barcode %>"><% }else{ %><img src="images/delay.gif" alt="" class="<%- product.barcode %>" data-src="/images/<%- product.picture %>" style="width:62px;height:62px;padding-top:50px;"> <% } %></div>
-              <p><%- product.product_name %></p>
+              <p><%- product.product_name %>
+				  <% _.forEach(product.sale_properties, function(sale_property) { %>
+					  <% if (product.stock_options[sale_property.field_name]) { %>
+					  	<%- sale_property.name %>:<%- product.stock_options[sale_property.field_name] %>
+					  <% } %>
+			      <% }); %>
+			  </p>
               <div class="price">
                 <span>￥<%- product.product_price %></span><span>X<%- product.product_number %></span>
               </div>
@@ -412,49 +570,114 @@
 	</script>
 	<script>
 		$(function() {
-			var shopping_infos = {"total_price":0,
-				"total_discount":0,
-				"marketing_price":0
+			var store_address = "{{store_info[0].address}}";
+			var person_id = "{{person_info.person_id}}";
+			var order = {
+				"shopping_infos" : {
+					"total_price":0,
+					"total_discount":0,
+					"marketing_price":0
+				},
+				"member" : null,
+				"products" : [],
+				"pay_way" : [],
+				"order_id" : null,
+				"fin" : null,
+				"pay_infos" : []
 			};
-			var products = [];
 			//挂单用的临时变量
-			var temp_shopping_infos ={};
 			var temp_products = [];
-			var member;
+			var pay_way_status = 0; //现金 0，支付宝 1，会员卡 2
+			var pay_way_change = function(pay_way_status){
+				$(".pay_amount").html("应付："+order.shopping_infos.total_price);
+				if (pay_way_status == 0) {
+					$(".cash_pay").removeAttr("style");
+					order.shopping_infos.total_price = parseFloat(parseInt(order.shopping_infos.total_price*10)/10);
+					$(".pay_amount").html("应付："+order.shopping_infos.total_price);
+					$(".alipay_pay").attr("style","display:none;");
+					$(".member_pay").attr("style","display:none;");
+				}else if (pay_way_status == 1) {
+					$(".alipay_pay").removeAttr("style");
+					$(".member_pay").attr("style","display:none;");
+					$(".cash_pay").attr("style","display:none;");
+				}else {
+					$(".member_pay").removeAttr("style");
+					$(".alipay_pay").attr("style","display:none;");
+					$(".cash_pay").attr("style","display:none;");
+				}
+			};
+			pay_way_change(pay_way_status);
 			//初始产品信息
 			var init_product_infos = function(){
-				shopping_infos = {
-					"total_price":0,
-					"total_discount":0
+				order = {
+					"shopping_infos" : {
+						"total_price":0,
+						"total_discount":0,
+						"marketing_price":0
+					},
+					"member" : null,
+					"products" : [],
+					"pay_way" : [],
+					"order_id" : null,
+					"fin" : null
 				};
-				products = [];
 				product_infos();
 				$("#barcode").val("");
 			};
+			//添加现金支付记录
+			var add_pay_info = function(pay_way,pay_amount,data){
+				var pay_infos = {};
+				pay_infos.pay_amount = pay_amount;
+				pay_infos.pay_way = pay_way;
+				pay_infos.fin = data.row.fin_occurrence_log_id;
+				order.pay_infos.push(pay_infos);
+				payment_info_table();
+			};
 			//挂单
 			$("#put_order").click(function(){
-				if (products.length >0) {
-					temp_shopping_infos = shopping_infos;
-					temp_products = products;
+				if (order.products.length >0 && temp_products.length < 3) {
+					order.guadan_time = new Date();
+					temp_products.push(order);
 					init_product_infos();
-				}else {
+					member_update();
+				}else if (order.products.length >0 && temp_products.length >= 3) {
+					alert("挂单已满");
+				}
+				else {
 					alert("无单可挂");
 				}
 			});
 			//取单
 			$("#get_order").click(function(){
 				if (temp_products.length >0) {
-					shopping_infos = temp_shopping_infos;
-					products = temp_products
-					temp_shopping_infos ={};
-					temp_products = [];
-					product_infos();
-					$("#barcode").val("");
+					$("#guadan").removeAttr("style");
+					guadan_info();
 				}else {
 					alert("无单可取");
 				}
-
 			});
+			//挂单信息
+			var guadan_info = function(){
+				var t = _.template($("#qudan").html());
+				$("#guadan_info").html(t({temp_products:temp_products}));
+				$(".qudan_line").hover(
+					function () {
+						$(this).addClass("hover");
+					},
+					function () {
+						$(this).removeClass("hover");
+					}
+				);
+				$(".qudan_line").click(function(){
+					var index = $(this).data("id");
+					order = temp_products[index];
+					product_infos();
+					member_update();
+					temp_products.splice(index,1);
+					$("#barcode").val("");
+					$("#guadan").attr("style","display:none;");
+				});
+			};
 			//商品高亮
 			var highlight = function(id){
 				$("#"+id).removeClass("curr");
@@ -482,20 +705,22 @@
 							product.product_brand = data.row.product_brand;
 							product.product_discount = 1;
 							product.picture = data.picture_info.location;
+							product.sale_properties = data.sale_properties;
+							product.stock_options = data.stock_options;
 							if (!product.picture) {
 								product.picture = "images/delay.gif";
 							}
 							product.barcode = barcode;
 							var add = true;
-							for (var i = 0; i < products.length; i++) {
-								if (products[i].barcode == product.barcode) {
-									products[i].product_number = products[i].product_number +1;
+							for (var i = 0; i < order.products.length; i++) {
+								if (order.products[i].barcode == product.barcode) {
+									order.products[i].product_number = order.products[i].product_number +1;
 									add = false;
 									break;
 								}
 							}
 							if (add) {
-								products.push(product);
+								order.products.push(product);
 							}
 							get_total_price();
 							product_infos();
@@ -509,8 +734,8 @@
 			});
 			//获取图片
 			var get_picture = function(){
-				for (var i = 0; i < products.length; i++) {
-					var product = products[i];
+				for (var i = 0; i < order.products.length; i++) {
+					var product = order.products[i];
 					if (!product.delay) {
 						product.delay = 1;
 						var oimg = new Image();
@@ -538,26 +763,26 @@
 			}
 			//计算总价
 			var get_total_price = function(){
-				shopping_infos.total_price = 0;
-				for (var i = 0; i < products.length; i++) {
-					if (member) {
-						for (var j = 0; j < member.discounts.length; j++) {
-							if (member.discounts[j].org_brand_id == products[i].product_brand) {
-								products[i].product_discount = member.discounts[j].discount;
+				order.shopping_infos.total_price = 0;
+				for (var i = 0; i < order.products.length; i++) {
+					if (order.member) {
+						for (var j = 0; j < order.member.discounts.length; j++) {
+							if (order.member.discounts[j].org_brand_id == order.products[i].product_brand) {
+								order.products[i].product_discount = order.member.discounts[j].discount;
 							}
 						}
 					}
-					shopping_infos.marketing_price = shopping_infos.total_price + parseFloat(products[i].product_price) * products[i].product_number;
-					shopping_infos.total_price = shopping_infos.total_price + parseFloat(products[i].product_price) * products[i].product_number * parseFloat(products[i].product_discount);
-					shopping_infos.total_price6 = shopping_infos.total_price.toFixed(6);
-					shopping_infos.total_price = parseFloat(parseInt(shopping_infos.total_price6*100)/100);
+					order.shopping_infos.marketing_price = order.shopping_infos.total_price + parseFloat(order.products[i].product_price) * order.products[i].product_number;
+					order.shopping_infos.total_price = order.shopping_infos.total_price + parseFloat(order.products[i].product_price) * order.products[i].product_number * parseFloat(order.products[i].product_discount);
+					order.shopping_infos.total_price6 = order.shopping_infos.total_price.toFixed(6);
+					order.shopping_infos.total_price = parseFloat(parseInt(order.shopping_infos.total_price6*100)/100);
 				}
 			};
 			//修改单条商品
 			var show_one_line = function(index){
-				var product_name = products[index].product_name;
-				var product_price = products[index].product_price;
-				var product_number = products[index].product_number;
+				var product_name = order.products[index].product_name;
+				var product_price = order.products[index].product_price;
+				var product_number = order.products[index].product_number;
 
 				$(".content").removeAttr("style");
 
@@ -573,8 +798,8 @@
 				var update_price = $("#update_price").val();
 				var update_number =  $("#update_number").val();
 
-				products[index].product_price = update_price;
-				products[index].product_number = parseInt(update_number);
+				order.products[index].product_price = update_price;
+				order.products[index].product_number = parseInt(update_number);
 
 				$(".content").attr("style","display:none;");
 				get_total_price();
@@ -583,8 +808,8 @@
 			//商品模板信息
 			var product_infos = function(){
 				var t = _.template($("#products").html());
-				$("#product_infos").html(t({shopping_infos:shopping_infos,products:products}));
-				$("#amount").html("￥"+shopping_infos.total_price);
+				$("#product_infos").html(t({shopping_infos:order.shopping_infos,products:order.products}));
+				$("#amount").html("￥"+order.shopping_infos.total_price);
 				$(".product_line").click(function(){
 					var index = $(this).data("id")-1;
 					show_one_line(index);
@@ -600,20 +825,32 @@
 			});
 			//结算
 			$("#pay").click(function(){
-				$("#pay_info").removeAttr("style");
-				$(".pay_amount").html("应付："+shopping_infos.total_price);
+				if (order.products.length>0) {
+					$("#pay_info").removeAttr("style");
+					$(".pay_amount").html("应付："+order.shopping_infos.total_price);
+				}else {
+					alert("还没有购买商品！")
+				}
 			});
-			//作废
+			//离开结算
+			$(".leave").click(function(){
+				$("#pay_info").attr("style","display:none;");
+			});
+			//作废 看商品数量多少，超过10个弹出判断
 			$("#clear").click(function(){
-				if (products.length>10) {
+				if (order.products.length>10) {
 					$(".do_clear").removeAttr("style");
 				}else {
 					init_product_infos();
+					product_infos();
+					member_update();
 				}
 			});
 			//作废是
 			$(".yes").click(function(){
 				init_product_infos();
+				product_infos();
+				member_update();
 				$(".do_clear").attr("style","display:none;");
 			});
 			//作废否
@@ -622,76 +859,205 @@
 			});
 			//点击现金
 			$(".cash").click(function(){
-				$(".cash_pay").removeAttr("style");
-				shopping_infos.total_price = parseFloat(parseInt(shopping_infos.total_price*10)/10);
-				$(".pay_amount").html("应付："+shopping_infos.total_price);
+				pay_way_status =0;
+				pay_way_change(pay_way_status);
 			});
+			//付款信息表显示
+			var payment_info_table = function(){
+				alert("123");
+				var t = _.template($("#pay_table_infos").html());
+				$(".pay_table").html(t({pay_infos:order.pay_infos}));
+			};
 			//输入现金
 			$(".cash_value").keypress(function(e){
-				var cash_value = $(".cash_value").val();
+				var pay_amount = $(".cash_value").val();
 				var key = e.which;
-				if (cash_value && key == 13) {
-					$(".change").removeAttr("style");
-					var change = 0;
-					console.log('parseFloat(cash_value):'+parseFloat(cash_value));
-					console.log("shopping_infos.total_price:"+shopping_infos.total_price);
-					change = parseFloat(cash_value)-parseFloat(shopping_infos.total_price);
-					$(".change_value").val(change);
-					if (change >= 0) {
-						$(".print_invoice").removeAttr("style");
-						$.get("/save_order_detail",{"shopping_infos":JSON.stringify(shopping_infos),"products":JSON.stringify(products),"member":JSON.stringify(member)},function(data){
+				if (!pay_amount || key != 13) {
+					return;
+				}
+				pay_amount = parseFloat(pay_amount);
+				$(".change").removeAttr("style");
+				var change = 0;
+				console.log('parseFloat(cash_value):'+pay_amount);
+				console.log("shopping_infos.total_price:"+order.shopping_infos.total_price);
+				change = pay_amount-parseFloat(order.shopping_infos.total_price);
+				$(".change_value").val(change);
+				order.pay_way.push("0");
+				$(".print_invoice").removeAttr("style");
+				//如果金额大于等于订单总计一次性保存订单，并且支付
+				if (change>100) {
+					alert("支付额过大");
+					return;
+				}
+				if (change >= 0) {
+					if (!order.order_id) {
+						$.get("/save_order_detail",{"order":JSON.stringify(order)},function(data){
 							if (data.success) {
-								alert(data.info.order_id);
-								init_product_infos();
+								order.order_id = data.row.order_id;
+								$.get("/deal_cash_pay",{"order":JSON.stringify(order),"store_address":store_address,"person_id":person_id,"pay_amount":pay_amount},function(data){
+									if (data.success) {
+										alert(JSON.stringify(data));
+										add_pay_info("现金",pay_amount,data);
+									}else {
+									}
+								});
 							}else {
-
+							}
+						});
+					}else {
+						$.get("/deal_cash_pay",{"order":JSON.stringify(order),"store_address":store_address,"person_id":person_id,"pay_amount":pay_amount},function(data){
+							if (data.success) {
+								add_pay_info("现金",pay_amount,data);
+							}else {
+							}
+						});
+					}
+				}else {
+					//非一次性支付
+					if (!order.order_id) {
+						$.get("/save_order_detail",{"order":JSON.stringify(order)},function(data){
+							if (data.success) {
+								order.order_id = data.row.order_id;
+								$.get("/deal_cash_pay",{"order":JSON.stringify(order),"store_address":store_address,"person_id":person_id,"pay_amount":pay_amount},function(data){
+									if (data.success) {
+										add_pay_info("现金",pay_amount,data);
+									}else {
+									}
+								});
+							}else {
+							}
+						});
+					}else {
+						$.get("/deal_cash_pay",{"order":JSON.stringify(order),"store_address":store_address,"person_id":person_id,"pay_amount":pay_amount},function(data){
+							if (data.success) {
+								add_pay_info("现金",pay_amount,data);
+							}else {
 							}
 						});
 					}
 				}
 			});
+			//输入会员卡号码
+			$(".member_pay_card").keypress(function(e){
+				var pay_amount = $(".member_value").val();
+				var member_pay_card = $(".member_pay_card").val();
+				var key = e.which;
+				if ( !member_pay_card || key != 13) {
+					return;
+				}
+				pay_amount = parseFloat(pay_amount);
+				order.pay_way.push("3");
+				var change = 0;
+				change = pay_amount-parseFloat(order.shopping_infos.total_price);
+				//一次支付
+				if (change >0) {
+					alert("超过支付金额！");
+					return;
+				}
+				if (change <= 0) {
+					//一次支付，并生成订单
+					if (!order.order_id) {
+						$.get("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
+							if (data.success) {
+								alert(JSON.stringify(data));
+								order.order_id = data.row.order_id;
+								$.get("/deal_card_pay",{"order":JSON.stringify(order),"paycode":member_pay_card,"store_address":store_address,"person_id":person_id,"pay_amount":pay_amount},function(data){
+									if (data.success) {
+										alert(JSON.stringify(data));
+										add_pay_info("会员卡",pay_amount,data);
+									}else {
+										alert(data.info);
+									}
+								});
+							}
+						});
+					}else {
+						$.get("/deal_card_pay",{"order":JSON.stringify(order),"paycode":member_pay_card,"store_address":store_address,"person_id":person_id,"pay_amount":pay_amount},function(data){
+							if (data.success) {
+								add_pay_info("会员卡",pay_amount,data);
+							}else {
+								alert(data.info);
+							}
+						});
+					}
+				}else {
+					//多种支付方式
+					if (!order.order_id) {
+
+					}else {
+
+					}
+				}
+			});
 			//支付宝点击
 			$(".alipay").click(function(){
-				$(".alipay_pay").removeAttr("style");
+				pay_way_status =1;
+				pay_way_change(pay_way_status);
 			});
-			//会员点击
+			//会员支付点击
+			$(".member_card").click(function(){
+				pay_way_status =2;
+				pay_way_change(pay_way_status);
+
+				if (order.member) {
+					$(".member_number").val(order.member.mobile);
+					$(".member_number").attr("readonly","true");
+				}else {
+					$(".member_number").attr("readonly","true");
+					$(".member_value").attr("readonly","true");
+					$(".member_pay_card").attr("readonly","true");
+				}
+
+			});
+			//输入会员卡点击
 			$(".member").click(function(){
 				$(".member_info").removeAttr("style");
 			});
-			//会员取消
+			//输入会员取消
 			$("#member_cancel").click(function(){
 				$(".member_phone").val("");
 				$(".member_info").attr("style","display:none;");
 			});
+			//会员刷新
+			var member_update = function(){
+				if (order.member) {
+					$(".member_name").html("姓名："+order.member.vip_name);
+					$(".member_level").val(order.member.vip_type_name);
+					if (!order.member.amount) {
+						$(".member_amount").html("余额："+"0");
+					}else {
+						$(".member_amount").html("余额："+order.member.amount);
+					}
+					if (!order.member.integral) {
+						$(".member_integral").html("积分："+"0");
+					}else {
+						$(".member_integral").html("积分："+order.member.integral);
+					}
+				}else {
+					$(".member_name").html("");
+					$(".member_amount").html("");
+					$(".member_integral").html("");
+				}
+
+			};
 			//会员号码点击
 			var member_click = function(member_phone){
 				$(".member_phone").val("");
 				$.get("/get_member_info",{"q":member_phone},function(data){
 					if (data.success) {
 						bobang_success();
-						member = data.row;
-						$(".member_name").html("姓名："+member.vip_name);
-						$(".member_level").val(member.vip_type_name);
-						if (!member.amount) {
-							$(".member_amount").html("余额："+"0");
-						}else {
-							$(".member_amount").html("余额："+member.amount);
-						}
-						if (!member.integral) {
-							$(".member_integral").html("积分："+"0");
-						}else {
-							$(".member_integral").html("积分："+member.integral);
-						}
-						for (var i = 0; i < products.length; i++) {
-							if (member) {
-								for (var j = 0; j < member.discounts.length; j++) {
-									if (member.discounts[j].org_brand_id == products[i].product_brand) {
-										products[i].product_discount = member.discounts[j].discount;
+						order.member = data.row;
+						member_update();
+						$(".member_info").attr("style","display:none;");
+						for (var i = 0; i < order.products.length; i++) {
+							if (order.member) {
+								for (var j = 0; j < order.member.discounts.length; j++) {
+									if (order.member.discounts[j].org_brand_id == order.products[i].product_brand) {
+										order.products[i].product_discount = order.member.discounts[j].discount;
 									}
 								}
 							}
 						}
-						$(".member_info").attr("style","display:none;");
 						get_total_price();
 						product_infos();
 					}else {
