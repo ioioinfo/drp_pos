@@ -342,6 +342,9 @@
 		background: #F7F7F7;
 		font-size: 14px;
 	}
+	.table_flow{
+		overflow: auto;
+	}
 </style>
 </head>
   <body>
@@ -410,26 +413,26 @@
 	<script id="pay_table_infos" type="text/template">
 		<table class="pay_way_infos">
 			<tr>
-				<th>序号</th><th>支付方式</th><th>支付金额</th><th>订单号</th><th>流水号</th>
+				<th>序号</th><th>支付方式</th><th>支付金额</th><th>流水号</th>
 			</tr>
-			<% _.forEach(pay_infos, function(pay_info,index) { %>
-				<tr>
-					<td><%- index+1 %></td>
-					<td><%- pay_info.pay_way %></td>
-					<td><%- pay_info.pay_amount %></td>
-					<td><%- pay_info.order_id %></td>
-					<td><%- pay_info.fin %></td>
-				</tr>
-			<% }); %>
+			<div class="table_flow">
+				<% _.forEach(pay_infos, function(pay_info,index) { %>
+					<tr>
+						<td><%- index+1 %></td>
+						<td><%- pay_info.pay_way %></td>
+						<td><%- pay_info.pay_amount %></td>
+						<td><%- pay_info.fin %></td>
+					</tr>
+				<% }); %>
+			</div>
 			<tr>
-				<th>总共金额</th><th>已付金额</th><th>剩余金额</th><th></th><th></th>
+				<th>总付金额</th><th>已付金额</th><th>待付金额</th><th></th>
 			</tr>
 			<tr>
-				<td><%- index+1 %></td>
-				<td><%- pay_info.pay_way %></td>
-				<td><%- pay_info.pay_amount %></td>
-				<td><%- pay_info.order_id %></td>
-				<td><%- pay_info.fin %></td>
+				<td><%- shopping_infos.total_price %></td>
+				<td><%- shopping_infos.ready_pay %></td>
+				<td><%- shopping_infos.pre_pay %></td>
+				<td></td>
 			</tr>
 		</table>
 	</script>
@@ -462,10 +465,8 @@
 
         <!-- 商品显示 -->
         <div class="middle-product">
-
           <ul class="product-conver" id="product_infos">
           </ul>
-
         </div>
       </div>
       <div class="footer">
@@ -574,9 +575,11 @@
 			var person_id = "{{person_info.person_id}}";
 			var order = {
 				"shopping_infos" : {
-					"total_price":0,
-					"total_discount":0,
-					"marketing_price":0
+					"total_price":parseFloat(0),
+					"total_discount":parseFloat(0),
+					"marketing_price":parseFloat(0),
+					"ready_pay":parseFloat(0),
+					"pre_pay":parseFloat(0)
 				},
 				"member" : null,
 				"products" : [],
@@ -631,6 +634,20 @@
 				pay_infos.pay_way = pay_way;
 				pay_infos.fin = data.row.fin_occurrence_log_id;
 				order.pay_infos.push(pay_infos);
+				var ready_pay = parseFloat(0);
+				var pre_pay = parseFloat(0);
+				for (var i = 0; i < order.pay_infos.length; i++) {
+					ready_pay = ready_pay + order.pay_infos[i].pay_amount;
+
+				}
+				ready_pay = parseFloat(parseInt(ready_pay*100)/100);
+				console.log(ready_pay);
+				pre_pay = order.shopping_infos.total_price - ready_pay;
+				pre_pay = pre_pay.toFixed(2);
+				console.log(pre_pay);
+				order.shopping_infos.ready_pay = ready_pay;
+				order.shopping_infos.pre_pay = pre_pay;
+
 				payment_info_table();
 			};
 			//挂单
@@ -866,7 +883,7 @@
 			var payment_info_table = function(){
 				alert("123");
 				var t = _.template($("#pay_table_infos").html());
-				$(".pay_table").html(t({pay_infos:order.pay_infos}));
+				$(".pay_table").html(t({pay_infos:order.pay_infos,shopping_infos:order.shopping_infos}));
 			};
 			//输入现金
 			$(".cash_value").keypress(function(e){
@@ -877,10 +894,8 @@
 				}
 				pay_amount = parseFloat(pay_amount);
 				$(".change").removeAttr("style");
-				var change = 0;
-				console.log('parseFloat(cash_value):'+pay_amount);
-				console.log("shopping_infos.total_price:"+order.shopping_infos.total_price);
-				change = pay_amount-parseFloat(order.shopping_infos.total_price);
+				var change = parseFloat(0);
+				change = pay_amount-order.shopping_infos.total_price;
 				$(".change_value").val(change);
 				order.pay_way.push("0");
 				$(".print_invoice").removeAttr("style");
@@ -947,8 +962,8 @@
 				}
 				pay_amount = parseFloat(pay_amount);
 				order.pay_way.push("3");
-				var change = 0;
-				change = pay_amount-parseFloat(order.shopping_infos.total_price);
+				var change = parseFloat(0);
+				change = pay_amount-order.shopping_infos.total_price;
 				//一次支付
 				if (change >0) {
 					alert("超过支付金额！");
