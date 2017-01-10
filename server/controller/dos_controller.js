@@ -112,9 +112,9 @@ var find_product_byId = function(product_id, cb){
 	do_get_method(url,cb);
 };
 // 查询库存
-var find_stock = function(product_id,industry_id,store_id,cb){
+var find_stock = function(product_id,industry_id,stock_options,cb){
 	var url = "http://139.196.148.40:12001/get_product_stock?product_id=";
-	url = url + product_id + "&industry_id=" + industry_id + "&store_id=" + store_id;
+	url = url + product_id + "&industry_id=" + industry_id + "&stock_options=" + stock_options;
 	do_get_method(url,cb);
 };
 //保存订单
@@ -174,7 +174,28 @@ var order_params = function(request){
 	data.origin = "pos_origin";
 	return data;
 };
-
+//白条支付接口
+var credit_pay_method = function(data,cb){
+	var url = "http://139.196.148.40:18008/order_creditpay";
+	do_post_method(data,url,cb);
+};
+//更新订单状态
+var update_order_status = function(data,cb){
+	var url = "http://127.0.0.1:8010/update_order_status";
+	do_post_method(data,url,cb);
+};
+//订单支付信息
+var get_order_pay_infos = function(order_id,cb){
+	var url = "http://139.196.148.40:18008/get_order_pay_infos?order_id=";
+	url = url + order_id;
+	console.log("123");
+	do_get_method(url,cb);
+}
+//
+var order_finish = function(data,cb){
+	var url = "http://139.196.148.40:18003/vip/order_finish";
+	do_post_method(data,url,cb);
+}
 exports.register = function(server, options, next){
 	server.route([
 		//登入页面
@@ -279,7 +300,6 @@ exports.register = function(server, options, next){
 							return reply({"succss":false,"messsage":"no store_info"});
 						}
 						cookie.store_id = store_info[0].org_store_id;
-
 						return reply.view("pos",{"person_info":person_info,"store_info":store_info,"company_info":company_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
 				});
 
@@ -401,7 +421,7 @@ exports.register = function(server, options, next){
 											}
 										});
 
-										find_stock(product_id,industry_id,stock_options,function(err,row){
+										find_stock(product_id,industry_id,JSON.stringify(stock_options),function(err,row){
 											if (!err) {
 												console.log(row);
 												ep.emit("stocks", row.stocks);
@@ -451,7 +471,7 @@ exports.register = function(server, options, next){
 							var industry_id = product.industry_id;
 							stock_options.warehouse_id = store_id;
 
-							find_stock(product_id,industry_id,stock_options,function(err,row){
+							find_stock(product_id,industry_id,JSON.stringify(stock_options),function(err,row){
 								if (!err) {
 									console.log(row);
 									return reply({"success":true,"row":product,"message":"ok","stocks":row.stocks});
@@ -469,7 +489,6 @@ exports.register = function(server, options, next){
 				});
 			}
 		},
-
 		//购物车订单及详细
 		{
 			method: 'GET',
@@ -499,7 +518,7 @@ exports.register = function(server, options, next){
 					if (!err) {
 						return reply({"success":true,"row":row.row,"order_id":data.order_id});
 					}else {
-						
+
 					}
 				});
 			}
@@ -517,7 +536,7 @@ exports.register = function(server, options, next){
 						if (row.success) {
 							return reply({"success":true,"row":row.row,"order_id":data.order_id});
 						}else {
-							return reply({"success":false,"row":"余额不足","order_id":data.order_id});
+							return reply({"success":false,"message":"余额不足","order_id":data.order_id});
 						}
 					}else {
 						return reply({"success":false});
@@ -525,8 +544,121 @@ exports.register = function(server, options, next){
 				});
 			}
 		},
+		//白条支付处理订单
+		{
+			method: 'GET',
+			path: '/deal_credit_pay',
+			handler: function(request, reply){
+				var data = pay_params(request);
+				credit_pay_method(data,function(err,row){
+					if (!err) {
+						if (row.success) {
+							return reply({"success":true,"row":row.row,"order_id":data.order_id});
+						}else {
+						}
+					}else {
+					}
+				});
+			}
+		},
+		//更新订单状态
+		{
+			method: 'POST',
+			path: '/update_order_status',
+			handler: function(request, reply){
+				var data = {};
+				var order = request.payload.order;
+				order = JSON.parse(order);
+				data.order_id = order.order_id;
+				data.order_status = "4";
+				var pay_infos = order.pay_infos;
+				console.log(pay_infos);
+				update_order_status(data,function(err,row){
+					if (!err) {
+						if (row.success) {
+							get_order_pay_infos(data.order_id,function(err,row){
+								if (!err) {
+									console.log(row);
+									if (row.success) {
+										var payinfos = row.rows;
+										if (pay_infos.length != payinfos.length){
+											return reply({"success":false,"message":"付款次数不一致"});
+										}
+										for (var i = 0; i < pay_infos.length; i++) {
+											for (var j = 0; j < payinfos.length; j++) {
+												if (pay_infos[i].fin == payinfos[j].fin_occurrence_log_id) {
+													if (pay_infos[i].pay_amount == payinfos[j].pay_amount) {
+														if (pay_infos[i].pay_way == payinfos[j].pay_way) {
+														}else {
+															return reply({"success":false,"message":"付款方式不一致"});
+														}
+													}else {
+														return reply({"success":false,"message":"付款金额不一致"});
+													}
+												}
+											}
+										}
+										if (order.member) {
+											var info = {
+												order_id : order.order_id,
+												vip_id : order.member.vip_id,
+												order_desc : order.store + "购物",
+												amount : order.shopping_infos.total_price
+											};
+											order_finish(info,function(err,row){
+												// if (!err) {
+												// 	if (row.success) {
+												// 		return reply({"success":true});
+												// 	}
+												// }else {
+												// 	return reply({"success":false});
+												// }
+											});
+											return reply({"success":true});
+										}else {
+											return reply({"success":true});
+										}
+									}else {
+										return reply({"success":false});
+									}
+								}else {
+									return reply({"success":false});
+								}
+							});
+						}else {
+							return reply({"success":false,"message":"row.message"});
+						}
+					}else {
+						return reply({"success":false,"message":"fail"});
+					}
 
-
+				});
+			}
+		},
+		//保存付款方式
+		{
+			method: 'GET',
+			path: '/save_pay_way',
+			handler: function(request, reply){
+				var data = {};
+				var order = request.query.order;
+				order = JSON.parse(order);
+				data.order_id = order.order_id;
+				data.serial_number = order.pay_infos.fin;
+				data.person_id = order.member.id;
+				data.pay_way = order.pay_infos.pay_way;
+				data.pay_amount =  order.pay_infos.pay_amount;
+				save_pay_way(data,function(err,row){
+					if (!err) {
+						if (row.success) {
+							return reply({"success":true});
+						}else {
+						}
+					}else {
+					}
+				});
+			}
+		},
 	]);
 
     next();
