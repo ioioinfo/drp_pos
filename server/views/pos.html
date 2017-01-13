@@ -6,6 +6,10 @@
 <script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
 <script src="js/lodash.min.js" type="text/javascript"></script>
 <style media="screen">
+	html, body, * {
+		color: #666;
+		font:12px/1.5 Microsoft YaHei,tahoma,arial,Hiragino Sans GB,\\5b8b\4f53,sans-serif;
+	}
       *{
       margin: 0;
       padding: 0
@@ -17,6 +21,9 @@
         text-decoration: none;
         color: #fff;
       }
+	  img{
+		  cursor: pointer;
+	  }
       .warp{
         width: 1024px;
         height: 768px;
@@ -115,48 +122,49 @@
 
       }
       .product-infor{
-        width: 210px;
-        height: 210px;
+		width: 196px;
+  		height: 244px;
         margin-top:10px;
-        margin: 10px 6px 0;
+        margin: 10px 15px 0;
         display: inline-block;
-
+		border: 1px solid #e5e5e8;
       }
 
       .product-infor p{
         width: 170px;
         margin: 0 auto;
-        font-size: 14px;
+        font-size: 12px;
         padding-bottom: 5px;
         color: #6d40ae;
+		margin-top: 3px;
       }
       .product-img{
-        width: 176px;
-        height: 170px;
         margin: 0 auto;
 		text-align: center;
       }
       .product-img img{
-        width: 170px;
-        height: 170px;
+		  margin-top: 10px;
+          width: 180px;
+          height: 180px;
       }
       .product-infor span:first-child{
-        font-size: 18px;
+        font-size: 16px;
         color: red;
-        margin-left: 21px;
+        margin-left: 9px;
       }
       .product-infor span:last-child{
-        font-size:18px;
+        font-size:16px;
         color: #FF0000;
         float: right;
         margin-right: 23px;
       }
       .product-conver{
         /*display: none;*/
-        width: 930px;
+        width: 100%;
         margin: 0 auto;
         overflow: auto;
         height: 470px;
+	    /*background: url(images/135178199510146468.jpg);*/
       }
      /*底                部*/
      .footer{
@@ -249,17 +257,18 @@
 		position: fixed;
 		z-index: 13;
 		width: 380px;
-    	height: 180px;
-		top: 50%;
-		left: 53%;
+    	height: 140px;
+		top: 47%;
+		left: 50%;
 		-webkit-transform: translate(-50%, -50%);
 		transform: translate(-50%, -50%);
-		background-color: #FAFAFC;
 		border-radius: 3px;
 		overflow: hidden;
+		background: url(images/bg01.png) no-repeat;
+		background-size:100% 100%;
 	}
 	.curr{
-		border:1px solid #000;
+		/*background: #dedede;*/
 	}
 	.get_member{
 		height: 75px;
@@ -284,19 +293,11 @@
 	    cursor: pointer;
 	    text-align: center;
 	}
-	.weui_mask2 {
-		position: fixed;
-		z-index: 10;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		left: 0;
-		background: rgba(0, 0, 0, 0.6);
-	}
 	.weui_dialog2 {
 		position: fixed;
 		z-index: 13;
-		width: 896px;
+		width: 540px;
+		height: 500px;
 		top: 50%;
 		left: 53%;
 		-webkit-transform: translate(-50%, -50%);
@@ -308,13 +309,14 @@
 	#guadan_info{
 		height:600px;
 		width:100%;
+
 	}
 	.hover{
 		border:1px solid red;
 	}
 	.pay_table{
-		height:200px;
-		width: 800px;
+		height:140px;
+		width: 510px;
 		margin: 20px auto;
 	}
 	table.pay_way_infos {
@@ -328,11 +330,11 @@
 	}
 	table.pay_way_infos th {
 		border-width: 1px;
-		padding: 8px;
+		padding: 3px;
 		border-style: solid;
 		border-color: #666666;
 		background-color: #dedede;
-		font-size: 18px;
+		font-size: 16px;
 	}
 	table.pay_way_infos td {
 		border-width: 1px;
@@ -345,12 +347,182 @@
 	.table_flow{
 		overflow: auto;
 	}
+	.product-infor.product_line.imgAnimation.curr{
+		 animation-name: imgAnimation;
+		 animation: imgAnimation 1s alternate;
+		 -webkit-animation: imgAnimation 1s alternate;
+		 /*-moz-animation: imgAnimation 1s alternate;*/
+		 border:1px solid red;
+	}
+	@-webkit-keyframes imgAnimation{
+		0%{ opacity: 0}
+		50%{ opacity: 0.5}
+		100%{ opacity: 1}
+	}
+	@-moz-keyframes imgAnimation{
+		0%{ opacity: 0}
+		50%{ opacity: 0.5}
+		100%{ opacity: 1}
+	}
+	.close{
+		float:right;
+		height:100%;
+		width:16px;
+		font-size:16px;
+		cursor: pointer;
+	}
+	#update_name{
+		font-size: 16px;
+		font-weight: 700;
+		margin-left: 60px;
+		line-height: 30px;
+	}
+	.update_data{
+		margin-left: 57px;
+		width: 111px;
+		border: 3px solid #996C33;
+		border-radius: 4px;
+		height: 20px;
+		margin-top: 10px;
+	}
+	.update_data1{
+		margin-left: 23px;
+		width: 111px;
+		border: 3px solid #996C33;
+		border-radius: 4px;
+		height: 20px;
+		margin-top: 10px;
+	}
+	.update_button{
+		float: right;
+		height: 30px;
+		font-size: 18px;
+		line-height: 30px;
+		width: 60px;
+		text-align: center;
+		background: #ffbd0f;
+		color: white;
+		font-weight: 500;
+		border-radius: 6px;
+		margin-right: 90px;
+		cursor: pointer;
+	}
+	.update_button1{
+		float: left;
+		height: 30px;
+		font-size: 18px;
+		line-height: 30px;
+		width: 60px;
+		text-align: center;
+		background: #00ff00;
+		color:white;
+		font-weight: 500;
+		border-radius: 6px;
+		margin-left: 85px;
+		cursor: pointer;
+	}
+	.weui_dialog3 {
+		position: fixed;
+		z-index: 13;
+		width: 896px;
+		top: 50%;
+		left: 53%;
+		-webkit-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
+		background-color: #FAFAFC;
+		border-radius: 3px;
+		overflow: hidden;
+		width: 370px;
+		height: 200px;
+	}
+	.pay_img{
+		float:left;
+		margin: 15px 24px;
+	}
+	.pay_img2{
+		float:left;
+		margin: 5px 24px;
+	}
+	.weui_dialog4 {
+		position: fixed;
+		z-index: 13;
+		width: 300px;
+		height: 400px;
+		top: 50%;
+		left: 50%;
+		-webkit-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
+		background-color: #FAFAFC;
+		border-radius: 3px;
+		overflow: hidden;
+		background: transparent;
+	}
+	.guadan_top{
+		background: url(images/guadan01.png) no-repeat;
+		background-size:100% 100%;
+		height: 70px;
+	}
+	.guadan_body{
+		background: url(images/guadan02.png) no-repeat;
+		background-size:100% 100%;
+		height: 350px;
+	}
+	.guadan01{
+		font-size:14px;
+		line-height:14px;
+		width: 40%;
+		display: inline-block;
+	}
+	.guadan02{
+		font-size:14px;
+		line-height:14px;
+		width: 17%;
+		display: inline-block;
+	}
+	.guadan03{
+		font-size:14px;
+		line-height:14px;
+		width: 40%;
+		display: inline-block;
+	}
+	.back_product_info{
+		position: fixed;
+		top: 29px;
+		right: 15px;
+	}
+	.weui_dialog5 {
+		position: fixed;
+		z-index: 13;
+		width: 255px;
+    	height: 500px;
+		top: 40%;
+		left: 50%;
+		-webkit-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
+		border-radius: 3px;
+		overflow: hidden;
+		background-color: white;
+	}
+	.logo{
+		font-size: 20px;
+		margin: 25px 10px 10px;
+	}
+	.normal{
+		font-size: 12px;
+		margin: 1px 12px;
+	}
+	.weui_dialog5 span{
+		display: inline-block;
+	}
+	.pp_info{
+		margin-top: 10px;
+	}
 </style>
 </head>
   <body>
 	<div class="member_info" style="display:none;">
 	  <div class="weui_mask"></div>
-	  <div class="weui_dialog">
+	  <div class="weui_dialog3">
 		  <div class="get_member">
 			  <span>会员卡号：</span> <input class="member_phone" type="text" value="" placeholder="请输入会员卡号/手机号"/>
 		  </div>
@@ -363,69 +535,75 @@
 	<div class="content" style="display:none;">
 	  <div class="weui_mask"></div>
 	  <div class="weui_dialog">
+		  <div style="width:100%;height:20px" >
+			  <div class="close">X</div>
+		  </div>
+		  <div style="width:100%;height:30px">
+			  <div id="update_name"></div>
+		  </div>
+		  <div style="width:100%;height:50px;">
+			   <input id="update_price" class="update_data" value=""/>
+			   <input id="update_number" class="update_data1" value=""/>
+		  </div>
+		  <div style="width:100%;height:40px">
+			  <div class="save update_button">保存</div>
+			  <div class="delete update_button1">删除</div>
+		  </div>
+		  <div></div>
 		  <input id="update_id" value="" style="display:none;"/>
-		  <div id="update_name"></div>
-		  <input id="update_price" value=""/>
-		  <input id="update_number" value=""/>
-		  <div class="save">保存</div>
-		  <div class="close">关闭</div>
 	  </div>
 	</div>
 	<div id="pay_info" style="display:none;">
-		<div class="weui_mask2"></div>
+		<div class="weui_mask"></div>
 		<div class="weui_dialog2">
-			<div style="height:600px;width:100%;">
-				<div style="width:800px;margin:20px auto;height:300px;">
-					<div class="cash" style="border:1px solid #dedede;float:left;height:200px;width:100px;background-color:green">
-						<div style="font-size:24px;">现金</div>
-					</div>
-					<div class="alipay" style="border:1px solid #dedede;float:left;height:200px;width:100px;background-color:yellow">
-						<div style="font-size:24px;">支付宝</div>
-					</div>
-					<div class="member_card" style="border:1px solid #dedede;float:left;height:200px;width:100px;background-color:red">
-						<div style="font-size:24px;">会员卡</div>
-					</div>
-					<div class="credit" style="border:1px solid #dedede;float:left;height:200px;width:100px;background-color:#3385ff">
-						<div style="font-size:24px;">白条</div>
-					</div>
+			<div style="height:500px;width:100%;">
+				<div style="width:500px;height:280px;margin:0 auto">
+					<img src="/images/pay01.png" class="pay_img cash"/>
+					<img src="/images/pay03.png" class="pay_img"/>
+					<img src="/images/pay02.png" class="pay_img alipay"/>
+					<img src="/images/pay04.png" class="pay_img2 member_card"/>
+					<img src="/images/pay05.png" class="pay_img2 credit"/>
+					<img src="/images/pay06.png" class="pay_img2"/>
 					<div style="clear:both;"></div>
-					<div class="pay_amount"></div>
-					<div class="cash_pay" style="display:none;">
-						现金：<input class="cash_value" type="text" value=""/>
+					<div style="margin-left:24px;">
+						<div class="pay_amount"></div>
+						<div class="cash_pay" style="display:none;">
+							现金：<input class="cash_value" type="text" value=""/>
+						</div>
+						<div class="alipay_pay" style="display:none;">
+							支付宝：<input class="alipay_value" type="text" value="" data-id="1"/>
+						</div>
+						<div class="member_pay" style="display:none;">
+							卡号：<input class="member_number" type="text" value="" placeholder="会员还未登记！" readonly style="width:90px;"/>
+							<span style="margin-left:20px;">金额：</span><input class="member_value" type="text" value="" style="width:90px;"/>
+							<span style="margin-left:20px;">支付码：</span><input class="member_pay_card" type="text" value="" style="width:90px;"/>
+						</div>
+						<div class="credit_pay" style="display:none;">
+							白条：<input class="credit_value" type="text" value=""/>
+						</div>
+						<div class="pay_more" style="display:none;">
+							<div>已超额支付，请找零！</div>
+						</div>
+						<div class="change" style="display:none;">
+							找零：<input class="change_value" type="text" value="" readonly=""/>
+						</div>
+						<div class="choose_pay" style="display:none;">
+							请选择其他支付方式
+						</div>
+						<div class="back" style="width: 50px;">返回</div>
 					</div>
-					<div class="alipay_pay" style="display:none;">
-						支付宝：<input class="alipay_value" type="text" value="" data-id="1"/>
-					</div>
-					<div class="member_pay" style="display:none;">
-						卡号：<input class="member_number" type="text" value="" placeholder="会员还未登记！" readonly/>
-						金额：<input class="member_value" type="text" value=""/>
-						支付码：<input class="member_pay_card" type="text" value=""/>
-					</div>
-					<div class="credit_pay" style="display:none;">
-						白条：<input class="credit_value" type="text" value=""/>
-					</div>
-					<div class="pay_more" style="display:none;">
-						<div>已超额支付，请找零！</div>
-					</div>
-					<div class="change" style="display:none;">
-						找零：<input class="change_value" type="text" value="" readonly=""/>
-					</div>
-					<div class="choose_pay" style="display:none;">
-						请选择其他支付方式
-					</div>
-					<div class="back" style="width: 50px;">返回</div>
-					<div style="clear:both;"></div>
 				</div>
 				<div class="pay_table">
 				</div>
-				<div class="leave" style="width: 50px;">确认</div>
+				<img src="/images/sure.png" class="leave" style="width: 50px;">
+				<input class="print" type="button" value="打印" style="display:none;"/>
 			</div>
 		</div>
 	</div>
 	<script id="pay_table_infos" type="text/template">
 		<table class="pay_way_infos">
 			<tr>
-				<th>序号</th><th>支付方式</th><th>支付金额</th><th>流水号</th>
+				<th>序号</th><th>方式</th><th>金额</th><th>流水号</th>
 			</tr>
 			<div class="table_flow">
 				<% _.forEach(pay_infos, function(pay_info,index) { %>
@@ -438,7 +616,7 @@
 				<% }); %>
 			</div>
 			<tr>
-				<th>总付金额</th><th>已付金额</th><th>待付金额</th><th></th>
+				<th>总付</th><th>已付</th><th>待付</th><th></th>
 			</tr>
 			<tr>
 				<td><%- shopping_infos.total_price %></td>
@@ -470,6 +648,7 @@
         <div class="ma-num">
           机器编号：001
         </div>
+
         <div class="middle-tiaoma">
           <div class="tiaoma-left"></div>
           <input type="text" name="" value="" class="tiaoma-right" style="padding-left: 5px;" id="barcode">
@@ -534,39 +713,72 @@
           </ul>
         </div>
         <div class="footer-right" id="pay">
-          <p><u id="amount">￥0</u></p>
-          <p>结帐</p>
+          <p><u id="amount" style="color:white;">￥0.00</u></p>
+          <p></p>
         </div>
       </div>
     </div>
 	<div id="guadan" style="display:none;">
-		<div class="weui_mask2"></div>
-		<div class="weui_dialog2">
+		<div class="weui_mask"></div>
+		<div class="weui_dialog4">
 			<div id="guadan_info">
 			</div>
 		</div>
 	</div>
-	<audio class="success"><source src="js/notify.ogg" type="audio/ogg"><source src="js/notify.mp3" type="audio/mpeg"><source src="js/notify.wav" type="audio/wav"></audio>
-	<audio class="fail"><source src="js/7499.wav" type="audio/wav"></audio>
+	<div id="receipt_infos" style="display:none;">
+		<div class="weui_mask"></div>
+		<div class="weui_dialog5">
+			<div class="logo">
+				佑佑&nbsp;&nbsp;YOYO
+			</div>
+			<div class="normal">{{store_info[0].org_store_name}}</div>
+			<div class="normal">电话：021-60489399</div>
+			<div class="normal">地址：{{store_info[0].address}}</div>
+			<div class="normal">
+				<span style="width:63%;">收营员：{{person_info.person.person_code}}</span>
+				<span style="width:35%;">序：12345678</span>
+			</div>
+			<div id="print_receipt_info">
+
+			</div>
+		</div>
+	</div>
+	<audio class="success"><source src="js/7499.wav" type="audio/wav"></audio>
+	<audio class="fail"><source src="js/3.wav" type="audio/wav"></audio>
 	<script id="qudan" type="text/template">
-		<div>挂单信息</div>
-		<% _.forEach(temp_products, function(order,index) { %>
-		<div class="qudan_line" data-id="<%- index %>">
-			<%- index+1 %>
-			<div>时间：<%- order.products.guadan_time %></div>
-			<% _.forEach(order.products, function(product) { %>
-				<div>商品名称：<%- product.product_name %>
-					价格：<%- product.product_price %>
-					数量：<%- product.product_number %>
-				</div>
+		<div class="guadan_top">
+			<div>
+				<input type="button" value="返回" class="back_product_info"/>
+			</div>
+			<div style="padding: 45px 0 5px 110px;font-size:20px;line-height:20px;">挂单信息</div>
+		</div>
+		<div class="guadan_body">
+			<% _.forEach(temp_products, function(order,index) { %>
+			<div style="padding: 5px;text-align: center;">
+				<!-- <p style="display: inline-block;"><%- index+1 %>.</p>&nbsp;&nbsp;&nbsp; -->
+				<p  style="display: inline-block;">时间：<%- order.guadan_time %></p>
+			</div>
+			<div style="padding: 5px;text-align: center;">
+				<P class="guadan01">商品名称</P>
+				<p class="guadan02">价格</P>
+				<P class="guadan03">数量</P>
+			</div>
+			<div class="qudan_line" data-id="<%- index %>">
+				<% _.forEach(order.products, function(product) { %>
+					<div style="padding: 5px;text-align: center;">
+						<span class="guadan01"><%- product.product_name %></span>
+						<span class="guadan02">￥<%- product.product_price %></span>
+						<span class="guadan03"><%- product.product_number %></span>
+					</div>
+				<% }); %>
+			</div>
 			<% }); %>
 		</div>
-		<% }); %>
 	</script>
 	<script id="products" type="text/template">
 		<% _.forEach(products, function(product,index) { %>
-			<li class="product-infor product_line" data-id="<%- index+1 %>" id="<%- product.barcode %>">
-              <div class="product-img">	<% if (product.delay) { %><img src="/images/<%- product.picture %>" alt="" class="<%- product.barcode %>"><% }else{ %><img src="images/delay.gif" alt="" class="<%- product.barcode %>" data-src="/images/<%- product.picture %>" style="width:62px;height:62px;padding-top:50px;"> <% } %></div>
+			<li class="product-infor product_line imgAnimation" data-id="<%- index+1 %>" id="<%- product.barcode %>">
+              <div class="product-img">	<% if (product.delay) { %><img src="/images/<%- product.picture %>" alt="" class="<%- product.barcode %>"><% }else{ %><img src="/images/delay.gif" alt="" class="<%- product.barcode %>" data-src="/images/<%- product.picture %>" style="width:62px;height:62px;padding-top:50px;"> <% } %></div>
               <p><%- product.product_name %>
 				  <% _.forEach(product.sale_properties, function(sale_property) { %>
 					  <% if (product.stock_options[sale_property.field_name]) { %>
@@ -574,26 +786,86 @@
 					  <% } %>
 			      <% }); %>
 			  </p>
-              <div class="price">
-                <span>￥<%- product.product_price %></span><span>X<%- product.product_number %></span>
+              <div class="price" style="margin-top:-5px;">
+				<% if (product.product_discount ==1) { %>
+					<span>￥<%- product.product_price %></span>
+				<% }else { %>
+					<span>￥<%- product.discount_product_price %></span>
+				<% } %>
+				<% if (product.product_discount !=1) { %>
+					<span style="margin-left:15px;"><%- product.product_discount %>折</span>
+				<% } %>
+				<span><%- product.product_number %></span>
               </div>
             </li>
 
 		<% }); %>
 	</script>
+	<script id="print_receipt_infos" type="text/template">
+		<div class="normal">
+			<span style="width:63%;"><%- print_infos.order.order_date %></span>
+			<span style="width:35%;">机：<%- print_infos.order.pos_id %></span>
+		</div>
+		<div class="pp_info">
+			<% _.forEach(print_infos.order_details, function(order_detail,index) { %>
+			<div class="normal">
+				<span style="width:50%;"><%- order_detail.product.product_name %></span>
+				<span style="width:26%;"><%- order_detail.price %>X<%- order_detail.number %></span>
+				<span style="width:20%;text-align:right;"><%- order_detail.price*order_detail.number %></span>
+			</div>
+			<% }); %>
+		</div>
+		<div class="pp_info">
+			<div class="normal">支付宝账号：182****6882</div>
+			<div class="normal">支付宝流水号:</div>
+			<div class="normal">2016060521001004870229369483</div>
+		</div>
+		<div class="pp_info">
+			<div class="normal">
+				<span style="width:26%">商品小计：</span>
+				<span style="width:20%;text-align:right;"><%- print_infos.order.total_price %></span>
+				<span style="width:25%;text-align:center;">现&nbsp;&nbsp;&nbsp;金：</span>
+				<span style="width:23%;text-align:right;">0.00</span>
+			</div>
+			<div class="normal">
+				<span style="width:26%"></span>
+				<span style="width:20%;text-align:right;"></span>
+				<span style="width:25%;text-align:center;">支付宝：</span>
+				<span style="width:23%;text-align:right;">14.40</span>
+			</div>
+			<div class="normal">
+				<span style="width:26%">折扣合计：</span>
+				<span style="width:20%;text-align:right;"><%- print_infos.order.card_reduce %></span>
+			</div>
+			<div class="normal">
+				<span style="width:26%">分头舍去</span>
+				<span style="width:20%;text-align:right;"><%- print_infos.order.small_change %></span>
+			</div>
+			<div class="normal">
+				<span style="width:26%">金额合计：</span>
+				<span style="width:20%;text-align:right;"><%- print_infos.order.actual_price %></span>
+				<span style="width:25%;text-align:center;">找&nbsp;&nbsp;&nbsp;零：</span>
+				<span style="width:23%;text-align:right;"><%- print_infos.order.changes %></span>
+			</div>
+		</div>
+	</script>
 	<script>
 		$(function() {
 			var store = "{{store_info[0].org_store_name}}";
+			var store_id = "{{store_info[0].org_store_id}}"
 			var store_address = "{{store_info[0].address}}";
 			var person_id = "{{person_info.person_id}}";
 			var order = {
 				"shopping_infos" : {
-					"total_price":parseFloat(0),
+					"total_price":parseFloat(0.00),
 					"total_discount":parseFloat(0),
+					"payway_price":parseFloat(0.00),
 					"marketing_price":parseFloat(0),
 					"ready_pay" : parseFloat(0),
 					"pre_pay" : parseFloat(0),
-					"cash_pay" : parseFloat(0)
+					"cash_pay" : parseFloat(0),
+					"change" : parseFloat(0),
+					"small_change" : parseFloat(0)
 				},
 				"member" : null,
 				"products" : [],
@@ -601,7 +873,8 @@
 				"order_id" : null,
 				"fin" : null,
 				"pay_infos" : [],
-				"store" : null
+				"store" : null,
+				"store_id":null
 			};
 			//挂单用的临时变量
 			var temp_products = [];
@@ -610,10 +883,15 @@
 			var pay_way_change = function(pay_way_status){
 				$(".pay_amount").html("应付："+order.shopping_infos.total_price);
 				if (pay_way_status == 0) {
-					order.shopping_infos.total_price = parseFloat(parseInt(order.shopping_infos.total_price*10)/10);
-					order.shopping_infos.pre_pay = order.shopping_infos.total_price -  order.shopping_infos.ready_pay;
+					if (!order.shopping_infos.small_change) {
+						order.shopping_infos.small_change = order.shopping_infos.total_price - parseFloat(parseInt(order.shopping_infos.total_price*10)/10);
+						order.shopping_infos.payway_price = parseFloat(parseInt(order.shopping_infos.total_price*10)/10);
+					} else {
+						order.shopping_infos.payway_price = order.shopping_infos.total_price;
+					}
+					order.shopping_infos.pre_pay = (order.shopping_infos.payway_price -  order.shopping_infos.ready_pay).toFixed(2);
 					$(".cash_value").val(order.shopping_infos.pre_pay);
-					$(".pay_amount").html("应付："+order.shopping_infos.total_price);
+					$(".pay_amount").html("应付："+order.shopping_infos.payway_price);
 					$(".alipay_pay").attr("style","display:none;");
 					$(".member_pay").attr("style","display:none;");
 					$(".pay_more").attr("style","display:none;");
@@ -622,7 +900,7 @@
 					$(".cash_pay").removeAttr("style");
 					$(".cash_value").focus();
 				}else if (pay_way_status == 1) {
-					order.shopping_infos.pre_pay = order.shopping_infos.total_price -  order.shopping_infos.ready_pay;
+					order.shopping_infos.pre_pay = (order.shopping_infos.total_price -  order.shopping_infos.ready_pay).toFixed(2);
 					$(".alipay_value").val(order.shopping_infos.pre_pay);
 					$(".member_pay").attr("style","display:none;");
 					$(".cash_pay").attr("style","display:none;");
@@ -632,7 +910,7 @@
 					$(".alipay_pay").removeAttr("style");
 					$(".alipay_value").focus();
 				}else if (pay_way_status == 2) {
-					order.shopping_infos.pre_pay = order.shopping_infos.total_price -  order.shopping_infos.ready_pay;
+					order.shopping_infos.pre_pay = (order.shopping_infos.total_price -  order.shopping_infos.ready_pay).toFixed(2);
 					$(".member_value").val(order.shopping_infos.pre_pay);
 					$(".alipay_pay").attr("style","display:none;");
 					$(".cash_pay").attr("style","display:none;");
@@ -642,7 +920,7 @@
 					$(".member_pay").removeAttr("style");
 					$(".member_pay_card").focus();
 				}else if (pay_way_status == 3) {
-					order.shopping_infos.pre_pay = order.shopping_infos.total_price -  order.shopping_infos.ready_pay;
+					order.shopping_infos.pre_pay = (order.shopping_infos.total_price -  order.shopping_infos.ready_pay).toFixed(2);
 					$(".credit_value").val(order.shopping_infos.pre_pay);
 					$(".alipay_pay").attr("style","display:none;");
 					$(".cash_pay").attr("style","display:none;");
@@ -671,7 +949,10 @@
 						"total_discount":parseFloat(0),
 						"marketing_price":parseFloat(0),
 						"ready_pay":parseFloat(0),
-						"pre_pay":parseFloat(0)
+						"pre_pay":parseFloat(0),
+						"cash_pay" : parseFloat(0),
+						"change" : parseFloat(0),
+						"small_change" : parseFloat(0)
 					},
 					"member" : null,
 					"products" : [],
@@ -683,7 +964,6 @@
 				payment_info_table();
 				product_infos();
 				member_update();
-				// $(".pay_more").attr("style","display:none;");
 				$(".cash_value").val("");
 				$(".member_number").val("");
 				$(".member_value").val("");
@@ -692,25 +972,32 @@
 				$(".alipay_value").val("");
 				$(".credit_value").val("");
 				$(".pay_table").html("");
+				$(".change").attr("style","display:none;");
 			};
 			//初始产品信息
 			var init_product_infos = function(){
 				order = {
 					"shopping_infos" : {
-						"total_price":0,
-						"total_discount":0,
-						"marketing_price":0
+						"total_price":parseFloat(0.00),
+						"total_discount":parseFloat(0),
+						"marketing_price":parseFloat(0),
+						"ready_pay" : parseFloat(0),
+						"pre_pay" : parseFloat(0),
+						"cash_pay" : parseFloat(0),
+						"change" : parseFloat(0),
+						"small_change" : parseFloat(0)
 					},
 					"member" : null,
 					"products" : [],
 					"pay_way" : [],
 					"order_id" : null,
-					"fin" : null
+					"fin" : null,
+					"pay_infos" : []
 				};
 				product_infos();
 				$("#barcode").val("");
 			};
-			//添加现金支付记录
+			//添加付记录
 			var add_pay_info = function(pay_way,pay_amount,data){
 				var pay_infos = {};
 				pay_infos.pay_amount = pay_amount;
@@ -732,6 +1019,7 @@
 					pay_way_change(pay_way_status);
 					$(".change").removeAttr("style");
 					var change = order.shopping_infos.ready_pay-order.shopping_infos.total_price;
+					order.shopping_infos.change = change;
 					$(".change_value").val(change);
 				}
 				payment_info_table();
@@ -739,7 +1027,7 @@
 			//挂单
 			$("#put_order").click(function(){
 				if (order.products.length >0 && temp_products.length < 3) {
-					order.guadan_time = new Date();
+					order.guadan_time = new Date().toLocaleString();
 					temp_products.push(order);
 					init_product_infos();
 					member_update();
@@ -780,6 +1068,9 @@
 					$("#barcode").val("");
 					$("#guadan").attr("style","display:none;");
 				});
+				$(".back_product_info").click(function(){
+					$("#guadan").attr("style","display:none;");
+				});
 			};
 			//商品高亮
 			var highlight = function(id){
@@ -809,9 +1100,10 @@
 							product.product_discount = 1;
 							product.picture = data.picture_info.location;
 							product.sale_properties = data.sale_properties;
+							product.discount_product_price = product.product_price;
 							product.stock_options = data.stock_options;
 							if (!product.picture) {
-								product.picture = "images/delay.gif";
+								product.picture = "delay.gif";
 							}
 							product.barcode = barcode;
 							var add = true;
@@ -872,13 +1164,13 @@
 						for (var j = 0; j < order.member.discounts.length; j++) {
 							if (order.member.discounts[j].org_brand_id == order.products[i].product_brand) {
 								order.products[i].product_discount = order.member.discounts[j].discount;
+								order.products[i].discount_product_price = (order.products[i].product_price*order.products[i].product_discount).toFixed(2);
 							}
 						}
+						product_infos();
 					}
 					order.shopping_infos.marketing_price = order.shopping_infos.total_price + parseFloat(order.products[i].product_price) * order.products[i].product_number;
-					order.shopping_infos.total_price = order.shopping_infos.total_price + parseFloat(order.products[i].product_price) * order.products[i].product_number * parseFloat(order.products[i].product_discount);
-					order.shopping_infos.total_price6 = order.shopping_infos.total_price.toFixed(6);
-					order.shopping_infos.total_price = parseFloat(parseInt(order.shopping_infos.total_price6*100)/100);
+					order.shopping_infos.total_price = (order.shopping_infos.total_price + parseFloat(order.products[i].discount_product_price)* order.products[i].product_number).toFixed(2);
 				}
 			};
 			//修改单条商品
@@ -904,16 +1196,25 @@
 				order.products[index].product_price = update_price;
 				order.products[index].product_number = parseInt(update_number);
 
-				$(".content").attr("style","display:none;");
 				get_total_price();
 				product_infos();
+				$(".content").attr("style","display:none;");
 			}
+			var delete_one_line = function(){
+				var index = $("#update_id").val();
+				order.products.splice(index,1);
+				get_total_price();
+				product_infos();
+				$(".content").attr("style","display:none;");
+			};
 			//商品模板信息
 			var product_infos = function(){
 				var t = _.template($("#products").html());
 				$("#product_infos").html(t({shopping_infos:order.shopping_infos,products:order.products}));
 				$("#amount").html("￥"+order.shopping_infos.total_price);
 				$(".product_line").click(function(){
+					$(".product_line").removeClass("curr");
+					$(this).addClass("curr");
 					var index = $(this).data("id")-1;
 					show_one_line(index);
 				});
@@ -926,8 +1227,13 @@
 			$(".save").click(function(){
 				save_one_line();
 			});
+			//删除商品
+			$(".delete").click(function(){
+				delete_one_line();
+			});
 			//结算
 			$("#pay").click(function(){
+				order.store_id = store_id;
 				if (order.products.length>0) {
 					pay_way_change(pay_way_status);
 					$("#pay_info").removeAttr("style");
@@ -938,12 +1244,12 @@
 			});
 			//更新订单状态
 			$(".leave").click(function(){
-				order.store = store;
 				if (order.shopping_infos.ready_pay >= order.shopping_infos.total_price) {
 					$.post("/update_order_status",{"order":JSON.stringify(order)},function(data){
 						if (data.success) {
-							init_pay_infos();
-							$("#pay_info").attr("style","display:none;");
+							$(".print").removeAttr("style");
+							// init_pay_infos();
+							// $("#pay_info").attr("style","display:none;");
 						}else {
 							alert(data.message);
 						}
@@ -952,6 +1258,41 @@
 					alert("尚未付清全款");
 				}
 			});
+			//打印发票
+			$(".print").click(function(){
+				if (!order.order_id) {
+					alert("order_id is null!");
+					return;
+				}
+				$.get("/search_order_infos",{"order_id":order.order_id},function(data){
+					if (data.success) {
+						var print_infos ={
+							"order" : null,
+							"order_details" : null,
+							"pay_infos" : null
+						};
+						print_infos.order = data.order;
+						print_infos.order_details = data.order_details;
+						print_infos.pay_infos = data.pay_infos;
+
+						$("#pay_info").attr("style","display:none;");
+						$("#receipt_infos").removeAttr("style");
+						var t = _.template($("#print_receipt_infos").html());
+						print_method(t({print_infos:print_infos}));
+					}else {
+
+					}
+				});
+
+			});
+			//打印
+			var print_method = function(docStr){
+				var newWindow=window.open("打印窗口","_blank");//打印窗口要换成页面的url
+				newWindow.document.write(docStr);
+				newWindow.document.close();
+				newWindow.print();
+				newWindow.close();
+			};
 			//返回
 			$(".back").click(function(){
 				$("#pay_info").attr("style","display:none;");
@@ -1002,7 +1343,6 @@
 					return;
 				}
 				pay_amount = parseFloat(pay_amount);
-
 				var change = parseFloat(0);
 				change = pay_amount-order.shopping_infos.total_price;
 				order.pay_way.push("0");

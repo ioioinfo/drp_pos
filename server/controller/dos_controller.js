@@ -4,6 +4,7 @@ const uu_request = require('../utils/uu_request');
 const uuidV1 = require('uuid/v1');
 var eventproxy = require('eventproxy');
 var org_code = "ioio";
+var service_info = "ec pos service"
 var do_get_method = function(url,cb){
 	uu_request.get(url, function(err, response, body){
 		if (!err && response.statusCode === 200) {
@@ -163,12 +164,13 @@ var order_params = function(request){
 	var shopping_infos = order.shopping_infos;
 	data.products = JSON.stringify(order.products);
 	data.pay_way = JSON.stringify(order.pay_way);
-
 	if (order.member) {
-		data.vip_id = JSON.stringify(order.member.vip_id);
+		data.vip_id = order.member.vip_id;
 	}
+	data.store_id = order.store_id;
 	data.actual_price = shopping_infos.total_price;
 	data.marketing_price = shopping_infos.marketing_price;
+	data.small_change = order.shopping_infos.small_change;
 	data.pos_id = "pos001";
 	data.operation_system = "pos_system001";
 	data.origin = "pos_origin";
@@ -188,13 +190,17 @@ var update_order_status = function(data,cb){
 var get_order_pay_infos = function(order_id,cb){
 	var url = "http://139.196.148.40:18008/get_order_pay_infos?order_id=";
 	url = url + order_id;
-	console.log("123");
 	do_get_method(url,cb);
 }
-//
+//会员积分
 var order_finish = function(data,cb){
 	var url = "http://139.196.148.40:18003/vip/order_finish";
 	do_post_method(data,url,cb);
+}
+//查询订单商品列表
+var search_order_products = function(order_id,cb){
+	var url ="http://127.0.0.1:8010/search_order_products?order_id="+order_id;
+	do_get_method(url,cb);
 }
 exports.register = function(server, options, next){
 	server.route([
@@ -226,7 +232,7 @@ exports.register = function(server, options, next){
 				}
 				get_captcha(cookie_id,function(err, content){
 					if (!err) {
-						return reply({"success":true,"image":content.image});
+						return reply({"success":true,"image":content.image,"service_info":service_info});
 					}else {
 
 					}
@@ -262,7 +268,7 @@ exports.register = function(server, options, next){
 										return reply({"success":false});
 									}
 									cookie.login_id = login_id;
-									return reply({"success":true}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
+									return reply({"success":true,"service_info":service_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
 								}
 							});
 						}else {
@@ -300,7 +306,7 @@ exports.register = function(server, options, next){
 							return reply({"succss":false,"messsage":"no store_info"});
 						}
 						cookie.store_id = store_info[0].org_store_id;
-						return reply.view("pos",{"person_info":person_info,"store_info":store_info,"company_info":company_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
+						return reply.view("pos",{"person_info":person_info,"store_info":store_info,"company_info":company_info,"service_info":service_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
 				});
 
 				get_person_info(login_id, org_code, function(err,row){
@@ -363,12 +369,12 @@ exports.register = function(server, options, next){
 						if (row.success) {
 							var member_info = row.row;
 							console.log(member_info);
-							return reply({"success":true,"row":member_info,"message":"ok"});
+							return reply({"success":true,"row":member_info,"message":"ok","service_info":service_info});
 						}else {
-							return reply({"success":false,"message":row.message});
+							return reply({"success":false,"message":row.message,"service_info":service_info});
 						}
 					}else {
-						return reply({"success":false});
+						return reply({"success":false,"service_info":service_info});
 					}
 				});
 			}
@@ -404,7 +410,7 @@ exports.register = function(server, options, next){
 
 										var ep =  eventproxy.create("stocks","picture_info",
 											function(stocks,picture_info){
-												return reply({"success":true,"row":product_info,"message":"ok","stocks":stocks,"picture_info":picture_info,"sale_properties":sale_properties,"stock_options":stock_options});
+												return reply({"success":true,"row":product_info,"message":"ok","stocks":stocks,"picture_info":picture_info,"sale_properties":sale_properties,"stock_options":stock_options,"service_info":service_info});
 										});
 
 
@@ -474,22 +480,22 @@ exports.register = function(server, options, next){
 							find_stock(product_id,industry_id,JSON.stringify(stock_options),function(err,row){
 								if (!err) {
 									console.log(row);
-									return reply({"success":true,"row":product,"message":"ok","stocks":row.stocks});
+									return reply({"success":true,"row":product,"message":"ok","stocks":row.stocks,"service_info":service_info});
 								}else {
 									return reply({"success":false});
 								}
 							});
 
 						}else {
-							return reply({"success":false,"message":row.message});
+							return reply({"success":false,"message":row.message,"service_info":service_info});
 						}
 					}else {
-						return reply({"success":false});
+						return reply({"success":false,"service_info":service_info});
 					}
 				});
 			}
 		},
-		//购物车订单及详细
+		//保存购物车订单及详细
 		{
 			method: 'GET',
 			path: '/save_order_detail',
@@ -499,11 +505,12 @@ exports.register = function(server, options, next){
 					return reply.redirect("/login");
 				}
 				var data = order_params(request);
+				console.log("data.vip_id:"+data.vip_id);
 				save_order(data,function(err, row){
 					if (!err) {
-						return reply({"success":true,"row":row});
+						return reply({"success":true,"row":row,"service_info":service_info});
 					}else {
-						return reply({"success":false});
+						return reply({"success":false,"service_info":service_info});
 					}
 				});
 			}
@@ -516,7 +523,7 @@ exports.register = function(server, options, next){
 				var data = pay_params(request);
 				cash_pay_method(data,function(err,row){
 					if (!err) {
-						return reply({"success":true,"row":row.row,"order_id":data.order_id});
+						return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
 					}else {
 
 					}
@@ -534,12 +541,12 @@ exports.register = function(server, options, next){
 					if (!err) {
 						console.log("row:"+row);
 						if (row.success) {
-							return reply({"success":true,"row":row.row,"order_id":data.order_id});
+							return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
 						}else {
-							return reply({"success":false,"message":"余额不足","order_id":data.order_id});
+							return reply({"success":false,"message":"余额不足","order_id":data.order_id,"service_info":service_info});
 						}
 					}else {
-						return reply({"success":false});
+						return reply({"success":false,"service_info":service_info});
 					}
 				});
 			}
@@ -553,7 +560,7 @@ exports.register = function(server, options, next){
 				credit_pay_method(data,function(err,row){
 					if (!err) {
 						if (row.success) {
-							return reply({"success":true,"row":row.row,"order_id":data.order_id});
+							return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
 						}else {
 						}
 					}else {
@@ -570,6 +577,8 @@ exports.register = function(server, options, next){
 				var order = request.payload.order;
 				order = JSON.parse(order);
 				data.order_id = order.order_id;
+				data.change = order.shopping_infos.change;
+				console.log("data.change:"+data.change);
 				data.order_status = "4";
 				var pay_infos = order.pay_infos;
 				console.log(pay_infos);
@@ -635,30 +644,94 @@ exports.register = function(server, options, next){
 				});
 			}
 		},
-		//保存付款方式
+		//保存付款方式 ....不需要了
+		// {
+		// 	method: 'GET',
+		// 	path: '/save_pay_way',
+		// 	handler: function(request, reply){
+		// 		var data = {};
+		// 		var order = request.query.order;
+		// 		order = JSON.parse(order);
+		// 		data.order_id = order.order_id;
+		// 		data.serial_number = order.pay_infos.fin;
+		// 		data.person_id = order.member.id;
+		// 		data.pay_way = order.pay_infos.pay_way;
+		// 		data.pay_amount =  order.pay_infos.pay_amount;
+		// 		save_pay_way(data,function(err,row){
+		// 			if (!err) {
+		// 				if (row.success) {
+		// 					return reply({"success":true});
+		// 				}else {
+		// 				}
+		// 			}else {
+		// 			}
+		// 		});
+		// 	}
+		// },
+
+		//订单查询页面
 		{
 			method: 'GET',
-			path: '/save_pay_way',
+			path: '/search_order',
 			handler: function(request, reply){
-				var data = {};
-				var order = request.query.order;
-				order = JSON.parse(order);
-				data.order_id = order.order_id;
-				data.serial_number = order.pay_infos.fin;
-				data.person_id = order.member.id;
-				data.pay_way = order.pay_infos.pay_way;
-				data.pay_amount =  order.pay_infos.pay_amount;
-				save_pay_way(data,function(err,row){
+				return reply.view("order");
+			}
+		},
+		//根据订单号查询订单商品
+		{
+			method: 'GET',
+			path: '/search_order_infos',
+			handler: function(request, reply){
+				var order_id = request.query.order_id;
+				var ep = eventproxy.create("order","order_details","pay_infos",
+					function(order,order_details,pay_infos){
+						console.log("123");
+						return reply({"success":true,"order":order,"order_details":order_details,"pay_infos":pay_infos,"service_info":service_info});
+				});
+				search_order_products(order_id, function(err,row){
+					console.log("row:"+JSON.stringify(row));
 					if (!err) {
 						if (row.success) {
-							return reply({"success":true});
+							var order_details = row.order_details;
+							var products = row.products;
+							var order = row.order;
+							order.store = row.store;
+							for (var i = 0; i < order_details.length; i++) {
+								for (var j = 0; j < products.length; j++) {
+									if (order_details[i].product_id == products[j].id) {
+										order_details[i].product = products[j];
+									}
+								}
+							}
+							ep.emit("order", order);
+							ep.emit("order_details", order_details);
 						}else {
+							ep.emit("order", null);
+							ep.emit("order_details", null);
 						}
 					}else {
 					}
 				});
+				get_order_pay_infos(order_id, function(err,row){
+					if (!err) {
+						if (row.success) {
+							var pay_infos = row.rows;
+							console.log("pay_infos"+pay_infos);
+							ep.emit("pay_infos", pay_infos);
+						}else {
+							ep.emit("pay_infos", null);
+						}
+					}else {
+
+					}
+				});
+
 			}
 		},
+
+
+
+
 	]);
 
     next();
