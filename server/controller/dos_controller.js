@@ -202,6 +202,17 @@ var search_order_products = function(order_id,cb){
 	var url ="http://127.0.0.1:8010/search_order_products?order_id="+order_id;
 	do_get_method(url,cb);
 }
+//查询所有订单
+var get_all_orders = function(cb){
+	var url = "http://127.0.0.1:8010/get_all_orders";
+	do_get_method(url,cb);
+}
+//根据日期查询订单
+var get_orders_byDate = function(date1,date2,cb){
+	var url = "http://127.0.0.1:8010/get_orders_byDate?date1=";
+	url = url + date1 + "&date2=" + date2;
+	do_get_method(url,cb);
+}
 exports.register = function(server, options, next){
 	server.route([
 		//登入页面
@@ -728,9 +739,44 @@ exports.register = function(server, options, next){
 
 			}
 		},
+		//获取所有订单
+		{
+			method: 'GET',
+			path: '/get_all_orders',
+			handler: function(request, reply){
+				get_all_orders(function(err,rows){
+					if (!err) {
+						if (rows.success) {
+							console.log("rows:"+JSON.stringify(rows));
+							return reply({"success":true,"rows":rows.rows,"service_info":service_info});
+						}else {
+						}
+					}else {
 
+					}
+				});
+			}
+		},
+		//根据日期获取订单
+		{
+			method: 'GET',
+			path: '/get_orders_byDate',
+			handler: function(request, reply){
+				var date1 = request.query.date1;
+				var date2 = request.query.date2;
+				get_orders_byDate(date1,date2,function(err,rows){
+					if (!err) {
+						if (rows.success) {
+							console.log("rows:"+JSON.stringify(rows));
+							return reply({"success":true,"rows":rows.rows,"service_info":service_info});
+						}else {
+						}
+					}else {
 
-
+					}
+				});
+			}
+		},
 
 	]);
 

@@ -5,6 +5,7 @@
 <title>pos</title>
 <script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
 <script src="js/lodash.min.js" type="text/javascript"></script>
+<script src="js/print.js" type="text/javascript"></script>
 <style media="screen">
 	html, body, * {
 		color: #666;
@@ -494,7 +495,6 @@
 		position: fixed;
 		z-index: 13;
 		width: 255px;
-    	height: 500px;
 		top: 40%;
 		left: 50%;
 		-webkit-transform: translate(-50%, -50%);
@@ -502,6 +502,9 @@
 		border-radius: 3px;
 		overflow: hidden;
 		background-color: white;
+	}
+	.print_content {
+		width: 255px;
 	}
 	.logo{
 		font-size: 20px;
@@ -511,11 +514,16 @@
 		font-size: 12px;
 		margin: 1px 12px;
 	}
-	.weui_dialog5 span{
+	.print_content span{
 		display: inline-block;
 	}
 	.pp_info{
 		margin-top: 10px;
+	}
+	img.num_rank{
+		width: 17px;
+		height: 17px;
+		position: absolute;
 	}
 </style>
 </head>
@@ -679,7 +687,7 @@
             </li>
             <li>
               <div class="nav-infor" id="put_order">
-                <div class="nav-img">
+                <div class="nav-img" >
                   <img src="images/yuan.png" alt="">
                 </div>
               </div>
@@ -728,18 +736,42 @@
 	<div id="receipt_infos" style="display:none;">
 		<div class="weui_mask"></div>
 		<div class="weui_dialog5">
-			<div class="logo">
-				佑佑&nbsp;&nbsp;YOYO
-			</div>
-			<div class="normal">{{store_info[0].org_store_name}}</div>
-			<div class="normal">电话：021-60489399</div>
-			<div class="normal">地址：{{store_info[0].address}}</div>
-			<div class="normal">
-				<span style="width:63%;">收营员：{{person_info.person.person_code}}</span>
-				<span style="width:35%;">序：12345678</span>
-			</div>
-			<div id="print_receipt_info">
+			<div class="print_content">
+				<style type="text/css">
+					.print_content {
+						width: 255px;
+					}
+					.logo{
+						font-size: 20px;
+						margin: 25px 10px 10px;
+					}
+					.normal{
+						font-size: 12px;
+						margin: 1px 12px;
+					}
+					.normal:last-child{
+						margin-bottom: 20px;
+					}
+					.print_content span{
+						display: inline-block;
+					}
+					.pp_info{
+						margin-top: 10px;
+					}
+				</style>
+				<div class="logo">
+					佑佑&nbsp;&nbsp;YOYO
+				</div>
+				<div class="normal">{{store_info[0].org_store_name}}</div>
+				<div class="normal">电话：021-60489399</div>
+				<div class="normal">地址：{{store_info[0].address}}</div>
+				<div class="normal">
+					<span style="width:63%;">收营员：{{person_info.person.person_code}}</span>
+					<span style="width:35%;">序：12345678</span>
+				</div>
+				<div id="print_receipt_info">
 
+				</div>
 			</div>
 		</div>
 	</div>
@@ -803,7 +835,7 @@
 	</script>
 	<script id="print_receipt_infos" type="text/template">
 		<div class="normal">
-			<span style="width:63%;"><%- print_infos.order.order_date %></span>
+			<span style="width:63%;"><%- print_infos.order.order_date.substring(0,10) %></span>
 			<span style="width:35%;">机：<%- print_infos.order.pos_id %></span>
 		</div>
 		<div class="pp_info">
@@ -815,24 +847,27 @@
 			</div>
 			<% }); %>
 		</div>
-		<div class="pp_info">
-			<div class="normal">支付宝账号：182****6882</div>
-			<div class="normal">支付宝流水号:</div>
-			<div class="normal">2016060521001004870229369483</div>
-		</div>
+		<% _.forEach(print_infos.pay_infos, function(pay_info,index) { %>
+			<div class="pp_info">
+				<div class="normal"><%- pay_info.pay_way %>：<%- pay_info.pay_amount %></div>
+				<!-- <div class="normal">支付宝账号:182****6882</div> -->
+				<div class="normal">流水号：</div>
+				<div class="normal"><%- pay_info.fin_occurrence_log_id %></div>
+			</div>
+		<% }); %>
 		<div class="pp_info">
 			<div class="normal">
 				<span style="width:26%">商品小计：</span>
 				<span style="width:20%;text-align:right;"><%- print_infos.order.total_price %></span>
-				<span style="width:25%;text-align:center;">现&nbsp;&nbsp;&nbsp;金：</span>
-				<span style="width:23%;text-align:right;">0.00</span>
+				<!-- <span style="width:25%;text-align:center;">现&nbsp;&nbsp;&nbsp;金：</span>
+				<span style="width:23%;text-align:right;">0.00</span> -->
 			</div>
-			<div class="normal">
+			<!-- <div class="normal">
 				<span style="width:26%"></span>
 				<span style="width:20%;text-align:right;"></span>
 				<span style="width:25%;text-align:center;">支付宝：</span>
 				<span style="width:23%;text-align:right;">14.40</span>
-			</div>
+			</div> -->
 			<div class="normal">
 				<span style="width:26%">折扣合计：</span>
 				<span style="width:20%;text-align:right;"><%- print_infos.order.card_reduce %></span>
@@ -889,7 +924,7 @@
 					} else {
 						order.shopping_infos.payway_price = order.shopping_infos.total_price;
 					}
-					order.shopping_infos.pre_pay = (order.shopping_infos.payway_price -  order.shopping_infos.ready_pay).toFixed(2);
+					order.shopping_infos.pre_pay = parseFloat((order.shopping_infos.payway_price -  order.shopping_infos.ready_pay).toFixed(2));
 					$(".cash_value").val(order.shopping_infos.pre_pay);
 					$(".pay_amount").html("应付："+order.shopping_infos.payway_price);
 					$(".alipay_pay").attr("style","display:none;");
@@ -900,7 +935,7 @@
 					$(".cash_pay").removeAttr("style");
 					$(".cash_value").focus();
 				}else if (pay_way_status == 1) {
-					order.shopping_infos.pre_pay = (order.shopping_infos.total_price -  order.shopping_infos.ready_pay).toFixed(2);
+					order.shopping_infos.pre_pay = parseFloat((order.shopping_infos.payway_price -  order.shopping_infos.ready_pay).toFixed(2));
 					$(".alipay_value").val(order.shopping_infos.pre_pay);
 					$(".member_pay").attr("style","display:none;");
 					$(".cash_pay").attr("style","display:none;");
@@ -910,7 +945,7 @@
 					$(".alipay_pay").removeAttr("style");
 					$(".alipay_value").focus();
 				}else if (pay_way_status == 2) {
-					order.shopping_infos.pre_pay = (order.shopping_infos.total_price -  order.shopping_infos.ready_pay).toFixed(2);
+					order.shopping_infos.pre_pay = parseFloat((order.shopping_infos.payway_price -  order.shopping_infos.ready_pay).toFixed(2));
 					$(".member_value").val(order.shopping_infos.pre_pay);
 					$(".alipay_pay").attr("style","display:none;");
 					$(".cash_pay").attr("style","display:none;");
@@ -920,7 +955,7 @@
 					$(".member_pay").removeAttr("style");
 					$(".member_pay_card").focus();
 				}else if (pay_way_status == 3) {
-					order.shopping_infos.pre_pay = (order.shopping_infos.total_price -  order.shopping_infos.ready_pay).toFixed(2);
+					order.shopping_infos.pre_pay = parseFloat((order.shopping_infos.payway_price -  order.shopping_infos.ready_pay).toFixed(2));
 					$(".credit_value").val(order.shopping_infos.pre_pay);
 					$(".alipay_pay").attr("style","display:none;");
 					$(".cash_pay").attr("style","display:none;");
@@ -1031,6 +1066,9 @@
 					temp_products.push(order);
 					init_product_infos();
 					member_update();
+					var num = temp_products.length;
+					$(this).children(".nav-img").children(".num_rank").remove();
+					$(this).children(".nav-img").append("<img src='images/" + num +".png' alt='' class='num_rank'>");
 				}else if (order.products.length >0 && temp_products.length >= 3) {
 					alert("挂单已满");
 				}
@@ -1063,6 +1101,7 @@
 					var index = $(this).data("id");
 					order = temp_products[index];
 					product_infos();
+					get_picture();
 					member_update();
 					temp_products.splice(index,1);
 					$("#barcode").val("");
@@ -1099,6 +1138,9 @@
 							product.product_brand = data.row.product_brand;
 							product.product_discount = 1;
 							product.picture = data.picture_info.location;
+							if (product.picture == null) {
+								product.picture = "no_picture.png";
+							}
 							product.sale_properties = data.sale_properties;
 							product.discount_product_price = product.product_price;
 							product.stock_options = data.stock_options;
@@ -1158,19 +1200,23 @@
 			}
 			//计算总价
 			var get_total_price = function(){
-				order.shopping_infos.total_price = 0;
+				order.shopping_infos.total_price = parseFloat(0.00);
+				if (order.products.length == 0) {
+					order.shopping_infos.total_price = "0.00";
+					return;
+				}
 				for (var i = 0; i < order.products.length; i++) {
 					if (order.member) {
 						for (var j = 0; j < order.member.discounts.length; j++) {
 							if (order.member.discounts[j].org_brand_id == order.products[i].product_brand) {
 								order.products[i].product_discount = order.member.discounts[j].discount;
-								order.products[i].discount_product_price = (order.products[i].product_price*order.products[i].product_discount).toFixed(2);
+								order.products[i].discount_product_price = parseFloat((order.products[i].product_price*order.products[i].product_discount).toFixed(2));
 							}
 						}
 						product_infos();
 					}
-					order.shopping_infos.marketing_price = order.shopping_infos.total_price + parseFloat(order.products[i].product_price) * order.products[i].product_number;
-					order.shopping_infos.total_price = (order.shopping_infos.total_price + parseFloat(order.products[i].discount_product_price)* order.products[i].product_number).toFixed(2);
+					order.shopping_infos.marketing_price = order.shopping_infos.total_price + order.products[i].product_price*order.products[i].product_number;
+					order.shopping_infos.total_price = parseFloat((order.shopping_infos.total_price + order.products[i].discount_product_price*order.products[i].product_number).toFixed(2));
 				}
 			};
 			//修改单条商品
@@ -1278,7 +1324,10 @@
 						$("#pay_info").attr("style","display:none;");
 						$("#receipt_infos").removeAttr("style");
 						var t = _.template($("#print_receipt_infos").html());
-						print_method(t({print_infos:print_infos}));
+						$("#print_receipt_info").html(t({print_infos:print_infos}));
+						$(".print_content").printArea();
+						// print_method(t({print_infos:print_infos}));
+
 					}else {
 
 					}

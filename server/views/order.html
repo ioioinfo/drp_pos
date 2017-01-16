@@ -35,12 +35,29 @@
 	  查询订单号：
 	  <input type="text" name="" value="" id="search_order">
 	</div>
+	<div>
+		<input class="find_all" type="button" value="查询所有订单"/>
+	</div>
+	<div>
+		<input class="find_today" type="button" value="查询当日订单"/>
+	</div>
+	<div>
+		<input class="find_day1" type="date"/>
+		<input class="find_day2" type="date"/>
+		<input class="search_day" type="button" value="查询"/>
+	</div>
+	<div id="orders" style="display:none;">
+		<div class="weui_mask2"></div>
+		<div class="weui_dialog2">
+			<div style="width:100%;" id="all_orders">
 
-
+			</div>
+		</div>
+	</div>
 	<div id="order_infos" style="display:none;">
 		<div class="weui_mask2"></div>
 		<div class="weui_dialog2">
-			<div style="height:600px;width:100%;" id="order_table">
+			<div style="width:100%;" id="order_table">
 
 			</div>
 		</div>
@@ -69,6 +86,14 @@
 			<div>金额：<%- pay_info.pay_amount %></div>
 		<% }); %>
 	</script>
+	<script id="all_orders_infos" type="text/template">
+		<% _.forEach(orders, function(order,index) { %>
+			<div class="click_order_info" data-id="<%- order.order_id %>">
+				<div>日期：<%- order.order_date %></div>
+				<div>订单号：<%- order.order_id %></div>
+			</div>
+		<% }); %>
+	</script>
 <script>
 	$(function() {
 		var order_infos ={
@@ -76,6 +101,7 @@
 			"order_details" : null,
 			"pay_infos" : null
 		};
+		var orders = [];
 		//付款get方法
 		var do_get_method = function(url,params,cb){
 			$.get(url,params,function(data){
@@ -87,14 +113,9 @@
 				}
 			});
 		};
-		//订单号查询
-		$("#search_order").keypress(function(e){
-			var search_order = $("#search_order").val();
-			var key = e.which;
-			if (!search_order || key != 13) {
-				return;
-			}
-			do_get_method("/search_order_infos",{"order_id":search_order},function(data){
+		//查询订单详细
+		var get_order_details = function(order_id){
+			do_get_method("/search_order_infos",{"order_id":order_id},function(data){
 				order_infos.order = data.order;
 				order_infos.order_details = data.order_details;
 				order_infos.pay_infos = data.pay_infos;
@@ -102,7 +123,88 @@
 				$("#order_table").html(t({order_infos:order_infos}));
 				$("#order_infos").removeAttr("style");
 			});
+		};
+		//订单号查询
+		$("#search_order").keypress(function(e){
+			var search_order = $("#search_order").val();
+			var key = e.which;
+			if (!search_order || key != 13) {
+				return;
+			}
+			get_order_details(search_order);
 		});
+		//查询所有订单
+		$(".find_all").click(function(){
+			$.get("/get_all_orders",function(data){
+				if (data.success) {
+					orders = data.rows;
+					var t = _.template($("#all_orders_infos").html());
+					$("#all_orders").html(t({orders:orders}));
+					$("#orders").removeAttr("style");
+					$(".click_order_info").click(function(){
+						var order_id = $(this).data("id");
+						get_order_details(order_id);
+					});
+				}else {
+				}
+			});
+		});
+		//查询今天订单
+		$(".find_today").click(function(){
+			var date1 = new Date();
+			var date2 = new Date(date1.valueOf() + 1*24*60*60*1000);
+			date1 = getNowFormatDate(date1);
+			date2 = getNowFormatDate(date2);
+			search_order_byDate(date1,date2);
+		});
+		//查询指定日期订单
+		$(".search_day").click(function(){
+			var find_day1 = $(".find_day1").val();
+			var find_day2 = $(".find_day2").val();
+			search_order_byDate(find_day1,find_day2);
+		});
+		//根据日期查询订单
+		var search_order_byDate = function(data1,data2){
+			do_get_method("/get_orders_byDate",{date1:data1,date2:data2},function(data){
+				orders = data.rows;
+				var t = _.template($("#all_orders_infos").html());
+				$("#all_orders").html(t({orders:orders}));
+				$("#orders").removeAttr("style");
+				$(".click_order_info").click(function(){
+					var order_id = $(this).data("id");
+					get_order_details(order_id);
+				});
+			});
+		};
+		//日期格式方法
+		var getNowFormatDate = function(day){
+			var Year = 0;
+			var Month = 0;
+			var Day = 0;
+			var CurrentDate = "";
+			//初始化时间
+			//Year= day.getYear();//有火狐下2008年显示108的bug
+			Year = day.getFullYear();//ie火狐下都可以
+			Month = day.getMonth()+1;
+			Day = day.getDate();
+			//Hour = day.getHours();
+			// Minute = day.getMinutes();
+			// Second = day.getSeconds();
+			CurrentDate += Year + "-";
+			if (Month >= 10 ){
+				CurrentDate += Month + "-";
+			}
+			else{
+				CurrentDate += "0" + Month + "-";
+			}
+			if (Day >= 10 ){
+				CurrentDate += Day ;
+			}
+			else{
+				CurrentDate += "0" + Day ;
+			}
+			return CurrentDate;
+		};
 	});
 </script>
 </body>
