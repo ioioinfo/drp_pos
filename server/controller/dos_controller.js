@@ -108,7 +108,7 @@ var get_product_info = function(barcode, cb){
 };
 //根据货物id找到pos商品
 var find_product_byId = function(product_id, cb){
-	var url = "http://127.0.0.1:7000/get_pos_product?product_id=";
+	var url = "http://211.149.248.241:18002/get_pos_product?product_id=";
 	url = url + product_id;
 	do_get_method(url,cb);
 };
@@ -120,12 +120,12 @@ var find_stock = function(product_id,industry_id,stock_options,cb){
 };
 //保存订单
 var save_order = function(data,cb){
-	var url = "http://127.0.0.1:8010/add_order";
+	var url = "http://211.149.248.241:18010/add_order";
 	do_post_method(data,url,cb);
 };
 //查询商品图片
 var get_picturesById = function(product_id,cb){
-	var url = "http://127.0.0.1:7000/get_product_pictures?product_id=";
+	var url = "http://211.149.248.241:18002/get_product_pictures?product_id=";
 	url = url + product_id;
 	do_get_method(url,cb);
 }
@@ -183,7 +183,7 @@ var credit_pay_method = function(data,cb){
 };
 //更新订单状态
 var update_order_status = function(data,cb){
-	var url = "http://127.0.0.1:8010/update_order_status";
+	var url = "http://211.149.248.241:18010/update_order_status";
 	do_post_method(data,url,cb);
 };
 //订单支付信息
@@ -199,17 +199,17 @@ var order_finish = function(data,cb){
 }
 //查询订单商品列表
 var search_order_products = function(order_id,cb){
-	var url ="http://127.0.0.1:8010/search_order_products?order_id="+order_id;
+	var url ="http://211.149.248.241:18010/search_order_products?order_id="+order_id;
 	do_get_method(url,cb);
 }
 //查询所有订单
 var get_all_orders = function(cb){
-	var url = "http://127.0.0.1:8010/get_all_orders";
+	var url = "http://211.149.248.241:18010/get_all_orders";
 	do_get_method(url,cb);
 }
 //根据日期查询订单
 var get_orders_byDate = function(date1,date2,cb){
-	var url = "http://127.0.0.1:8010/get_orders_byDate?date1=";
+	var url = "http://211.149.248.241:18010/get_orders_byDate?date1=";
 	url = url + date1 + "&date2=" + date2;
 	do_get_method(url,cb);
 }
@@ -618,6 +618,7 @@ exports.register = function(server, options, next){
 												}
 											}
 										}
+										console.log("store:"+order.store);
 										if (order.member) {
 											var info = {
 												order_id : order.order_id,
@@ -655,30 +656,6 @@ exports.register = function(server, options, next){
 				});
 			}
 		},
-		//保存付款方式 ....不需要了
-		// {
-		// 	method: 'GET',
-		// 	path: '/save_pay_way',
-		// 	handler: function(request, reply){
-		// 		var data = {};
-		// 		var order = request.query.order;
-		// 		order = JSON.parse(order);
-		// 		data.order_id = order.order_id;
-		// 		data.serial_number = order.pay_infos.fin;
-		// 		data.person_id = order.member.id;
-		// 		data.pay_way = order.pay_infos.pay_way;
-		// 		data.pay_amount =  order.pay_infos.pay_amount;
-		// 		save_pay_way(data,function(err,row){
-		// 			if (!err) {
-		// 				if (row.success) {
-		// 					return reply({"success":true});
-		// 				}else {
-		// 				}
-		// 			}else {
-		// 			}
-		// 		});
-		// 	}
-		// },
 
 		//订单查询页面
 		{

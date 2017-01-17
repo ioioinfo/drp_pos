@@ -237,7 +237,6 @@
         margin-top: 17px;
         font-size: 14px;
         text-align: center;
-
     }
     .ma-num{
       display: inline-block;
@@ -624,13 +623,13 @@
 				<% }); %>
 			</div>
 			<tr>
-				<th>总付</th><th>已付</th><th>待付</th><th></th>
+				<th>总付</th><th>已付</th><th>待付</th><th>抹零</th>
 			</tr>
 			<tr>
 				<td><%- shopping_infos.total_price %></td>
 				<td><%- shopping_infos.ready_pay %></td>
 				<td><%- shopping_infos.pre_pay %></td>
-				<td></td>
+				<td><%- shopping_infos.small_change %></td>
 			</tr>
 		</table>
 	</script>
@@ -908,17 +907,22 @@
 				"order_id" : null,
 				"fin" : null,
 				"pay_infos" : [],
-				"store" : null,
 				"store_id":null
 			};
 			//挂单用的临时变量
 			var temp_products = [];
+			//回到商品扫描
+			var comefocus = function(){
+				$("#barcode").focus();
+			};
+			comefocus();
 			//支付方式选择
 			var pay_way_status = 0; //现金 0，支付宝 1，会员卡 2, 挂单 3，付款超额 10
 			var pay_way_change = function(pay_way_status){
 				$(".pay_amount").html("应付："+order.shopping_infos.total_price);
+				order.shopping_infos.small_change = 0;
 				if (pay_way_status == 0) {
-					if (!order.shopping_infos.small_change) {
+					if (!order.shopping_infos.pre_pay) {
 						order.shopping_infos.small_change = order.shopping_infos.total_price - parseFloat(parseInt(order.shopping_infos.total_price*10)/10);
 						order.shopping_infos.payway_price = parseFloat(parseInt(order.shopping_infos.total_price*10)/10);
 					} else {
@@ -1059,6 +1063,16 @@
 				}
 				payment_info_table();
 			};
+			//挂单小数字标记
+			var small_number = function(){
+				var num = temp_products.length;
+				if (num == 0) {
+					$("#put_order").children(".nav-img").children(".num_rank").remove();
+					return;
+				}
+				$("#put_order").children(".nav-img").children(".num_rank").remove();
+				$("#put_order").children(".nav-img").append("<img src='images/" + num +".png' alt='' class='num_rank'>");
+			};
 			//挂单
 			$("#put_order").click(function(){
 				if (order.products.length >0 && temp_products.length < 3) {
@@ -1066,9 +1080,7 @@
 					temp_products.push(order);
 					init_product_infos();
 					member_update();
-					var num = temp_products.length;
-					$(this).children(".nav-img").children(".num_rank").remove();
-					$(this).children(".nav-img").append("<img src='images/" + num +".png' alt='' class='num_rank'>");
+					small_number();
 				}else if (order.products.length >0 && temp_products.length >= 3) {
 					alert("挂单已满");
 				}
@@ -1106,6 +1118,7 @@
 					temp_products.splice(index,1);
 					$("#barcode").val("");
 					$("#guadan").attr("style","display:none;");
+					small_number();
 				});
 				$(".back_product_info").click(function(){
 					$("#guadan").attr("style","display:none;");
@@ -1290,7 +1303,8 @@
 			});
 			//更新订单状态
 			$(".leave").click(function(){
-				if (order.shopping_infos.ready_pay >= order.shopping_infos.total_price) {
+				order.store = store;
+				if (order.shopping_infos.ready_pay+order.shopping_infos.small_change >= order.shopping_infos.total_price) {
 					$.post("/update_order_status",{"order":JSON.stringify(order)},function(data){
 						if (data.success) {
 							$(".print").removeAttr("style");
@@ -1405,6 +1419,7 @@
 				$(".cash_pay").attr("style","display:none;");
 				if (change >= 0) {
 					if (!order.order_id) {
+						order.shopping_infos.total_price =parseFloat((order.shopping_infos.total_price - order.shopping_infos.small_change).toFixed(2));
 						do_get_method("/save_order_detail",{"order":JSON.stringify(order)},function(data){
 							order.order_id = data.row.order_id;
 							var params = {
@@ -1632,7 +1647,7 @@
 					$(".member_amount").html("");
 					$(".member_integral").html("");
 				}
-
+				comefocus();
 			};
 			//会员号码点击
 			var member_click = function(member_phone){
