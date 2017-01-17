@@ -168,6 +168,7 @@ var order_params = function(request){
 		data.vip_id = order.member.vip_id;
 	}
 	data.store_id = order.store_id;
+	data.ready_pay = shopping_infos.ready_pay;
 	data.actual_price = shopping_infos.total_price;
 	data.marketing_price = shopping_infos.marketing_price;
 	data.small_change = order.shopping_infos.small_change;

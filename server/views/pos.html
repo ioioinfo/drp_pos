@@ -1419,7 +1419,6 @@
 				$(".cash_pay").attr("style","display:none;");
 				if (change >= 0) {
 					if (!order.order_id) {
-						order.shopping_infos.total_price =parseFloat((order.shopping_infos.total_price - order.shopping_infos.small_change).toFixed(2));
 						do_get_method("/save_order_detail",{"order":JSON.stringify(order)},function(data){
 							order.order_id = data.row.order_id;
 							var params = {
