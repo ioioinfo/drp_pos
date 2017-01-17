@@ -168,7 +168,8 @@ var order_params = function(request){
 		data.vip_id = order.member.vip_id;
 	}
 	data.store_id = order.store_id;
-	data.ready_pay = shopping_infos.ready_pay;
+	// data.ready_pay = shopping_infos.ready_pay;
+	// console.log("ready_pay:"+ready_pay);
 	data.actual_price = shopping_infos.total_price;
 	data.marketing_price = shopping_infos.marketing_price;
 	data.small_change = order.shopping_infos.small_change;
@@ -589,36 +590,39 @@ exports.register = function(server, options, next){
 				var order = request.payload.order;
 				order = JSON.parse(order);
 				data.order_id = order.order_id;
-				data.change = order.shopping_infos.change;
+				data.ready_pay = order.shopping_infos.ready_pay;
+				data.changes = order.shopping_infos.changes;
 				console.log("data.change:"+data.change);
 				data.order_status = "4";
 				var pay_infos = order.pay_infos;
 				console.log(pay_infos);
-				update_order_status(data,function(err,row){
+
+				get_order_pay_infos(data.order_id,function(err,row){
 					if (!err) {
+						console.log(row);
 						if (row.success) {
-							get_order_pay_infos(data.order_id,function(err,row){
-								if (!err) {
-									console.log(row);
-									if (row.success) {
-										var payinfos = row.rows;
-										if (pay_infos.length != payinfos.length){
-											return reply({"success":false,"message":"付款次数不一致"});
-										}
-										for (var i = 0; i < pay_infos.length; i++) {
-											for (var j = 0; j < payinfos.length; j++) {
-												if (pay_infos[i].fin == payinfos[j].fin_occurrence_log_id) {
-													if (pay_infos[i].pay_amount == payinfos[j].pay_amount) {
-														if (pay_infos[i].pay_way == payinfos[j].pay_way) {
-														}else {
-															return reply({"success":false,"message":"付款方式不一致"});
-														}
-													}else {
-														return reply({"success":false,"message":"付款金额不一致"});
-													}
-												}
+							var payinfos = row.rows;
+							if (pay_infos.length != payinfos.length){
+								return reply({"success":false,"message":"付款次数不一致"});
+							}
+							for (var i = 0; i < pay_infos.length; i++) {
+								for (var j = 0; j < payinfos.length; j++) {
+									if (pay_infos[i].fin == payinfos[j].fin_occurrence_log_id) {
+										if (pay_infos[i].pay_amount == payinfos[j].pay_amount) {
+											if (pay_infos[i].pay_way == payinfos[j].pay_way) {
+											}else {
+												return reply({"success":false,"message":"付款方式不一致"});
 											}
+										}else {
+											return reply({"success":false,"message":"付款金额不一致"});
 										}
+									}
+								}
+							}
+
+							update_order_status(data,function(err,row){
+								if (!err) {
+									if (row.success) {
 										console.log("store:"+order.store);
 										if (order.member) {
 											var info = {
