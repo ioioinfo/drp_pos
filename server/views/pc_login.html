@@ -224,10 +224,13 @@
 
 			if (!username) {
 				alert("用户名必填！");
+				return;
 			}else if (!password) {
 				alert("密码必填！")
+				return;
 			}else if (!vertify) {
 				alert("验证码必须！")
+				return;
 			}
 			$.post("/do_login",{"username":username,"password":password,"vertify":vertify},function(data){
 				if (data.success) {

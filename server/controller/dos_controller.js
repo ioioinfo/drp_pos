@@ -16,7 +16,7 @@ var do_get_method = function(url,cb){
 	});
 };
 
-var do_post_method = function(data,url,cb){
+var do_post_method = function(url,data,cb){
 	uu_request.request(url, data, function(err, response, body) {
 		console.log(body);
 		if (!err && response.statusCode === 200) {
@@ -61,6 +61,7 @@ var get_cookie_storeId = function(request){
 	}
 	return store_id;
 };
+
 //获取验证图片
 var get_captcha = function(cookie_id,cb){
 	var url = "http://139.196.148.40:11111/api/captcha.png?cookie_id="+cookie_id;
@@ -73,12 +74,12 @@ var check_captcha = function(vertify,cookie_id,cb){
 };
 //登入账号验证
 var do_login = function(data, cb){
-	url = "http://139.196.148.40:18666/user/login_check";
-	do_post_method(data,url,cb);
+	var url = "http://139.196.148.40:18666/user/login_check";
+	do_post_method(url,data,cb);
 };
 //获取个人信息
 var get_person_info = function(login_id, org_code, cb){
-	url = "http://139.196.148.40:18666/user/get?login_id=";
+	var url = "http://139.196.148.40:18666/user/get?login_id=";
 	url = url + login_id + "&org_code=" + org_code;
 	do_get_method(url,cb);
 };
@@ -121,7 +122,7 @@ var find_stock = function(product_id,industry_id,stock_options,cb){
 //保存订单
 var save_order = function(data,cb){
 	var url = "http://211.149.248.241:18010/add_order";
-	do_post_method(data,url,cb);
+	do_post_method(url,data,cb);
 };
 //查询商品图片
 var get_picturesById = function(product_id,cb){
@@ -132,12 +133,12 @@ var get_picturesById = function(product_id,cb){
 //现金付款接口
 var cash_pay_method = function(data,cb){
 	var url = "http://139.196.148.40:18008/order_cashpay";
-	do_post_method(data,url,cb);
+	do_post_method(url,data,cb);
 };
 //会员卡支付接口
 var member_card_pay = function(data,cb){
 	var url = "http://139.196.148.40:18008/vip_card_pay";
-	do_post_method(data,url,cb);
+	do_post_method(url,data,cb);
 }
 //支付参数
 var pay_params = function(request){
@@ -181,12 +182,12 @@ var order_params = function(request){
 //白条支付接口
 var credit_pay_method = function(data,cb){
 	var url = "http://139.196.148.40:18008/order_creditpay";
-	do_post_method(data,url,cb);
+	do_post_method(url,data,cb);
 };
 //更新订单状态
 var update_order_status = function(data,cb){
 	var url = "http://211.149.248.241:18010/update_order_status";
-	do_post_method(data,url,cb);
+	do_post_method(url,data,cb);
 };
 //订单支付信息
 var get_order_pay_infos = function(order_id,cb){
@@ -197,7 +198,7 @@ var get_order_pay_infos = function(order_id,cb){
 //会员积分
 var order_finish = function(data,cb){
 	var url = "http://139.196.148.40:18003/vip/order_finish";
-	do_post_method(data,url,cb);
+	do_post_method(url,data,cb);
 }
 //查询订单商品列表
 var search_order_products = function(order_id,cb){
