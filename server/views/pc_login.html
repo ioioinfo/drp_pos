@@ -234,7 +234,7 @@
 			}
 			$.post("/do_login",{"username":username,"password":password,"vertify":vertify},function(data){
 				if (data.success) {
-					location.href = "/pos";
+					location.href = "/";
 				}else {
 					alert(data.message);
 					$("#vertify").val("");

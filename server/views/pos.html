@@ -807,7 +807,7 @@
 	<script id="products" type="text/template">
 		<% _.forEach(products, function(product,index) { %>
 			<li class="product-infor product_line imgAnimation" data-id="<%- index+1 %>" id="<%- product.barcode %>">
-              <div class="product-img">	<% if (product.delay) { %><img src="/images/<%- product.picture %>" alt="" class="<%- product.barcode %>"><% }else{ %><img src="/images/delay.gif" alt="" class="<%- product.barcode %>" data-src="/images/<%- product.picture %>" style="width:62px;height:62px;padding-top:50px;"> <% } %></div>
+              <div class="product-img">	<% if (product.delay) { %><img src="{{ image_host }}/images/<%- product.picture %>" alt="" class="<%- product.barcode %>"><% }else{ %><img src="/images/delay.gif" alt="" class="<%- product.barcode %>" data-src="{{ image_host }}/images/<%- product.picture %>" style="width:62px;height:62px;padding-top:50px;"> <% } %></div>
               <p><%- product.product_name %>
 				  <% _.forEach(product.sale_properties, function(sale_property) { %>
 					  <% if (product.stock_options[sale_property.field_name]) { %>

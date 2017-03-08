@@ -4,7 +4,7 @@ const uu_request = require('../utils/uu_request');
 const uuidV1 = require('uuid/v1');
 var eventproxy = require('eventproxy');
 var org_code = "ioio";
-var service_info = "ec pos service"
+var service_info = "drp pos service"
 var do_get_method = function(url,cb){
 	uu_request.get(url, function(err, response, body){
 		if (!err && response.statusCode === 200) {
@@ -103,19 +103,19 @@ var get_member_info = function(org_code, q, cb){
 };
 //查询商品信息
 var get_product_info = function(barcode, cb){
-	var url = "http://139.196.148.40:12001/get_cached_barcode?barcode=";
+	var url = "http://211.149.248.241:12001/get_cached_barcode?barcode=";
 	url = url + barcode;
 	do_get_method(url,cb);
 };
 //根据货物id找到pos商品
-var find_product_byId = function(product_id, cb){
+var get_pos_product = function(product_id, cb){
 	var url = "http://211.149.248.241:18002/get_pos_product?product_id=";
 	url = url + product_id;
 	do_get_method(url,cb);
 };
 // 查询库存
 var find_stock = function(product_id,industry_id,stock_options,cb){
-	var url = "http://139.196.148.40:12001/get_product_stock?product_id=";
+	var url = "http://211.149.248.241:12001/get_product_stock?product_id=";
 	url = url + product_id + "&industry_id=" + industry_id + "&stock_options=" + stock_options;
 	do_get_method(url,cb);
 };
@@ -125,7 +125,7 @@ var save_order = function(data,cb){
 	do_post_method(url,data,cb);
 };
 //查询商品图片
-var get_picturesById = function(product_id,cb){
+var get_product_pictures = function(product_id,cb){
 	var url = "http://211.149.248.241:18002/get_product_pictures?product_id=";
 	url = url + product_id;
 	do_get_method(url,cb);
@@ -297,7 +297,7 @@ exports.register = function(server, options, next){
 		//登入首页信息
 		{
 			method: 'GET',
-			path: '/pos',
+			path: '/',
 			handler: function(request, reply){
 				var cookie_id = get_cookie_id(request);
 				if (!cookie_id) {
@@ -412,7 +412,7 @@ exports.register = function(server, options, next){
 							var product_id = row.row.product_id;
 							var stock_options = row.row;
 							stock_options.warehouse_id = get_cookie_storeId(request);
-							find_product_byId(product_id, function(err,row){
+							get_pos_product(product_id, function(err,row){
 								if (!err) {
 									console.log(row);
 									if (row.success) {
@@ -427,8 +427,7 @@ exports.register = function(server, options, next){
 												return reply({"success":true,"row":product_info,"message":"ok","stocks":stocks,"picture_info":picture_info,"sale_properties":sale_properties,"stock_options":stock_options,"service_info":service_info});
 										});
 
-
-										get_picturesById(product_id,function(err,rows){
+										get_product_pictures(product_id,function(err,rows){
 											if (!err) {
 												if (rows.rows) {
 													ep.emit("picture_info", rows.rows[0]);
@@ -483,7 +482,7 @@ exports.register = function(server, options, next){
 				if (!store_id) {
 					return reply({"success":false,"message":"store_id null"});
 				}
-				find_product_byId(product_id, function(err, row){
+				get_pos_product(product_id, function(err, row){
 					if (!err) {
 						if (row.success) {
 							console.log(row);
