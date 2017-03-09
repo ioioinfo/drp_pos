@@ -661,7 +661,6 @@ exports.register = function(server, options, next){
 				});
 			}
 		},
-
 		//订单查询页面
 		{
 			method: 'GET',
