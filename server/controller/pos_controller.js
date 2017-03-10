@@ -1,6 +1,5 @@
 // Base routes for item..
 const uu_request = require('../utils/uu_request');
-﻿var industries = require('../utils/industries.js');
 const uuidV1 = require('uuid/v1');
 var eventproxy = require('eventproxy');
 var org_code = "ioio";
@@ -419,8 +418,7 @@ exports.register = function(server, options, next){
 										var product_info = row.row;
 										console.log(product_info);
 										var industry_id = product_info.industry_id;
-										var industry = industries[industry_id];
-										var sale_properties = industry["sale_properties"];
+										var sale_properties = row.sale_properties;
 
 										var ep =  eventproxy.create("stocks","picture_info",
 											function(stocks,picture_info){
@@ -731,9 +729,10 @@ exports.register = function(server, options, next){
 							console.log("rows:"+JSON.stringify(rows));
 							return reply({"success":true,"rows":rows.rows,"service_info":service_info});
 						}else {
+							return reply({"success":false,"message":rows.message,"service_info":service_info});
 						}
 					}else {
-
+						return reply({"success":false,"message":rows.message,"service_info":service_info});
 					}
 				});
 			}
