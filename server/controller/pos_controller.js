@@ -74,11 +74,12 @@ var check_captcha = function(vertify,cookie_id,cb){
 //登入账号验证
 var do_login = function(data, cb){
 	var url = "http://139.196.148.40:18666/user/login_check";
+	data.platform_code = "drp_pos";
 	do_post_method(url,data,cb);
 };
 //获取个人信息
 var get_person_info = function(login_id, org_code, cb){
-	var url = "http://139.196.148.40:18666/user/get?login_id=";
+	var url = "http://139.196.148.40:18666/person/get_by_id?login_id=";
 	url = url + login_id + "&org_code=" + org_code;
 	do_get_method(url,cb);
 };
@@ -278,7 +279,7 @@ exports.register = function(server, options, next){
 									var login_id = content.row.login_id;
 									var cookie = request.state.cookie;
 									if (!cookie) {
-										return reply({"success":false});
+										cookie = {};
 									}
 									cookie.login_id = login_id;
 									return reply({"success":true,"service_info":service_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
@@ -304,7 +305,6 @@ exports.register = function(server, options, next){
 				}
 				var login_id = get_cookie_loginId(request);
 				if (!login_id) {
-					// return reply({"success":false,"message":"login_id null"});
 					return reply.redirect("/login");
 				}
 
@@ -413,13 +413,13 @@ exports.register = function(server, options, next){
 							stock_options.warehouse_id = get_cookie_storeId(request);
 							get_pos_product(product_id, function(err,row){
 								if (!err) {
-									console.log(row);
 									if (row.success) {
 										var product_info = row.row;
-										console.log(product_info);
 										var industry_id = product_info.industry_id;
 										var sale_properties = row.sale_properties;
 
+											console.log(1234);
+											console.log("industry_id:"+industry_id);
 										var ep =  eventproxy.create("stocks","picture_info",
 											function(stocks,picture_info){
 												return reply({"success":true,"row":product_info,"message":"ok","stocks":stocks,"picture_info":picture_info,"sale_properties":sale_properties,"stock_options":stock_options,"service_info":service_info});
@@ -437,7 +437,7 @@ exports.register = function(server, options, next){
 												return reply({"success":false,"message":"search product's picture fail"});
 											}
 										});
-
+										console.log("industry_id:"+industry_id);
 										find_stock(product_id,industry_id,JSON.stringify(stock_options),function(err,row){
 											if (!err) {
 												console.log(row);
