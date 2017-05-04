@@ -230,6 +230,14 @@ var get_orders_byDate = function(date1,date2,cb){
 }
 exports.register = function(server, options, next){
 	server.route([
+		//退出loginout
+		{
+			method: 'GET',
+			path: '/logout',
+			handler: function(request, reply){
+				return reply({"success":true}).state('cookie', {});
+			}
+		},
 		//登入页面
 		{
 			method: 'GET',

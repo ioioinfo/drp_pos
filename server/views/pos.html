@@ -1381,9 +1381,13 @@
 						$("#receipt_infos").removeAttr("style");
 						var t = _.template($("#print_receipt_infos").html());
 						$("#print_receipt_info").html(t({print_infos:print_infos}));
-						$(".print_content").printArea();
-						// print_method(t({print_infos:print_infos}));
-
+						// $(".print_content").printArea();
+						print_method(t({print_infos:print_infos}));
+                        $("#receipt_infos").attr("style","display:none;");
+                        init_product_infos();
+    					init_pay_infos();
+    					product_infos();
+    					member_update();
 					}else {
 
 					}
