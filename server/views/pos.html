@@ -2,14 +2,17 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>pos</title>
+<title>佑佑收银平台</title>
 <script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
 <script src="js/lodash.min.js" type="text/javascript"></script>
 <script src="js/print.js" type="text/javascript"></script>
 <style media="screen">
-	html, body, * {
+	html, body{
 		color: #666;
 		font:12px/1.5 Microsoft YaHei,tahoma,arial,Hiragino Sans GB,\\5b8b\4f53,sans-serif;
+		background: #C8D7DB;
+		background: url(images/cs3.jpg)no-repeat 0 0;
+		background-size: cover;
 	}
       *{
       margin: 0;
@@ -31,29 +34,26 @@
         margin: 0 auto;
 
         position: relative;
+
       }
       .top{
         width: 100%;
         height: 73px;
-        background: url(images/header-2.jpg) no-repeat 0 0;
-        background-size: cover;
         overflow: hidden;
       }
       .top-left{
-        width: 45px;
-        height: 45px;
-        background: url(images/orange.png) no-repeat 0 0;
+	  	width: 112px;
+        background: url(images/exit.png) no-repeat 0 0;
         background-size: contain;
         line-height: 45px;
         text-align: center;
         margin-top: 12px;
-        margin-left: 19px;
         float: left;
       }
       .top-center{
-        width: 216px;
+        width: 243px;
         height: 73px;
-        background: url(images/shopname.png) no-repeat 0 0;
+        background: url(images/tiaofu.png) no-repeat 0 0;
         background-size: contain;
         position: absolute;
         top: 9px;
@@ -65,6 +65,7 @@
       .top-center span{
         display: inline-block;
         padding-top: 16px;
+		padding-left: 64px;
         font-weight: 600;
         opacity: 0.8;
       }
@@ -76,7 +77,7 @@
       .top-right-left{
         width: 25px;
         height: 25px;
-        background: url(images/header-1.png) no-repeat 0 0;
+        background: url(images/houtai_touxiang1.png) no-repeat 0 0;
         background-size: contain;
       }
 
@@ -84,8 +85,6 @@
       .middle{
         width: 100%;
         height: 560px;
-        background: url(images/header-2.jpg) no-repeat 0 0;
-        background-size: cover;
         overflow: hidden;
       }
       .middle-tiaoma{
@@ -119,12 +118,10 @@
         height: 470px;
         background: #fff;
         margin: 0 auto;
-        margin-top: 23px;
 
       }
       .product-infor{
 		width: 196px;
-  		height: 244px;
         margin-top:10px;
         margin: 10px 15px 0;
         display: inline-block;
@@ -133,11 +130,20 @@
 
       .product-infor p{
         width: 170px;
+		max-height: 41px;
         margin: 0 auto;
         font-size: 12px;
         padding-bottom: 5px;
         color: #6d40ae;
 		margin-top: 3px;
+		overflow:hidden;
+		text-overflow:ellipsis;
+		display:-webkit-box;
+		-webkit-box-orient:vertical;
+		-webkit-line-clamp:2;
+
+
+
       }
       .product-img{
         margin: 0 auto;
@@ -169,15 +175,14 @@
       }
      /*底                部*/
      .footer{
-       background: url(images/footer.jpg) no-repeat 0 0;
-       background-size: cover;
        overflow: hidden;
      }
      .footer-left{
        width: 140px;
        height: 130px;
        float: left;
-
+	   background: url(images/deng.png)no-repeat 0 0;
+	   background-size: contain;
      }
      .footer-left p{
        font-size: 12px;
@@ -221,8 +226,6 @@
       margin-right:10px;
       width: 160px;
       height: 130px;
-      background: url(images/jiesuan.png) no-repeat 0 0;
-      background-size: cover;
     }
     .footer-right p{
       text-align: center;
@@ -264,8 +267,6 @@
 		transform: translate(-50%, -50%);
 		border-radius: 3px;
 		overflow: hidden;
-		background: url(images/bg01.png) no-repeat;
-		background-size:100% 100%;
 	}
 	.curr{
 		/*background: #dedede;*/
@@ -651,11 +652,11 @@
 	</div>
 	<div class="warp">
       <div class="top">
-        <div class="top-left"><a href="#">返回</a></div>
+        <div class="top-left"><a href="/logout">退出</a></div>
         <div class="top-center"><span><u>{{store_info[0].org_store_name}}</u></span></div>
         <div class="top-right">
           <div class="top-right-left"></div>
-          <span><a href="#">{{person_info.person.person_code}}</a></span>
+          <span><a>{{person_info.person.person_code}}</a></span>
         </div>
       </div>
       <div class="middle">
