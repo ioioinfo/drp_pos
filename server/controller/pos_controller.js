@@ -167,6 +167,7 @@ var order_params = function(request){
 	data.pay_way = JSON.stringify(order.pay_way);
 	if (order.member) {
 		data.vip_id = order.member.vip_id;
+		data.person_id = order.member.person_id;
 	}
 	data.store_id = order.store_id;
 	// data.ready_pay = shopping_infos.ready_pay;
@@ -184,6 +185,17 @@ var credit_pay_method = function(data,cb){
 	var url = "http://139.196.148.40:18008/order_creditpay";
 	do_post_method(url,data,cb);
 };
+//微信支付接口
+var order_wxtransferpay = function(data,cb){
+	var url = "http://139.196.148.40:18008/order_wxtransferpay";
+	do_post_method(url,data,cb);
+};
+//支付宝支付接口
+var order_alitransferpay = function(data,cb){
+	var url = "http://139.196.148.40:18008/order_alitransferpay";
+	do_post_method(url,data,cb);
+};
+
 //更新订单状态
 var update_order_status = function(data,cb){
 	var url = "http://211.149.248.241:18010/update_order_status";
@@ -569,6 +581,40 @@ exports.register = function(server, options, next){
 			handler: function(request, reply){
 				var data = pay_params(request);
 				credit_pay_method(data,function(err,row){
+					if (!err) {
+						if (row.success) {
+							return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
+						}else {
+						}
+					}else {
+					}
+				});
+			}
+		},
+		//微信支付处理订单
+		{
+			method: 'GET',
+			path: '/order_wxtransferpay',
+			handler: function(request, reply){
+				var data = pay_params(request);
+				order_wxtransferpay(data,function(err,row){
+					if (!err) {
+						if (row.success) {
+							return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
+						}else {
+						}
+					}else {
+					}
+				});
+			}
+		},
+		//支付宝支付处理订单
+		{
+			method: 'GET',
+			path: '/order_alitransferpay',
+			handler: function(request, reply){
+				var data = pay_params(request);
+				order_alitransferpay(data,function(err,row){
 					if (!err) {
 						if (row.success) {
 							return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
