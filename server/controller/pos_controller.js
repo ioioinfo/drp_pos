@@ -235,7 +235,7 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/logout',
 			handler: function(request, reply){
-				return reply({"success":true}).state('cookie', {});
+				return reply.redirect("/login").state('cookie', {});
 			}
 		},
 		//登入页面
