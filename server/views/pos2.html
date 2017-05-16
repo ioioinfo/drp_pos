@@ -2,17 +2,14 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>佑佑收银平台</title>
+<title>pos</title>
 <script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
 <script src="js/lodash.min.js" type="text/javascript"></script>
 <script src="js/print.js" type="text/javascript"></script>
 <style media="screen">
-	html, body{
+	html, body, * {
 		color: #666;
 		font:12px/1.5 Microsoft YaHei,tahoma,arial,Hiragino Sans GB,\\5b8b\4f53,sans-serif;
-		background: #C8D7DB;
-		background: url(images/cs3.jpg)no-repeat 0 0;
-		background-size: cover;
 	}
       *{
       margin: 0;
@@ -23,7 +20,7 @@
       }
       a{
         text-decoration: none;
-        color: #000;
+        color: #fff;
       }
 	  img{
 		  cursor: pointer;
@@ -34,26 +31,29 @@
         margin: 0 auto;
 
         position: relative;
-
       }
       .top{
         width: 100%;
         height: 73px;
+        background: url(images/header-2.jpg) no-repeat 0 0;
+        background-size: cover;
         overflow: hidden;
       }
       .top-left{
-	  	width: 112px;
-        background: url(images/exit.png) no-repeat 0 0;
+        width: 45px;
+        height: 45px;
+        background: url(images/orange.png) no-repeat 0 0;
         background-size: contain;
         line-height: 45px;
         text-align: center;
         margin-top: 12px;
+        margin-left: 19px;
         float: left;
       }
       .top-center{
-        width: 243px;
+        width: 216px;
         height: 73px;
-        background: url(images/tiaofu.png) no-repeat 0 0;
+        background: url(images/shopname.png) no-repeat 0 0;
         background-size: contain;
         position: absolute;
         top: 9px;
@@ -65,7 +65,6 @@
       .top-center span{
         display: inline-block;
         padding-top: 16px;
-		padding-left: 64px;
         font-weight: 600;
         opacity: 0.8;
       }
@@ -77,88 +76,68 @@
       .top-right-left{
         width: 25px;
         height: 25px;
-        background: url(images/houtai_touxiang1.png) no-repeat 0 0;
+        background: url(images/header-1.png) no-repeat 0 0;
         background-size: contain;
-		display: inline-block;
       }
 
       /*中间部分*/
       .middle{
         width: 100%;
         height: 560px;
+        background: url(images/header-2.jpg) no-repeat 0 0;
+        background-size: cover;
         overflow: hidden;
       }
       .middle-tiaoma{
-		  width: 247px;
-	      position: absolute;
-	      bottom: 157px;
-	      overflow: hidden;
-	      right: 26px;
+        width: 265px;
+        float: right;
+        position: absolute;
+        top:82px;
+        right: -30px;
+        overflow: hidden;
       }
       .tiaoma-left{
-		  width: 42px;
-	      height: 42px;
-	      background: url(images/tiaoma1.png) no-repeat 0 0;
-	      background-size: cover;
-	      display: inline-block;
-	      vertical-align: middle;
+        width:20px;
+        height:15px;
+        background: url(images/tiaoma.png) no-repeat 0 0;
+        background-size: cover;
+        display: inline-block;
 
       }
       .tiaoma-right{
-		  margin-top: -2px;
-	      width: 74%;
-	      height: 22px;
-	      display: inline-block;
-	      outline: none;
-	      -webkit-appearance: none;
-	      vertical-align: middle;
-	      border: none;
-	      padding: 10px 0;
-		  background: url(images/tiaoma2.png) no-repeat 0 0;
-	      background-size: cover;
-		  text-indent: 15px;
-		  color: #fff;
+        margin-top: -2px;
+        width: 162px;
+        height: 22px;
+        display: inline-block;
+        outline: none;
+        -webkit-appearance : none ;
+        vertical-align: middle;
+        border: none;
       }
-	  input::-webkit-input-placeholder {
-		  color:#fff;
-		  text-indent: 15px;
-      }
-      input:-moz-placeholder {
-          color:#fff;
-		  text-indent: 15px;
-      }
-
       .middle-product{
         width: 944px;
         height: 470px;
-        background: #DDE6FA;
+        background: #fff;
         margin: 0 auto;
-		border: 1px solid #4c7be3;
+        margin-top: 23px;
+
       }
       .product-infor{
 		width: 196px;
+  		height: 244px;
         margin-top:10px;
         margin: 10px 15px 0;
         display: inline-block;
-		border: 1px solid #4C7BE3;
+		border: 1px solid #e5e5e8;
       }
 
       .product-infor p{
         width: 170px;
-		max-height: 41px;
         margin: 0 auto;
         font-size: 12px;
         padding-bottom: 5px;
         color: #6d40ae;
 		margin-top: 3px;
-		overflow:hidden;
-		text-overflow:ellipsis;
-		display:-webkit-box;
-		-webkit-box-orient:vertical;
-		-webkit-line-clamp:2;
-
-
-
       }
       .product-img{
         margin: 0 auto;
@@ -171,7 +150,7 @@
       }
       .product-infor span:first-child{
         font-size: 16px;
-        color: #666;
+        color: red;
         margin-left: 9px;
       }
       .product-infor span:last-child{
@@ -190,34 +169,34 @@
       }
      /*底                部*/
      .footer{
+       background: url(images/footer.jpg) no-repeat 0 0;
+       background-size: cover;
        overflow: hidden;
      }
      .footer-left{
        width: 140px;
        height: 130px;
        float: left;
-	   background: url(images/vip_card.png)no-repeat 0 0;
-	   background-size: contain;
+
      }
      .footer-left p{
        font-size: 12px;
        font-weight: 400;
        text-align: center;
-       line-height: 24px;
-       color: #000;
+       line-height: 15px;
+       color: #fff;
     }
     .footer-left p:first-child{
-      margin-top: 18px;
+      margin-top: 47px;
     }
     .footer-center{
       width: 714px;
       height: 130px;
       float: left;
-	  margin-left: 15px;
     }
     .footer-center-nav{
       display: flex;
-      margin-top: 20px;
+      margin-top: 43px;
     }
     .footer-center-nav li{
       flex: 1;
@@ -239,18 +218,18 @@
     }
     .footer-right{
       float: right;
-      width: 140px;
+      margin-right:10px;
+      width: 160px;
       height: 130px;
-	  cursor: pointer;
-	  background: url(images/jiesuan1.png)no-repeat 0 0;
-	  background-size: contain;
+      background: url(images/jiesuan.png) no-repeat 0 0;
+      background-size: cover;
     }
     .footer-right p{
       text-align: center;
       color: #fff;
     }
     .footer-right p:first-child{
-      margin-top: 18px;
+      margin-top: 57px;
       font-size: 18px;
       font-weight: 600;
     }
@@ -261,10 +240,9 @@
     }
     .ma-num{
       display: inline-block;
-      padding-top: 10px;
-	  padding-bottom: 10px;
+      padding-top: 20px;
       margin-left: 40px;
-      color: #000;
+      color: #fff;
     }
 	.weui_mask {
 		position: fixed;
@@ -279,15 +257,15 @@
 		position: fixed;
 		z-index: 13;
 		width: 380px;
-    	height: 180px;
+    	height: 140px;
 		top: 47%;
 		left: 50%;
 		-webkit-transform: translate(-50%, -50%);
 		transform: translate(-50%, -50%);
 		border-radius: 3px;
 		overflow: hidden;
-		background: url(images/price_num.jpg)no-repeat 0 0;
-  	  	background-size: cover;
+		background: url(images/bg01.png) no-repeat;
+		background-size:100% 100%;
 	}
 	.curr{
 		/*background: #dedede;*/
@@ -299,7 +277,7 @@
 	}
 	.member_phone{
 		margin-left: 12px;
-		width: 254px;
+		width: 165px;
 		padding: 2px;
 		height: 24px;
 		font-size: 16px;
@@ -311,7 +289,7 @@
 	    float: left;
 	    line-height: 30px;
 	    border: 1px solid #CECECE;
-	    margin-left: 52px;
+	    margin-left: 62px;
 	    cursor: pointer;
 	    text-align: center;
 	}
@@ -319,6 +297,7 @@
 		position: fixed;
 		z-index: 13;
 		width: 540px;
+		height: 500px;
 		top: 50%;
 		left: 53%;
 		-webkit-transform: translate(-50%, -50%);
@@ -336,6 +315,8 @@
 		border:1px solid red;
 	}
 	.pay_table{
+		height:140px;
+		width: 510px;
 		margin: 20px auto;
 	}
 	table.pay_way_infos {
@@ -345,8 +326,7 @@
 		border-width: 1px;
 		border-color: #666;
 		border-collapse: collapse;
-		width: 98%;
-		margin: 0 auto;
+		width: 100%;
 	}
 	table.pay_way_infos th {
 		border-width: 1px;
@@ -373,7 +353,6 @@
 		 -webkit-animation: imgAnimation 1s alternate;
 		 /*-moz-animation: imgAnimation 1s alternate;*/
 		 border:1px solid red;
-		 background: #F1F5FD;
 	}
 	@-webkit-keyframes imgAnimation{
 		0%{ opacity: 0}
@@ -391,12 +370,12 @@
 		width:16px;
 		font-size:16px;
 		cursor: pointer;
-		color: #fff;
 	}
 	#update_name{
 		font-size: 16px;
-		margin-left: 20px;
-		color: #fff;
+		font-weight: 700;
+		margin-left: 60px;
+		line-height: 30px;
 	}
 	.update_data{
 		margin-left: 57px;
@@ -455,11 +434,6 @@
 		overflow: hidden;
 		width: 370px;
 		height: 200px;
-		background: url(images/vip_alert.png)no-repeat 0 0;
-  	  	background-size: contain;
-	}
-	.get_member span{
-		color: #2172AE;
 	}
 	.pay_img{
 		float:left;
@@ -492,11 +466,9 @@
 		background: url(images/guadan02.png) no-repeat;
 		background-size:100% 100%;
 		height: 350px;
-		overflow: hidden;
-    	padding: 0 12px;
 	}
 	.guadan01{
-		font-size:12px;
+		font-size:14px;
 		line-height:14px;
 		width: 40%;
 		display: inline-block;
@@ -506,19 +478,17 @@
 		line-height:14px;
 		width: 17%;
 		display: inline-block;
-		vertical-align: top;
 	}
 	.guadan03{
 		font-size:14px;
 		line-height:14px;
 		width: 40%;
 		display: inline-block;
-		vertical-align: top;
 	}
 	.back_product_info{
-		position: absolute;
-    	top: 46px;
-    	left: 20px;
+		position: fixed;
+		top: 29px;
+		right: 15px;
 	}
 	.weui_dialog5 {
 		position: fixed;
@@ -554,63 +524,6 @@
 		height: 17px;
 		position: absolute;
 	}
-
-	.margin_right{
-		margin-right: 65px;
-		    font-size: 14px;
-	}
-	.padding_top{
-		padding-top: 24px;
-	}
-	.back{
-		padding: 3px 5px;
-		background: #58C3E5;
-		border-radius: 2px;
-		color: #fff;
-		cursor: pointer;
-	}
-	.span_width{
-		display: inline-block;
-		width: 219.14px;
-	}
-	.leave{
-		color: #fff;
-    	background-color: #286090;
-    	border-color: #204d74;
-		padding: 12px 50px;
-	    font-size: 12px;
-	    line-height: 1.5;
-	    border-radius: 3px;
-		display: inline-block;
-		font-weight: 400;
-		text-align: center;
-    	white-space: nowrap;
-    	vertical-align: middle;
-		touch-action: manipulation;
-    	cursor: pointer;
-		margin-bottom: 7px;
-	}
-	.cash_value{
-		width: 110px;
-	    border: 1px solid #999;
-	}
-	.print{
-		color: #fff;
-    	background-color: #00A9F2;
-		border-color: #00A9F2;
-		padding: 12px 50px;
-	    font-size: 12px;
-	    line-height: 1.5;
-	    border-radius: 3px;
-		display: inline-block;
-		font-weight: 400;
-		text-align: center;
-    	white-space: nowrap;
-    	vertical-align: middle;
-		touch-action: manipulation;
-    	cursor: pointer;
-		margin-bottom: 7px;
-	}
 </style>
 </head>
   <body>
@@ -632,7 +545,7 @@
 		  <div style="width:100%;height:20px" >
 			  <div class="close">X</div>
 		  </div>
-		  <div style="width:100%;height:70px">
+		  <div style="width:100%;height:30px">
 			  <div id="update_name"></div>
 		  </div>
 		  <div style="width:100%;height:50px;">
@@ -650,8 +563,8 @@
 	<div id="pay_info" style="display:none;">
 		<div class="weui_mask"></div>
 		<div class="weui_dialog2">
-			<div style="width:100%;">
-				<div style="width:500px;margin:0 auto">
+			<div style="height:500px;width:100%;">
+				<div style="width:500px;height:280px;margin:0 auto">
 					<img src="/images/pay01.png" class="pay_img cash"/>
 					<img src="/images/pay03.png" class="pay_img"/>
 					<img src="/images/pay02.png" class="pay_img alipay"/>
@@ -659,48 +572,44 @@
 					<!-- <img src="/images/pay05.png" class="pay_img2 credit"/>
 					<img src="/images/pay06.png" class="pay_img2"/> -->
 
-					<img src="/images/pay05.png" class="pay_img" />
-					<img src="/images/pay06.png" class="pay_img" />
-					<img src="/images/pay07.png" class="pay_img2 ali_transfer"/>
-					<img src="/images/pay08.png" class="pay_img2 weixin_transfer"/>
+					<img src="/images/pay05.png" class="pay_img2 ali_transfer"/>
+					<img src="/images/pay06.png" class="pay_img2 weixin_transfer"/>
 					<div style="clear:both;"></div>
-					<div style="margin-left:24px;" class="padding_top">
-						<span class="pay_amount margin_right"></span>
-						<span class="cash_pay margin_right span_width" style="display:none;">
+					<div style="margin-left:24px;">
+						<div class="pay_amount"></div>
+						<div class="cash_pay" style="display:none;">
 							现金：<input class="cash_value" type="text" value=""/>
-						</span>
-						<span class="alipay_pay margin_right span_width" style="display:none;">
-							支付宝：<input class="alipay_value cash_value" type="text" value="" data-id="1"/>
-						</span>
-						<span class="member_pay margin_right span_width" style="display:none;">
+						</div>
+						<div class="alipay_pay" style="display:none;">
+							支付宝：<input class="alipay_value" type="text" value="" data-id="1"/>
+						</div>
+						<div class="member_pay" style="display:none;">
 							卡号：<input class="member_number" type="text" value="" placeholder="会员还未登记！" readonly style="width:90px;"/>
 							<span style="margin-left:20px;">金额：</span><input class="member_value" type="text" value="" style="width:90px;"/>
 							<span style="margin-left:20px;">支付码：</span><input class="member_pay_card" type="text" value="" style="width:90px;"/>
-						</span>
-						<span class="credit_pay margin_right span_width" style="display:none;">
-							白条：<input class="credit_value cash_value" type="text" value=""/>
-						</span>
-						<span class="ali_transfer_pay margin_right span_width" style="display:none;">
-							支付宝转账：<input class="ali_transfer_value cash_value" type="text" value=""/>
-						</span>
-						<span class="weixin_transfer_pay margin_right span_width" style="display:none;">
-							微信转账：<input class="weixin_transfer_value cash_value" type="text" value=""/>
-						</span>
-						<span class="pay_more margin_right span_width" style="display:none;">
-							<span>支付完成！</span>
-						</span>
-						<span class="choose_pay margin_right span_width" style="display:none;">
+						</div>
+						<div class="credit_pay" style="display:none;">
+							白条：<input class="credit_value" type="text" value=""/>
+						</div>
+						<div class="ali_transfer_pay" style="display:none;">
+							支付宝转账：<input class="ali_transfer_value" type="text" value=""/>
+						</div>
+						<div class="weixin_transfer_pay" style="display:none;">
+							微信转账：<input class="weixin_transfer_value" type="text" value=""/>
+						</div>
+						<div class="pay_more" style="display:none;">
+							<div>支付完成！</div>
+						</div>
+						<div class="choose_pay" style="display:none;">
 							请选择其他支付方式
-						</span>
-						<span class="back" style="width: 50px;">返回</span>
+						</div>
+						<div class="back" style="width: 50px;">返回</div>
 					</div>
 				</div>
 				<div class="pay_table">
 				</div>
-				<div class="" style="text-align:center">
-					<span class="leave">确 认</span>
-					<input class="print" type="button" value="打印" style="display:none;"/>
-				</div>
+				<img src="/images/sure.png" class="leave" style="width: 50px;">
+				<input class="print" type="button" value="打印" style="display:none;"/>
 			</div>
 		</div>
 	</div>
@@ -742,18 +651,21 @@
 	</div>
 	<div class="warp">
       <div class="top">
-        <div class="top-left"><a href="/logout">退出</a></div>
+        <div class="top-left"><a href="#">返回</a></div>
         <div class="top-center"><span><u>{{store_info[0].org_store_name}}</u></span></div>
         <div class="top-right">
-			<span><a>{{person_info.person.person_code}}</a></span>
           <div class="top-right-left"></div>
+          <span><a href="#">{{person_info.person.person_code}}</a></span>
         </div>
       </div>
       <div class="middle">
+        <div class="ma-num">
+          机器编号：001
+        </div>
 
         <div class="middle-tiaoma">
           <div class="tiaoma-left"></div>
-          <input type="text" name="" value="" class="tiaoma-right" style="padding-left: 5px;" id="barcode" placeholder="条形码">
+          <input type="text" name="" value="" class="tiaoma-right" style="padding-left: 5px;" id="barcode">
         </div>
 
         <!-- 商品显示 -->
@@ -773,7 +685,7 @@
             <li>
               <div class="nav-infor member">
                 <div class="nav-img">
-                  <img src="images/vip_num.png" alt="">
+                  <img src="images/yu.png" alt="">
                 </div>
 
               </div>
@@ -782,7 +694,7 @@
             <li>
               <div class="nav-infor" id="put_order">
                 <div class="nav-img" >
-                  <img src="images/guadan1.png" alt="">
+                  <img src="images/yuan.png" alt="">
                 </div>
               </div>
               <p>挂单</p>
@@ -790,7 +702,7 @@
             <li>
               <div class="nav-infor" id="get_order">
                 <div class="nav-img">
-                  <img src="images/qudan1.png" alt="">
+                  <img src="images/fu.png" alt="">
                 </div>
               </div>
               <p>取单</p>
@@ -798,7 +710,7 @@
             <li>
               <div class="nav-infor" id="clear">
                 <div class="nav-img">
-                  <img src="images/zuofei.png" alt="">
+                  <img src="images/jianzhi-fu.png" alt="">
                 </div>
               </div>
               <p>作废</p>
@@ -806,7 +718,7 @@
             <li>
               <div class="nav-infor">
                 <div class="nav-img">
-                  <img src="images/qianxiang.png" alt="">
+                  <img src="images/deng.png" alt="">
                 </div>
               </div>
               <p>弹出钱箱</p>
@@ -815,7 +727,7 @@
           </ul>
         </div>
         <div class="footer-right" id="pay">
-          <p><u id="amount" style="color:#000;font-size:30px;">￥0.00</u></p>
+          <p><u id="amount" style="color:white;">￥0.00</u></p>
           <p></p>
         </div>
       </div>
@@ -832,7 +744,6 @@
 		<div class="weui_dialog5">
 			<div class="print_content">
 				<style type="text/css">
-
 					.print_content {
 						width: 255px;
 					}
@@ -855,7 +766,7 @@
 					}
 				</style>
 				<div class="logo">
-					善淘慈善商店
+					佑佑&nbsp;&nbsp;YOYO
 				</div>
 				<div class="normal">{{store_info[0].org_store_name}}</div>
 				<div class="normal">电话：021-60489399</div>
@@ -1307,6 +1218,7 @@
 							highlight(barcode);
 						} else {
 							bobang_fail();
+							alert(data.message);
 						}
 					});
 				}
@@ -1434,6 +1346,7 @@
 			$(".leave").click(function(){
 				order.store = store;
 				if (order.shopping_infos.ready_pay+order.shopping_infos.small_change >= order.shopping_infos.total_price) {
+
 					$.post("/update_order_status",{"order":JSON.stringify(order)},function(data){
 						if (data.success) {
 							$(".print").removeAttr("style");
