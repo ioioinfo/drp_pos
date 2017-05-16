@@ -1,1 +1,1 @@
-# admin_controller
+# pos_controller

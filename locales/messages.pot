@@ -1,11 +1,11 @@
-#: drp_admin service system_controller
-msgid "Enter a comma separated list of user names."
+#: ioio_authority service auth_controller
+msgid "login error"
 msgstr ""
 
-#: drp_admin service full_text_controller
-msgid "Unable to find user: @users"
-msgid_plural "Unable to find users: @users"
-msgstr[0] ""
-msgstr[1] ""
+msgid "has no store role"
+msgstr ""
 
-#: drp_admin service admin_controller
+
+# drp_pos service pos_controller
+msgid "vertify wrong"
+msgstr ""
