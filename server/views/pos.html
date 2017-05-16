@@ -1402,7 +1402,6 @@
 			$(".leave").click(function(){
 				order.store = store;
 				if (order.shopping_infos.ready_pay+order.shopping_infos.small_change >= order.shopping_infos.total_price) {
-
 					$.post("/update_order_status",{"order":JSON.stringify(order)},function(data){
 						if (data.success) {
 							$(".print").removeAttr("style");

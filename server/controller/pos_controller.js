@@ -624,6 +624,7 @@ exports.register = function(server, options, next){
 			handler: function(request, reply){
 				var data = {};
 				var order = request.payload.order;
+				order = JSON.parse(order);
 				data.order_id = order.order_id;
 				data.ready_pay = order.shopping_infos.ready_pay;
 				data.changes = order.shopping_infos.changes;
