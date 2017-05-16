@@ -1,4 +1,8 @@
-#: ioio_authority service auth_controller
+# common message
+msgid "network error"
+msgstr ""
+
+# ioio_authority service auth_controller
 msgid "login error"
 msgstr ""
 
