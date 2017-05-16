@@ -17,7 +17,6 @@ var do_get_method = function(url,cb){
 
 var do_post_method = function(url,data,cb){
 	uu_request.request(url, data, function(err, response, body) {
-		console.log(body);
 		if (!err && response.statusCode === 200) {
 			cb(false,body);
 		} else {
@@ -171,7 +170,6 @@ var order_params = function(request){
 	}
 	data.store_id = order.store_id;
 	// data.ready_pay = shopping_infos.ready_pay;
-	// console.log("ready_pay:"+ready_pay);
 	data.actual_price = shopping_infos.total_price;
 	data.marketing_price = shopping_infos.marketing_price;
 	data.small_change = order.shopping_infos.small_change;
@@ -346,7 +344,6 @@ exports.register = function(server, options, next){
 					if (!err) {
 						if (row.success) {
 							var person_info = row.row;
-							console.log(person_info);
 							ep.emit("person_info", person_info);
 						}else {
 							ep.emit("person_info", null);
@@ -360,7 +357,6 @@ exports.register = function(server, options, next){
 					if (!err) {
 						if (rows.success) {
 							var store_info = rows.rows;
-							console.log(store_info);
 							ep.emit("store_info", store_info);
 						}else {
 							ep.emit("store_info", null);
@@ -374,7 +370,6 @@ exports.register = function(server, options, next){
 					if (!err) {
 						if (rows.success) {
 							var company_info = rows.rows;
-							console.log(company_info);
 							ep.emit("company_info", company_info);
 						}else {
 							ep.emit("company_info", null);
@@ -392,7 +387,6 @@ exports.register = function(server, options, next){
 			path: '/get_member_info',
 			handler: function(request, reply){
 				var q = request.query.q;
-				console.log("q:"+q);
 				var login_id = get_cookie_loginId(request);
 				if (!login_id) {
 					return reply.redirect("/login");
@@ -401,7 +395,6 @@ exports.register = function(server, options, next){
 					if (!err) {
 						if (row.success) {
 							var member_info = row.row;
-							console.log(member_info);
 							return reply({"success":true,"row":member_info,"message":"ok","service_info":service_info});
 						}else {
 							return reply({"success":false,"message":row.message,"service_info":service_info});
@@ -437,9 +430,6 @@ exports.register = function(server, options, next){
 										var product_info = row.row;
 										var industry_id = product_info.industry_id;
 										var sale_properties = row.sale_properties;
-
-											console.log(1234);
-											console.log("industry_id:"+industry_id);
 										var ep =  eventproxy.create("stocks","picture_info",
 											function(stocks,picture_info){
 												return reply({"success":true,"row":product_info,"message":"ok","stocks":stocks,"picture_info":picture_info,"sale_properties":sale_properties,"stock_options":stock_options,"service_info":service_info});
@@ -457,10 +447,8 @@ exports.register = function(server, options, next){
 												return reply({"success":false,"message":"search product's picture fail"});
 											}
 										});
-										console.log("industry_id:"+industry_id);
 										find_stock(product_id,industry_id,JSON.stringify(stock_options),function(err,row){
 											if (!err) {
-												console.log(row);
 												ep.emit("stocks", row.stocks);
 											}else {
 												return reply({"success":false,"message":"search product's stock fail"});
@@ -503,14 +491,12 @@ exports.register = function(server, options, next){
 				get_pos_product(product_id, function(err, row){
 					if (!err) {
 						if (row.success) {
-							console.log(row);
 							var product = row.row;
 							var industry_id = product.industry_id;
 							stock_options.warehouse_id = store_id;
 
 							find_stock(product_id,industry_id,JSON.stringify(stock_options),function(err,row){
 								if (!err) {
-									console.log(row);
 									return reply({"success":true,"row":product,"message":"ok","stocks":row.stocks,"service_info":service_info});
 								}else {
 									return reply({"success":false});
@@ -536,7 +522,6 @@ exports.register = function(server, options, next){
 					return reply.redirect("/login");
 				}
 				var data = order_params(request);
-				console.log("data.vip_id:"+data.vip_id);
 				save_order(data,function(err, row){
 					if (!err) {
 						return reply({"success":true,"row":row,"service_info":service_info});
@@ -570,7 +555,6 @@ exports.register = function(server, options, next){
 				data.paycode = request.query.paycode;
 				member_card_pay(data,function(err,row){
 					if (!err) {
-						console.log("row:"+row);
 						if (row.success) {
 							return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
 						}else {
@@ -640,18 +624,14 @@ exports.register = function(server, options, next){
 			handler: function(request, reply){
 				var data = {};
 				var order = request.payload.order;
-				order = JSON.parse(order);
 				data.order_id = order.order_id;
 				data.ready_pay = order.shopping_infos.ready_pay;
 				data.changes = order.shopping_infos.changes;
-				console.log("data.change:"+data.change);
 				data.order_status = "4";
 				var pay_infos = order.pay_infos;
-				console.log(pay_infos);
 
 				get_order_pay_infos(data.order_id,function(err,row){
 					if (!err) {
-						console.log(row);
 						if (row.success) {
 							var payinfos = row.rows;
 							if (pay_infos.length != payinfos.length){
@@ -675,7 +655,6 @@ exports.register = function(server, options, next){
 							update_order_status(data,function(err,row){
 								if (!err) {
 									if (row.success) {
-										console.log("store:"+order.store);
 										if (order.member) {
 											var info = {
 												order_id : order.order_id,
@@ -684,13 +663,7 @@ exports.register = function(server, options, next){
 												amount : order.shopping_infos.total_price
 											};
 											order_finish(info,function(err,row){
-												// if (!err) {
-												// 	if (row.success) {
-												// 		return reply({"success":true});
-												// 	}
-												// }else {
-												// 	return reply({"success":false});
-												// }
+
 											});
 											return reply({"success":true});
 										}else {
@@ -704,7 +677,7 @@ exports.register = function(server, options, next){
 								}
 							});
 						}else {
-							return reply({"success":false,"message":"row.message"});
+							return reply({"success":false,"message":row.message});
 						}
 					}else {
 						return reply({"success":false,"message":"fail"});
@@ -729,11 +702,9 @@ exports.register = function(server, options, next){
 				var order_id = request.query.order_id;
 				var ep = eventproxy.create("order","order_details","pay_infos",
 					function(order,order_details,pay_infos){
-						console.log("123");
 						return reply({"success":true,"order":order,"order_details":order_details,"pay_infos":pay_infos,"service_info":service_info});
 				});
 				search_order_products(order_id, function(err,row){
-					console.log("row:"+JSON.stringify(row));
 					if (!err) {
 						if (row.success) {
 							var order_details = row.order_details;
@@ -760,7 +731,6 @@ exports.register = function(server, options, next){
 					if (!err) {
 						if (row.success) {
 							var pay_infos = row.rows;
-							console.log("pay_infos"+pay_infos);
 							ep.emit("pay_infos", pay_infos);
 						}else {
 							ep.emit("pay_infos", null);
@@ -780,7 +750,6 @@ exports.register = function(server, options, next){
 				get_all_orders(function(err,rows){
 					if (!err) {
 						if (rows.success) {
-							console.log("rows:"+JSON.stringify(rows));
 							return reply({"success":true,"rows":rows.rows,"service_info":service_info});
 						}else {
 							return reply({"success":false,"message":rows.message,"service_info":service_info});
@@ -801,7 +770,6 @@ exports.register = function(server, options, next){
 				get_orders_byDate(date1,date2,function(err,rows){
 					if (!err) {
 						if (rows.success) {
-							console.log("rows:"+JSON.stringify(rows));
 							return reply({"success":true,"rows":rows.rows,"service_info":service_info});
 						}else {
 						}
