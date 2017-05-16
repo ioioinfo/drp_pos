@@ -1,4 +1,4 @@
-﻿var Hapi = require('hapi');
+var Hapi = require('hapi');
 // Create a server with a host and port
 var server = new Hapi.Server();
 
@@ -40,13 +40,8 @@ server.state('cookie', {
 // Export the server to be required elsewhere.
 module.exports = server;
 
-/*
-    Load all plugins and then start the server.
-    First: community/npm plugins are loaded
-    Second: project specific plugins are loaded
- */
 server.register([
-	{
+    {
         register: require("good"),
         options: {
             ops: {interval: 5000},
@@ -56,21 +51,18 @@ server.register([
                 }, 'stdout']
             }
         }
-    },
-    {
-      register: require('./server/db/db_mysql.js')
-    },
-	{
+    }, {
+        register: require('./server/db/db_mysql.js')
+    }, {
         register: require('./server/utils/g.js'),
         options: require('./view_globals.js')
+    }, {
+        register: require('./server/utils/i18n.js')
+    }, {
+        register: require('./server/assets/index.js')
+    }, {
+        register: require('./server/controller/pos_controller.js')
     },
-	{
-      register: require('./server/assets/index.js')
-    },
-	{
-	  register: require('./server/controller/pos_controller.js')
-	},
-
 ], function () {
     //Start the server
     server.start(function() {
