@@ -610,6 +610,25 @@
 		touch-action: manipulation;
     	cursor: pointer;
 		margin-bottom: 7px;
+	}.print_content {
+		width: 255px;
+	}
+	.logo{
+		font-size: 20px;
+		margin: 25px 10px 10px;
+	}
+	.normal{
+		font-size: 12px;
+		margin: 1px 12px;
+	}
+	.normal:last-child{
+		margin-bottom: 20px;
+	}
+	.print_content span{
+		display: inline-block;
+	}
+	.pp_info{
+		margin-top: 10px;
 	}
 </style>
 </head>
@@ -831,29 +850,6 @@
 		<div class="weui_mask"></div>
 		<div class="weui_dialog5">
 			<div class="print_content">
-				<style type="text/css">
-
-					.print_content {
-						width: 255px;
-					}
-					.logo{
-						font-size: 20px;
-						margin: 25px 10px 10px;
-					}
-					.normal{
-						font-size: 12px;
-						margin: 1px 12px;
-					}
-					.normal:last-child{
-						margin-bottom: 20px;
-					}
-					.print_content span{
-						display: inline-block;
-					}
-					.pp_info{
-						margin-top: 10px;
-					}
-				</style>
 				<div class="logo">
 					善淘慈善商店
 				</div>
@@ -936,7 +932,7 @@
 		<div class="pp_info">
 			<% _.forEach(print_infos.order_details, function(order_detail,index) { %>
 			<div class="normal">
-				<span style="width:50%;"><%- order_detail.product.product_name %></span>
+				<span style="width:50%;vertical-align: middle;"><%- order_detail.product.product_name %></span>
 				<span style="width:26%;"><%- order_detail.price %>X<%- order_detail.number %></span>
 				<span style="width:20%;text-align:right;"><%- order_detail.price*order_detail.number %></span>
 			</div>
