@@ -677,7 +677,7 @@ exports.register = function(server, options, next){
 								}
 							});
 						}else {
-							return reply({"success":false,"message":row.message});
+							return reply({"success":false,"message":"row.message"});
 						}
 					}else {
 						return reply({"success":false,"message":"fail"});
