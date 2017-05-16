@@ -201,7 +201,7 @@ var update_order_status = function(data,cb){
 };
 //订单支付信息
 var get_order_pay_infos = function(order_id,cb){
-	var url = "http://139.196.148.40:18008/get_order_pay_infos?order_id=";
+	var url = "http://139.196.148.40:18008/get_order_pay_infos?sob_id=ioio&order_id=";
 	url = url + order_id;
 	do_get_method(url,cb);
 }
