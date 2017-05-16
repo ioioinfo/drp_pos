@@ -707,7 +707,7 @@
 	<div class="warp">
       <div class="top">
         <div class="top-left"><a href="/logout">退出</a></div>
-        <div class="top-center"><span><u>{{store_info[0].org_store_name}}</u></span></div>
+        <div class="top-center"><span><u>{{store_info[0].point_name}}</u></span></div>
         <div class="top-right">
           <div class="top-right-left"></div>
           <span><a>{{person_info.person.person_code}}</a></span>
@@ -822,11 +822,11 @@
 					}
 				</style>
 				<div class="logo">
-					佑佑&nbsp;&nbsp;YOYO
+					善淘&nbsp;&nbsp;BUYFOR
 				</div>
-				<div class="normal">{{store_info[0].org_store_name}}</div>
+				<div class="normal">{{store_info[0].point_name}}</div>
 				<div class="normal">电话：021-60489399</div>
-				<div class="normal">地址：{{store_info[0].address}}</div>
+				<div class="normal">地址：{{store_info[0].detail_address}}</div>
 				<div class="normal">
 					<span style="width:63%;">收营员：{{person_info.person.person_code}}</span>
 					<span style="width:35%;">序：12345678</span>
@@ -1811,7 +1811,7 @@
 					if (!order.member.amount) {
 						$(".member_amount").html("余额："+"0");
 					}else {
-						$(".member_amount").html("余额："+order.member.amount);
+						$(".member_amount").html("余额："+order.member.vip_type_name);
 					}
 					if (!order.member.integral) {
 						$(".member_integral").html("积分："+"0");

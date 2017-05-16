@@ -4,25 +4,41 @@ const uuidV1 = require('uuid/v1');
 var eventproxy = require('eventproxy');
 var org_code = "ioio";
 var service_info = "drp pos service"
+
 var do_get_method = function(url,cb){
 	uu_request.get(url, function(err, response, body){
 		if (!err && response.statusCode === 200) {
 			var content = JSON.parse(body);
-			cb(false, content);
+			do_result(false, content, cb);
 		} else {
 			cb(true, null);
 		}
 	});
 };
 
+//所有post调用接口方法
 var do_post_method = function(url,data,cb){
 	uu_request.request(url, data, function(err, response, body) {
+		console.log(body);
 		if (!err && response.statusCode === 200) {
-			cb(false,body);
+			do_result(false, body, cb);
 		} else {
 			cb(true,null);
 		}
 	});
+};
+
+//处理结果
+var do_result = function(err,result,cb){
+	if (!err) {
+		if (result.success) {
+			cb(false,result);
+		}else {
+			cb(true,result);
+		}
+	}else {
+		cb(true,null);
+	}
 };
 
 //获取当前cookie cookie_id
@@ -47,6 +63,17 @@ var get_cookie_loginId = function(request){
 		}
 	}
 	return login_id;
+};
+//获取当前cookie store_id
+var get_cookie_store_id = function(request){
+	var store_id;
+	if (request.state && request.state.cookie) {
+		var cookie = request.state.cookie;
+		if (cookie.login_id) {
+			store_id = cookie.store_id;
+		}
+	}
+	return store_id;
 };
 //获取当前cookie store_id
 var get_cookie_storeId = function(request){
@@ -83,9 +110,9 @@ var get_person_info = function(login_id, org_code, cb){
 	do_get_method(url,cb);
 };
 //获取门店信息
-var get_store_info = function(login_id, org_code, cb){
-	var url = "http://139.196.148.40:18666/store/list_by_login?login_id=";
-	url = url + login_id + "&org_code=" + org_code;
+var get_store_info = function(store_ids, org_code, cb){
+	var url = "http://211.149.248.241:18013/freightage/list_by_stores?store_ids=";
+	url = url + store_ids + "&org_code=" + org_code;
 	do_get_method(url,cb);
 };
 //获取公司信息
@@ -295,11 +322,13 @@ exports.register = function(server, options, next){
 										return reply({"success":false,"message":"password wrong"});
 									}
 									var login_id = content.row.login_id;
+									var store_id = content.stores[0].org_store_id;
 									var cookie = request.state.cookie;
 									if (!cookie) {
 										cookie = {};
 									}
 									cookie.login_id = login_id;
+									cookie.store_id = store_id;
 									return reply({"success":true,"service_info":service_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
 								}
 							});
@@ -336,7 +365,7 @@ exports.register = function(server, options, next){
 						if (store_info.length<=0) {
 							return reply({"succss":false,"messsage":"no store_info"});
 						}
-						cookie.store_id = store_info[0].org_store_id;
+
 						return reply.view("pos",{"person_info":person_info,"store_info":store_info,"company_info":company_info,"service_info":service_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
 				});
 
@@ -352,8 +381,14 @@ exports.register = function(server, options, next){
 						ep.emit("person_info", null);
 					}
 				});
-
-				get_store_info(login_id, org_code, function(err,rows){
+				var store_id = get_cookie_store_id(request);
+				if (!store_id) {
+					return reply({"succss":false,"messsage":"no store_id"});
+				}
+				var store_ids = [];
+				store_ids.push(store_id);
+				get_store_info(JSON.stringify(store_ids), org_code, function(err,rows){
+					console.log("rows:"+JSON.stringify(rows));
 					if (!err) {
 						if (rows.success) {
 							var store_info = rows.rows;
