@@ -23,7 +23,7 @@ var do_post_method = function(url,data,cb){
 		if (!err && response.statusCode === 200) {
 			do_result(false, body, cb);
 		} else {
-			cb(true,null);
+			cb(true,{"success":false,"message":"network error"});
 		}
 	});
 };
@@ -254,6 +254,8 @@ var get_orders_byDate = function(date1,date2,cb){
 	do_get_method(url,cb);
 }
 exports.register = function(server, options, next){
+	var i18n = server.plugins.i18n;
+
 	server.route([
 		//退出loginout
 		{
@@ -318,9 +320,6 @@ exports.register = function(server, options, next){
 						if (content.success) {
 							do_login(data, function(err,content){
 								if (!err) {
-									if (!content.success) {
-										return reply({"success":false,"message":"password wrong"});
-									}
 									var login_id = content.row.login_id;
 									var store_id = content.stores[0].org_store_id;
 									var cookie = request.state.cookie;
@@ -330,13 +329,15 @@ exports.register = function(server, options, next){
 									cookie.login_id = login_id;
 									cookie.store_id = store_id;
 									return reply({"success":true,"service_info":service_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
+								} else {
+									return reply({"success":false,"message":i18n._n(content.message)});
 								}
 							});
 						}else {
-							return reply({"success":false,"message":"vertify wrong"});
+							return reply({"success":false,"message":i18n._n("vertify wrong")});
 						}
 					}else {
-
+						return reply({"success":false,"message":i18n._n("vertify wrong")});
 					}
 				});
 			}
