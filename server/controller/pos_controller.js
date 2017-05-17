@@ -714,7 +714,8 @@ exports.register = function(server, options, next){
 												order_id : order.order_id,
 												vip_id : order.member.vip_id,
 												order_desc : order.store + "购物",
-												amount : order.shopping_infos.total_price
+												amount : order.shopping_infos.total_price,
+												platform_code : "drp_pos"
 											};
 											order_finish(info,function(err,row){
 
