@@ -59,7 +59,7 @@
         background: url(images/title.png) no-repeat 0 0;
         background-size: contain;
         position: absolute;
-        top: 9px;
+        top: -6px;
         left: 43%;
         color: #fff;
         text-align: center;
@@ -78,6 +78,8 @@
         margin-top: 12px;
       }
 	  .top-right a{
+		  display: inline-block;
+		  padding: 3px;
 		  color: #f4f4f4;
 	  }
       .top-right-left{
@@ -636,6 +638,17 @@
 	.pp_info{
 		margin-top: 10px;
 	}
+	.num_rank{
+		width: 17px;
+	    height: 17px;
+	    display: inline-block;
+	    background: red;
+	    text-align: center;
+	    line-height: 17px;
+	    border-radius: 50%;
+	    color: #fff;
+	    position: absolute;
+	}
 </style>
 </head>
   <body class="body">
@@ -771,7 +784,6 @@
         <div class="top-center"><span><u>{{store_info[0].point_name}}</u></span></div>
         <div class="top-right">
 			<span><a>操作员:{{person_info.person.person_code}}</a></span>
-          <div class="top-right-left"></div>
         </div>
       </div>
       <div class="middle">
@@ -1203,7 +1215,7 @@
 					return;
 				}
 				$("#put_order").children(".nav-img").children(".num_rank").remove();
-				$("#put_order").children(".nav-img").append("<img src='images/" + num +".png' alt='' class='num_rank'>");
+				$("#put_order").children(".nav-img").append("<span class='num_rank'>"+num+"</span>");
 			};
 			//挂单
 			$("#put_order").click(function(){
