@@ -112,6 +112,8 @@
         display: inline-block;
         width: 228px;
         height: 42px;
+        line-height: 42px;
+        text-align: center;
         border: 0;
         cursor: pointer;
         text-decoration: none;
@@ -232,7 +234,8 @@
               if (data.success) {
                   location.href = "/";
                 }else {
-                  alert(data.message);
+                    $(".alertinfor").show();
+                    $(".alertinfor span").html(data.message);
                   $("#vertify").val("");
                   change_picture();
                 }
@@ -251,12 +254,11 @@
             var key = e.which;
             if (key == 13) {
                 e.preventDefault();
-
-                if(!username||!password||!vertify){
+                if(!$(this).val()){
                     return;
                 }else {
                     var nxtIdx = $inp.index(this) + 1;
-                    $(":input:eq(" + nxtIdx + ")").focus();
+                    $(":input:eq(" + nxtIdx + ")").not(".login-submit").select();
                 }
 
             }
