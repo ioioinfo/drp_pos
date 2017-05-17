@@ -11,7 +11,7 @@
 		color: #666;
 		font:12px/1.5 Microsoft YaHei,tahoma,arial,Hiragino Sans GB,\\5b8b\4f53,sans-serif;
 		background: #C8D7DB;
-		background: url(images/cs3.jpg)no-repeat 0 0;
+		background: url(images/ba_05.jpg)no-repeat 0 0;
 		background-size: cover;
 	}
       *{
@@ -32,7 +32,7 @@
         width: 1024px;
         height: 768px;
         margin: 0 auto;
-
+		background:#24533E;
         position: relative;
 
       }
@@ -43,20 +43,23 @@
       }
       .top-left{
 	  	width: 112px;
-        background: url(images/exit.png) no-repeat 0 0;
-        background-size: contain;
-        line-height: 45px;
         text-align: center;
         margin-top: 12px;
         float: left;
       }
+	  .top-left a{
+		  display: inline-block;
+		  padding: 2px;
+		  border: 1px solid #999;
+		  color: #f4f4f4;
+	  }
       .top-center{
         width: 243px;
         height: 73px;
-        background: url(images/tiaofu.png) no-repeat 0 0;
+        background: url(images/title.png) no-repeat 0 0;
         background-size: contain;
         position: absolute;
-        top: 9px;
+        top: -6px;
         left: 43%;
         color: #fff;
         text-align: center;
@@ -64,8 +67,8 @@
       }
       .top-center span{
         display: inline-block;
-        padding-top: 16px;
-		padding-left: 64px;
+        padding-top: 30px;
+		padding-left: 7px;
         font-weight: 600;
         opacity: 0.8;
       }
@@ -74,11 +77,14 @@
         margin-right: 19px;
         margin-top: 12px;
       }
+	  .top-right a{
+		  display: inline-block;
+		  padding: 3px;
+		  color: #f4f4f4;
+	  }
       .top-right-left{
         width: 25px;
         height: 25px;
-        background: url(images/houtai_touxiang1.png) no-repeat 0 0;
-        background-size: contain;
 		display: inline-block;
       }
 
@@ -98,7 +104,7 @@
       .tiaoma-left{
 		  width: 42px;
 	      height: 42px;
-	      background: url(images/tiaoma1.png) no-repeat 0 0;
+	      background: url(images/tiaoxingma.png) no-repeat 0 0;
 	      background-size: cover;
 	      display: inline-block;
 	      vertical-align: middle;
@@ -198,6 +204,7 @@
        float: left;
 	   background: url(images/vip_card.png)no-repeat 0 0;
 	   background-size: contain;
+	       margin-left: 7.5px;
      }
      .footer-left p{
        font-size: 12px;
@@ -228,7 +235,7 @@
       margin: 0 auto;
     }
     .footer-center-nav li p{
-      color: #5B5B5B;
+      color: #fff;
       font-size: 14px;
       font-weight: 600;
       text-align: center;
@@ -244,6 +251,7 @@
 	  cursor: pointer;
 	  background: url(images/jiesuan1.png)no-repeat 0 0;
 	  background-size: contain;
+	  margin-right: 7.5px;
     }
     .footer-right p{
       text-align: center;
@@ -630,6 +638,17 @@
 	.pp_info{
 		margin-top: 10px;
 	}
+	.num_rank{
+		width: 17px;
+	    height: 17px;
+	    display: inline-block;
+	    background: red;
+	    text-align: center;
+	    line-height: 17px;
+	    border-radius: 50%;
+	    color: #fff;
+	    position: absolute;
+	}
 </style>
 </head>
   <body class="body">
@@ -764,8 +783,7 @@
         <div class="top-left"><a href="/logout">退出</a></div>
         <div class="top-center"><span><u>{{store_info[0].point_name}}</u></span></div>
         <div class="top-right">
-			<span><a>{{person_info.person.person_code}}</a></span>
-          <div class="top-right-left"></div>
+			<span><a>操作员:{{person_info.person.person_code}}</a></span>
         </div>
       </div>
       <div class="middle">
@@ -1197,7 +1215,7 @@
 					return;
 				}
 				$("#put_order").children(".nav-img").children(".num_rank").remove();
-				$("#put_order").children(".nav-img").append("<img src='images/" + num +".png' alt='' class='num_rank'>");
+				$("#put_order").children(".nav-img").append("<span class='num_rank'>"+num+"</span>");
 			};
 			//挂单
 			$("#put_order").click(function(){
