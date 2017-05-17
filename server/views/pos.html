@@ -1076,7 +1076,6 @@
 			};
 			//清除支付信息
 			var init_pay_infos = function(){
-				flag = 0;
 				pay_way_status = 0;
 				pay_way_change(pay_way_status);
 				order = {
@@ -1398,13 +1397,8 @@
 				}
 			});
 			//更新订单状态
-			var flag = 0;
 			$(".leave").click(function(){
 				order.store = store;
-				if (flag ==1) {
-					return;
-				}
-				flag = 1;
 				if (order.shopping_infos.ready_pay+order.shopping_infos.small_change >= order.shopping_infos.total_price) {
 					$.post("/update_order_status",{"order":JSON.stringify(order)},function(data){
 						if (data.success) {
