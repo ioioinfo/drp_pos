@@ -1315,7 +1315,6 @@
 					$("#barcode").focus();
 				}
 			});
-
 			//获取图片
 			var get_picture = function(){
 				for (var i = 0; i < order.products.length; i++) {
@@ -1774,7 +1773,52 @@
 					});
 				}
 			});
+			//支付宝支付
+			$(".alipay_value").keypress(function(e){
+				var pay_amount = $(".alipay_value").val();
+				pay_amount = parseFloat(pay_amount);
+				var key = e.which;
+				if ( !pay_amount || key != 13) {
+					return;
+				}
+				var changes = parseFloat(0);
+				changes = pay_amount-order.shopping_infos.total_price;
+				if (pay_amount+order.shopping_infos.ready_pay-order.shopping_infos.total_price > order.shopping_infos.cash_pay ) {
+					return;
+				}
+				//一次支付
+				if (changes >0) {
+					alert("超过支付金额！");
+					return;
+				}
+				$(".alipay_value").attr("style","display:none;");
+				$(".choose_pay").removeAttr("style");
+				if (!order.order_id) {
+					do_get_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
+						order.order_id = data.row.order_id;
+						var params = {
+							"order":JSON.stringify(order),
+							"store_address":store_address,
+							"person_id":person_id,
+							"pay_amount":pay_amount
+						};
+						do_get_method("/ali_pay",params,function(data){
+							add_pay_info("支付宝付款",pay_amount,data);
+						});
+					});
+				}else {
+					var params = {
+						"order":JSON.stringify(order),
+						"store_address":store_address,
+						"person_id":person_id,
+						"pay_amount":pay_amount
+					};
+					do_get_method("/ali_pay",params,function(data){
+						add_pay_info("支付宝付款",pay_amount,data);
+					});
+				}
 
+			});
 			//点击支付方式
 			var click_pay_way = function(number){
 				pay_way_status = number;
