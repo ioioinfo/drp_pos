@@ -79,6 +79,7 @@
         height: 25px;
         background: url(images/houtai_touxiang1.png) no-repeat 0 0;
         background-size: contain;
+		display: inline-block;
       }
 
       /*中间部分*/
@@ -88,31 +89,45 @@
         overflow: hidden;
       }
       .middle-tiaoma{
-        width: 265px;
-        float: right;
-        position: absolute;
-        top:82px;
-        right: -30px;
-        overflow: hidden;
+		  width: 247px;
+	      position: absolute;
+	      bottom: 157px;
+	      overflow: hidden;
+	      right: 26px;
       }
       .tiaoma-left{
-        width:20px;
-        height:15px;
-        background: url(images/tiaoma1.png) no-repeat 0 0;
-        background-size: cover;
-        display: inline-block;
+		  width: 42px;
+	      height: 42px;
+	      background: url(images/tiaoma1.png) no-repeat 0 0;
+	      background-size: cover;
+	      display: inline-block;
+	      vertical-align: middle;
 
       }
       .tiaoma-right{
-        margin-top: -2px;
-        width: 162px;
-        height: 22px;
-        display: inline-block;
-        outline: none;
-        -webkit-appearance : none ;
-        vertical-align: middle;
-        border: none;
+		  margin-top: -2px;
+	      width: 74%;
+	      height: 22px;
+	      display: inline-block;
+	      outline: none;
+	      -webkit-appearance: none;
+	      vertical-align: middle;
+	      border: none;
+	      padding: 10px 0;
+		  background: url(images/tiaoma2.png) no-repeat 0 0;
+	      background-size: cover;
+		  text-indent: 15px;
+		  color: #fff;
       }
+	  input::-webkit-input-placeholder {
+		  color:#fff;
+		  text-indent: 15px;
+      }
+      input:-moz-placeholder {
+          color:#fff;
+		  text-indent: 15px;
+      }
+
       .middle-product{
         width: 944px;
         height: 470px;
@@ -156,7 +171,7 @@
       }
       .product-infor span:first-child{
         font-size: 16px;
-        color: red;
+        color: #666;
         margin-left: 9px;
       }
       .product-infor span:last-child{
@@ -235,7 +250,7 @@
       color: #fff;
     }
     .footer-right p:first-child{
-      margin-top: 57px;
+      margin-top: 18px;
       font-size: 18px;
       font-weight: 600;
     }
@@ -264,13 +279,15 @@
 		position: fixed;
 		z-index: 13;
 		width: 380px;
-    	height: 140px;
+    	height: 180px;
 		top: 47%;
 		left: 50%;
 		-webkit-transform: translate(-50%, -50%);
 		transform: translate(-50%, -50%);
 		border-radius: 3px;
 		overflow: hidden;
+		background: url(images/price_num.jpg)no-repeat 0 0;
+  	  	background-size: cover;
 	}
 	.curr{
 		/*background: #dedede;*/
@@ -374,12 +391,12 @@
 		width:16px;
 		font-size:16px;
 		cursor: pointer;
+		color: #fff;
 	}
 	#update_name{
 		font-size: 16px;
-		font-weight: 700;
-		margin-left: 60px;
-		line-height: 30px;
+		margin-left: 20px;
+		color: #fff;
 	}
 	.update_data{
 		margin-left: 57px;
@@ -577,6 +594,42 @@
 		width: 110px;
 	    border: 1px solid #999;
 	}
+	.print{
+		color: #fff;
+    	background-color: #00A9F2;
+		border-color: #00A9F2;
+		padding: 12px 50px;
+	    font-size: 12px;
+	    line-height: 1.5;
+	    border-radius: 3px;
+		display: inline-block;
+		font-weight: 400;
+		text-align: center;
+    	white-space: nowrap;
+    	vertical-align: middle;
+		touch-action: manipulation;
+    	cursor: pointer;
+		margin-bottom: 7px;
+	}.print_content {
+		width: 255px;
+	}
+	.logo{
+		font-size: 20px;
+		margin: 25px 10px 10px;
+	}
+	.normal{
+		font-size: 12px;
+		margin: 1px 12px;
+	}
+	.normal:last-child{
+		margin-bottom: 20px;
+	}
+	.print_content span{
+		display: inline-block;
+	}
+	.pp_info{
+		margin-top: 10px;
+	}
 </style>
 </head>
   <body>
@@ -598,7 +651,7 @@
 		  <div style="width:100%;height:20px" >
 			  <div class="close">X</div>
 		  </div>
-		  <div style="width:100%;height:30px">
+		  <div style="width:100%;height:70px">
 			  <div id="update_name"></div>
 		  </div>
 		  <div style="width:100%;height:50px;">
@@ -617,7 +670,7 @@
 		<div class="weui_mask"></div>
 		<div class="weui_dialog2">
 			<div style="width:100%;">
-				<div style="width:500px;height:280px;margin:0 auto">
+				<div style="width:500px;margin:0 auto">
 					<img src="/images/pay01.png" class="pay_img cash"/>
 					<img src="/images/pay03.png" class="pay_img"/>
 					<img src="/images/pay02.png" class="pay_img alipay"/>
@@ -625,8 +678,10 @@
 					<!-- <img src="/images/pay05.png" class="pay_img2 credit"/>
 					<img src="/images/pay06.png" class="pay_img2"/> -->
 
-					<img src="/images/pay05.png" class="pay_img2 ali_transfer"/>
-					<img src="/images/pay06.png" class="pay_img2 weixin_transfer"/>
+					<img src="/images/pay05.png" class="pay_img" />
+					<img src="/images/pay06.png" class="pay_img" />
+					<img src="/images/pay07.png" class="pay_img2 ali_transfer"/>
+					<img src="/images/pay08.png" class="pay_img2 weixin_transfer"/>
 					<div style="clear:both;"></div>
 					<div style="margin-left:24px;" class="padding_top">
 						<span class="pay_amount margin_right"></span>
@@ -663,8 +718,8 @@
 				</div>
 				<div class="" style="text-align:center">
 					<span class="leave">确 认</span>
+					<input class="print" type="button" value="打印" style="display:none;"/>
 				</div>
-				<input class="print" type="button" value="打印" style="display:none;"/>
 			</div>
 		</div>
 	</div>
@@ -707,14 +762,13 @@
 	<div class="warp">
       <div class="top">
         <div class="top-left"><a href="/logout">退出</a></div>
-        <div class="top-center"><span><u>{{store_info[0].point_name}}</u></span></div>
+        <div class="top-center"><span><u>{{store_info[0].org_store_name}}</u></span></div>
         <div class="top-right">
+			<span><a>{{person_info.person.person_code}}</a></span>
           <div class="top-right-left"></div>
-          <span><a>{{person_info.person.person_code}}</a></span>
         </div>
       </div>
       <div class="middle">
-
 
         <div class="middle-tiaoma">
           <div class="tiaoma-left"></div>
@@ -780,7 +834,7 @@
           </ul>
         </div>
         <div class="footer-right" id="pay">
-          <p><u id="amount" style="color:#000;">￥0.00</u></p>
+          <p><u id="amount" style="color:#000;font-size:30px;">￥0.00</u></p>
           <p></p>
         </div>
       </div>
@@ -796,34 +850,12 @@
 		<div class="weui_mask"></div>
 		<div class="weui_dialog5">
 			<div class="print_content">
-				<style type="text/css">
-					.print_content {
-						width: 255px;
-					}
-					.logo{
-						font-size: 20px;
-						margin: 25px 10px 10px;
-					}
-					.normal{
-						font-size: 12px;
-						margin: 1px 12px;
-					}
-					.normal:last-child{
-						margin-bottom: 20px;
-					}
-					.print_content span{
-						display: inline-block;
-					}
-					.pp_info{
-						margin-top: 10px;
-					}
-				</style>
 				<div class="logo">
-					佑佑&nbsp;&nbsp;YOYO
+					善淘慈善商店
 				</div>
-				<div class="normal">{{store_info[0].point_name}}</div>
+				<div class="normal">{{store_info[0].org_store_name}}</div>
 				<div class="normal">电话：021-60489399</div>
-				<div class="normal">地址：{{store_info[0].detail_address}}</div>
+				<div class="normal">地址：{{store_info[0].address}}</div>
 				<div class="normal">
 					<span style="width:63%;">收营员：{{person_info.person.person_code}}</span>
 					<span style="width:35%;">序：12345678</span>
@@ -900,7 +932,7 @@
 		<div class="pp_info">
 			<% _.forEach(print_infos.order_details, function(order_detail,index) { %>
 			<div class="normal">
-				<span style="width:50%;"><%- order_detail.product.product_name %></span>
+				<span style="width:50%;vertical-align: middle;"><%- order_detail.product.product_name %></span>
 				<span style="width:26%;"><%- order_detail.price %>X<%- order_detail.number %></span>
 				<span style="width:20%;text-align:right;"><%- order_detail.price*order_detail.number %></span>
 			</div>
@@ -946,9 +978,9 @@
 	</script>
 	<script>
 		$(function() {
-			var store = "{{store_info[0].point_name}}";
-			var store_id = "{{store_info[0].store_id}}"
-			var store_address = "{{store_info[0].point_name}}";
+			var store = "{{store_info[0].org_store_name}}";
+			var store_id = "{{store_info[0].org_store_id}}"
+			var store_address = "{{store_info[0].address}}";
 			var person_id = "{{person_info.person_id}}";
 			var order = {
 				"shopping_infos" : {
@@ -1272,7 +1304,6 @@
 							highlight(barcode);
 						} else {
 							bobang_fail();
-							alert(data.message);
 						}
 					});
 				}
@@ -1809,7 +1840,7 @@
 					if (!order.member.amount) {
 						$(".member_amount").html("余额："+"0");
 					}else {
-						$(".member_amount").html("余额："+order.member.vip_type_name);
+						$(".member_amount").html("余额："+order.member.amount);
 					}
 					if (!order.member.integral) {
 						$(".member_integral").html("积分："+"0");
