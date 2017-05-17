@@ -632,7 +632,7 @@
 	}
 </style>
 </head>
-  <body>
+  <body class="body">
 	<div class="member_info" style="display:none;">
 	  <div class="weui_mask"></div>
 	  <div class="weui_dialog3">
@@ -678,8 +678,8 @@
 					<!-- <img src="/images/pay05.png" class="pay_img2 credit"/>
 					<img src="/images/pay06.png" class="pay_img2"/> -->
 
-					<img src="/images/pay05.png" class="pay_img" />
-					<img src="/images/pay06.png" class="pay_img" />
+					<!-- <img src="/images/pay05.png" class="pay_img" />
+					<img src="/images/pay06.png" class="pay_img" /> -->
 					<img src="/images/pay07.png" class="pay_img2 ali_transfer"/>
 					<img src="/images/pay08.png" class="pay_img2 weixin_transfer"/>
 					<div style="clear:both;"></div>
@@ -696,9 +696,9 @@
 							<span style="margin-left:20px;">金额：</span><input class="member_value" type="text" value="" style="width:90px;"/>
 							<span style="margin-left:20px;">支付码：</span><input class="member_pay_card" type="text" value="" style="width:90px;"/>
 						</span>
-						<span class="credit_pay margin_right span_width" style="display:none;">
+						<!-- <span class="credit_pay margin_right span_width" style="display:none;">
 							白条：<input class="credit_value" type="text" value=""/>
-						</span>
+						</span> -->
 						<span class="ali_transfer_pay margin_right span_width" style="display:none;">
 							支付宝转账：<input class="ali_transfer_value" type="text" value=""/>
 						</span>
@@ -708,9 +708,9 @@
 						<span class="pay_more margin_right span_width" style="display:none;">
 							<span>支付完成！</span>
 						</span>
-						<span class="choose_pay margin_right span_width" style="display:none;">
+						<!-- <span class="choose_pay margin_right span_width" style="display:none;">
 							请选择其他支付方式
-						</span>
+						</span> -->
 						<span class="back" style="width: 50px;">返回</span>
 					</div>
 				</div>
@@ -1308,6 +1308,14 @@
 					});
 				}
 			});
+			//全屏回车事件
+			$(".body").keypress(function(e){
+				var key = e.which;
+				if (key == 13) {
+					$("#barcode").focus();
+				}
+			});
+
 			//获取图片
 			var get_picture = function(){
 				for (var i = 0; i < order.products.length; i++) {
@@ -1472,6 +1480,7 @@
     					init_pay_infos();
     					product_infos();
     					member_update();
+						$(".print").attr("style","display:none;");
 					}else {
 
 					}
