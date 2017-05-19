@@ -636,6 +636,23 @@ exports.register = function(server, options, next){
 				});
 			}
 		},
+		//支付宝付款
+		{
+			method: 'GET',
+			path: '/ali_pay',
+			handler: function(request, reply){
+				var data = pay_params(request);
+				order_wxtransferpay(data,function(err,row){
+					if (!err) {
+						if (row.success) {
+							return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
+						}else {
+						}
+					}else {
+					}
+				});
+			}
+		},
 		//支付宝支付处理订单
 		{
 			method: 'GET',
@@ -697,7 +714,8 @@ exports.register = function(server, options, next){
 												order_id : order.order_id,
 												vip_id : order.member.vip_id,
 												order_desc : order.store + "购物",
-												amount : order.shopping_infos.total_price
+												amount : order.shopping_infos.total_price,
+												platform_code : "drp_pos"
 											};
 											order_finish(info,function(err,row){
 
