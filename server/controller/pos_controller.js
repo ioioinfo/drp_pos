@@ -176,6 +176,7 @@ var pay_params = function(request){
 	data.address = request.query.store_address;
 	data.operator = request.query.person_id;
 	data.sob_id = "ioio";
+	data,platform_code = "drp_pos";
 	data.pay_amount = request.query.pay_amount;
 	data.main_role_id = "0";
 	if (order.member) {
