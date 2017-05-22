@@ -736,7 +736,7 @@
 				<div class="pay_table">
 				</div>
 				<div class="" style="text-align:center">
-					<span class="leave">确 认</span>
+					<button class="leave">确 认</button>
 					<input class="print" type="button" value="打印" style="display:none;"/>
 				</div>
 			</div>
@@ -1459,6 +1459,7 @@
 					$.post("/update_order_status",{"order":JSON.stringify(order)},function(data){
 						if (data.success) {
 							$(".print").removeAttr("style");
+							$(".leave").attr("disabled","disabled");
 							// init_pay_infos();
 							// $("#pay_info").attr("style","display:none;");
 						}else {
