@@ -166,6 +166,11 @@ var member_card_pay = function(data,cb){
 	var url = "http://139.196.148.40:18008/vip_card_pay";
 	do_post_method(url,data,cb);
 }
+//阿里支付
+var alipay_trade_pay = function(data,cb){
+	var url = "http://139.196.148.40:18008/alipay_trade_pay";
+	do_post_method(url,data,cb);
+}
 //支付参数
 var pay_params = function(request){
 	var data = {};
@@ -176,6 +181,7 @@ var pay_params = function(request){
 	data.address = request.query.store_address;
 	data.operator = request.query.person_id;
 	data.sob_id = "ioio";
+	data.platform_code = "drp_pos";
 	data.pay_amount = request.query.pay_amount;
 	data.main_role_id = "0";
 	if (order.member) {
@@ -237,6 +243,11 @@ var order_finish = function(data,cb){
 	var url = "http://139.196.148.40:18003/vip/order_finish";
 	do_post_method(url,data,cb);
 }
+//出库
+var outbound = function(data,cb){
+	var url = "http://211.149.248.241:12001/batch_outbound";
+	do_post_method(url,data,cb);
+}
 //查询订单商品列表
 var search_order_products = function(order_id,cb){
 	var url ="http://211.149.248.241:18010/search_order_products?order_id="+order_id;
@@ -253,6 +264,12 @@ var get_orders_byDate = function(date1,date2,cb){
 	url = url + date1 + "&date2=" + date2;
 	do_get_method(url,cb);
 }
+//批量查询产品信息
+var find_products = function(product_ids,cb){
+	var url = "http://211.149.248.241:18002/find_products?product_ids=";
+	url = url + product_ids;
+	do_get_method(url,cb);
+};
 exports.register = function(server, options, next){
 	var i18n = server.plugins.i18n;
 
@@ -588,7 +605,7 @@ exports.register = function(server, options, next){
 			path: '/deal_card_pay',
 			handler: function(request, reply){
 				var data = pay_params(request);
-				data.paycode = request.query.paycode;
+				data.auth_code = request.query.paycode;
 				member_card_pay(data,function(err,row){
 					if (!err) {
 						if (row.success) {
@@ -642,7 +659,15 @@ exports.register = function(server, options, next){
 			path: '/ali_pay',
 			handler: function(request, reply){
 				var data = pay_params(request);
-				order_wxtransferpay(data,function(err,row){
+				data.business_code = "ali_pay";
+				data.subject = "门店消费";
+				data.body = "ali_pay";
+				data.callback_url = "http://shop.buy42.com/return";
+				if (!request.query.alipay_code) {
+					return reply({"success":false,"message":"请扫支付码"});
+				}
+				data.auth_code = request.query.alipay_code;
+				alipay_trade_pay(data,function(err,row){
 					if (!err) {
 						if (row.success) {
 							return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
@@ -693,7 +718,7 @@ exports.register = function(server, options, next){
 							}
 							for (var i = 0; i < pay_infos.length; i++) {
 								for (var j = 0; j < payinfos.length; j++) {
-									if (pay_infos[i].fin == payinfos[j].fin_occurrence_log_id) {
+									if (pay_infos[i].fin == payinfos[j].pay_log_id) {
 										if (pay_infos[i].pay_amount == payinfos[j].pay_amount) {
 											if (pay_infos[i].pay_way == payinfos[j].pay_way) {
 											}else {
@@ -717,10 +742,39 @@ exports.register = function(server, options, next){
 												amount : order.shopping_infos.total_price,
 												platform_code : "drp_pos"
 											};
-											order_finish(info,function(err,row){
-
+											var out_data = {"batch_id":order.order_id,"platform_code":"drp_pos"};
+											var product_ids = [];
+											for (var i = 0; i < order.products.length; i++) {
+												var product = order.products[i];
+												product_ids.push(product.product_id);
+											}
+											find_products(JSON.stringify(product_ids),function(err,rows){
+												if (!err) {
+													var products = rows.rows;
+													var product_map = {};
+													for (var i = 0; i < products.length; i++) {
+														product_map[products[i].id] = products[i].industry_id;
+													}
+													for (var i = 0; i < order.products.length; i++) {
+														order.products[i].industry_id = product_map[order.products[i].product_id];
+														order.products[i].quantity = order.products[i].product_number;
+													}
+													out_data.products = JSON.stringify(order.products);
+													console.log("platform_code: "+out_data.platform_code);
+													outbound(out_data,function(err,content){
+														if (!err) {
+															order_finish(info,function(err,row){
+																return reply({"success":true});
+															});
+														}else {
+															return reply({"success":false,"message":content.message});
+														}
+													});
+												}else {
+													return reply({"success":false,"message":rows.message});
+												}
 											});
-											return reply({"success":true});
+
 										}else {
 											return reply({"success":true});
 										}
