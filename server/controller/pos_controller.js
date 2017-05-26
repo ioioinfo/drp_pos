@@ -166,6 +166,11 @@ var member_card_pay = function(data,cb){
 	var url = "http://139.196.148.40:18008/vip_card_pay";
 	do_post_method(url,data,cb);
 }
+//阿里支付
+var alipay_trade_pay = function(data,cb){
+	var url = "http://139.196.148.40:18008/alipay_trade_pay";
+	do_post_method(url,data,cb);
+}
 //支付参数
 var pay_params = function(request){
 	var data = {};
@@ -600,7 +605,7 @@ exports.register = function(server, options, next){
 			path: '/deal_card_pay',
 			handler: function(request, reply){
 				var data = pay_params(request);
-				data.paycode = request.query.paycode;
+				data.auth_code = request.query.paycode;
 				member_card_pay(data,function(err,row){
 					if (!err) {
 						if (row.success) {
@@ -654,7 +659,15 @@ exports.register = function(server, options, next){
 			path: '/ali_pay',
 			handler: function(request, reply){
 				var data = pay_params(request);
-				order_wxtransferpay(data,function(err,row){
+				data.business_code = "ali_pay";
+				data.subject = "门店消费";
+				data.body = "ali_pay";
+				data.callback_url = "http://shop.buy42.com/return";
+				if (!request.query.alipay_code) {
+					return reply({"success":false,"message":"请扫支付码"});
+				}
+				data.auth_code = request.query.alipay_code;
+				alipay_trade_pay(data,function(err,row){
 					if (!err) {
 						if (row.success) {
 							return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
@@ -705,7 +718,7 @@ exports.register = function(server, options, next){
 							}
 							for (var i = 0; i < pay_infos.length; i++) {
 								for (var j = 0; j < payinfos.length; j++) {
-									if (pay_infos[i].fin == payinfos[j].fin_occurrence_log_id) {
+									if (pay_infos[i].fin == payinfos[j].pay_log_id) {
 										if (pay_infos[i].pay_amount == payinfos[j].pay_amount) {
 											if (pay_infos[i].pay_way == payinfos[j].pay_way) {
 											}else {
