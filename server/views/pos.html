@@ -601,7 +601,6 @@
 	.cash_value{
 		width: 110px;
 	    border: 1px solid #999;
-		font-size: 24px;
 	}
 	.print{
 		color: #fff;
@@ -649,27 +648,6 @@
 	    border-radius: 50%;
 	    color: #fff;
 	    position: absolute;
-	}
-
-
-	/*退款*/
-	.refund{
-		color: #000;
-    	background-color: #ddd;
-		border-color: #999;
-		padding: 12px 50px;
-	    font-size: 12px;
-	    line-height: 1.5;
-	    border-radius: 3px;
-		display: inline-block;
-		font-weight: 400;
-		text-align: center;
-    	white-space: nowrap;
-    	vertical-align: middle;
-		touch-action: manipulation;
-    	cursor: pointer;
-		margin-bottom: 7px;
-		display: none;
 	}
 </style>
 </head>
@@ -730,8 +708,7 @@
 							现金：<input class="cash_value" type="text" value=""/>
 						</span>
 						<span class="alipay_pay margin_right span_width" style="display:none;">
-							支付宝 ：<input class="alipay_value" type="text" value="" data-id="1"/>
-							支付码 ：<input class="alipay_code" type="text" value="" />
+							支付宝：<input class="alipay_value" type="text" value="" data-id="1"/>
 						</span>
 						<span class="member_pay margin_right span_width" style="display:none;">
 							卡号：<input class="member_number" type="text" value="" placeholder="会员还未登记！" readonly style="width:90px;"/>
@@ -759,7 +736,6 @@
 				<div class="pay_table">
 				</div>
 				<div class="" style="text-align:center">
-
 					<button class="leave">确 认</button>
 					<input class="print" type="button" value="打印" style="display:none;"/>
 				</div>
@@ -985,7 +961,7 @@
 				<div class="normal"><%- pay_info.pay_way %>：<%- pay_info.pay_amount %></div>
 				<!-- <div class="normal">支付宝账号:182****6882</div> -->
 				<div class="normal">流水号：</div>
-				<div class="normal"><%- pay_info.pay_log_id %></div>
+				<div class="normal"><%- pay_info.fin_occurrence_log_id %></div>
 			</div>
 		<% }); %>
 		<div class="pp_info">
@@ -1090,7 +1066,7 @@
 					$(".ali_transfer_pay").attr("style","display:none;");
 					$(".weixin_transfer_pay").attr("style","display:none;");
 					$(".alipay_pay").removeAttr("style");
-					$(".alipay_code").focus();
+					$(".alipay_value").focus();
 				}else if (pay_way_status == 2) {
 					order.shopping_infos.pre_pay = parseFloat((order.shopping_infos.total_price -  order.shopping_infos.ready_pay).toFixed(2));
 					$(".member_value").val(order.shopping_infos.pre_pay);
@@ -1178,7 +1154,6 @@
 				$(".member_value").val("");
 				$(".member_pay_card").val("");
 				$(".alipay_value").val("");
-				$(".alipay_code").val("");
 				$(".credit_value").val("");
 				$(".pay_table").html("");
 			};
@@ -1204,14 +1179,13 @@
 				};
 				product_infos();
 				$("#barcode").val("");
-				$(".leave").removeAttr("disabled");
 			};
 			//添加付记录
 			var add_pay_info = function(pay_way,pay_amount,data){
 				var pay_infos = {};
 				pay_infos.pay_amount = pay_amount;
 				pay_infos.pay_way = pay_way;
-				pay_infos.fin = data.row.pay_log_id;
+				pay_infos.fin = data.row.fin_occurrence_log_id;
 				order.pay_infos.push(pay_infos);
 				var ready_pay = 0;
 				var pre_pay = 0;
@@ -1514,12 +1488,12 @@
 						print_infos.pay_infos = data.pay_infos;
 
 						$("#pay_info").attr("style","display:none;");
-						// $("#receipt_infos").removeAttr("style");
+						$("#receipt_infos").removeAttr("style");
 						var t = _.template($("#print_receipt_infos").html());
 						$("#print_receipt_info").html(t({print_infos:print_infos}));
 						// $(".print_content").printArea();
 						print_method(t({print_infos:print_infos}));
-                        // $("#receipt_infos").attr("style","display:none;");
+                        $("#receipt_infos").attr("style","display:none;");
                         init_product_infos();
     					init_pay_infos();
     					product_infos();
@@ -1819,15 +1793,13 @@
 				}
 			});
 			//支付宝支付
-			$(".alipay_code").keypress(function(e){
-				var alipay_code = $(".alipay_code").val();
+			$(".alipay_value").keypress(function(e){
 				var pay_amount = $(".alipay_value").val();
 				pay_amount = parseFloat(pay_amount);
 				var key = e.which;
-				if ( !pay_amount || key != 13 || !alipay_code) {
+				if ( !pay_amount || key != 13) {
 					return;
 				}
-				$(".alipay_code").val("");
 				var changes = parseFloat(0);
 				changes = pay_amount-order.shopping_infos.total_price;
 				if (pay_amount+order.shopping_infos.ready_pay-order.shopping_infos.total_price > order.shopping_infos.cash_pay ) {
@@ -1847,12 +1819,10 @@
 							"order":JSON.stringify(order),
 							"store_address":store_address,
 							"person_id":person_id,
-							"alipay_code":alipay_code,
 							"pay_amount":pay_amount
 						};
 						do_get_method("/ali_pay",params,function(data){
-							console.log("data:"+JSON.stringify(data));
-							add_pay_info("支付宝线下条码支付",pay_amount,data);
+							add_pay_info("支付宝付款",pay_amount,data);
 						});
 					});
 				}else {
@@ -1863,7 +1833,7 @@
 						"pay_amount":pay_amount
 					};
 					do_get_method("/ali_pay",params,function(data){
-						add_pay_info("支付宝线下条码支付",pay_amount,data);
+						add_pay_info("支付宝付款",pay_amount,data);
 					});
 				}
 
@@ -1871,7 +1841,7 @@
 			//点击支付方式
 			var click_pay_way = function(number){
 				pay_way_status = number;
-				(pay_way_status);
+				pay_way_change(pay_way_status);
 			};
 			//点击现金
 			$(".cash").click(function(){
@@ -1983,19 +1953,9 @@
 				var member_phone = $(".member_phone").val();
 				if (member_phone) {
 					member_click(member_phone);
-
 				}
 			});
-
-			// // 退款
-			// $(".refund").click(function(){
-			// 	if(pay_way_status==4)
-			//
-			// })
-
-
 		});
-
 	</script>
   </body>
 </html>
