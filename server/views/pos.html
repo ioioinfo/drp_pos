@@ -761,7 +761,6 @@
 				<div class="" style="text-align:center">
 
 					<button class="leave">确 认</button>
-					<button class="refund">退 款</button>
 					<input class="print" type="button" value="打印" style="display:none;"/>
 				</div>
 			</div>
@@ -1487,7 +1486,6 @@
 						if (data.success) {
 							$(".print").removeAttr("style");
 							$(".leave").attr("disabled","disabled");
-							$(".refund").show();
 							// init_pay_infos();
 							// $("#pay_info").attr("style","display:none;");
 						}else {
