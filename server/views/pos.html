@@ -1770,7 +1770,6 @@
 				}
 				$(".ali_transfer_pay").attr("style","display:none;");
 				$(".choose_pay").removeAttr("style");
-				
 				if (!order.order_id) {
 					do_get_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
 						order.order_id = data.row.order_id;
