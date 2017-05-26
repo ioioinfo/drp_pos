@@ -601,7 +601,6 @@
 	.cash_value{
 		width: 110px;
 	    border: 1px solid #999;
-		font-size: 24px;
 	}
 	.print{
 		color: #fff;
@@ -649,27 +648,6 @@
 	    border-radius: 50%;
 	    color: #fff;
 	    position: absolute;
-	}
-
-
-	/*退款*/
-	.refund{
-		color: #000;
-    	background-color: #ddd;
-		border-color: #999;
-		padding: 12px 50px;
-	    font-size: 12px;
-	    line-height: 1.5;
-	    border-radius: 3px;
-		display: inline-block;
-		font-weight: 400;
-		text-align: center;
-    	white-space: nowrap;
-    	vertical-align: middle;
-		touch-action: manipulation;
-    	cursor: pointer;
-		margin-bottom: 7px;
-		display: none;
 	}
 </style>
 </head>
@@ -759,9 +737,7 @@
 				<div class="pay_table">
 				</div>
 				<div class="" style="text-align:center">
-
 					<button class="leave">确 认</button>
-					<button class="refund">退 款</button>
 					<input class="print" type="button" value="打印" style="display:none;"/>
 				</div>
 			</div>
@@ -1487,7 +1463,6 @@
 						if (data.success) {
 							$(".print").removeAttr("style");
 							$(".leave").attr("disabled","disabled");
-							$(".refund").show();
 							// init_pay_infos();
 							// $("#pay_info").attr("style","display:none;");
 						}else {
@@ -1873,7 +1848,7 @@
 			//点击支付方式
 			var click_pay_way = function(number){
 				pay_way_status = number;
-				(pay_way_status);
+				pay_way_change(pay_way_status);
 			};
 			//点击现金
 			$(".cash").click(function(){
@@ -1985,19 +1960,9 @@
 				var member_phone = $(".member_phone").val();
 				if (member_phone) {
 					member_click(member_phone);
-
 				}
 			});
-
-			// // 退款
-			// $(".refund").click(function(){
-			// 	if(pay_way_status==4)
-			//
-			// })
-
-
 		});
-
 	</script>
   </body>
 </html>
