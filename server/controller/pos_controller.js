@@ -171,6 +171,11 @@ var alipay_trade_pay = function(data,cb){
 	var url = "http://139.196.148.40:18008/alipay_trade_pay";
 	do_post_method(url,data,cb);
 }
+//阿里支付
+var alipay_trade_query = function(data,cb){
+	var url = "http://139.196.148.40:18008/alipay_trade_query";
+	do_post_method(url,data,cb);
+}
 //支付参数
 var pay_params = function(request){
 	var data = {};
@@ -274,6 +279,26 @@ exports.register = function(server, options, next){
 	var i18n = server.plugins.i18n;
 
 	server.route([
+		//查询支付宝付款情况
+		{
+			method: 'POST',
+			path: '/alipay_trade_query',
+			handler: function(request, reply){
+				var order_id = request.payload.order_id;
+				var data = {
+					"order_id":order_id,
+					"sob_id": "ioio",
+					"platform_code" : "drp_pos"
+				};
+				alipay_trade_query(data,function(err,content){
+					if (!err) {
+						return reply({"success":true,"service_info":content.service_info,"row":content.row});
+					}else {
+						return reply({"success":false,"message":content.message,"service_info":content.service_info});
+					}
+				});
+			}
+		},
 		//退出loginout
 		{
 			method: 'GET',

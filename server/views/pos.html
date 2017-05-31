@@ -1048,6 +1048,8 @@
 				"pay_infos" : [],
 				"store_id":null
 			};
+			var cnt =0;
+			var ali_id;
 			//挂单用的临时变量
 			var temp_products = [];
 			//回到商品扫描
@@ -1209,6 +1211,7 @@
 				product_infos();
 				$("#barcode").val("");
 				$(".leave").removeAttr("disabled");
+				$(".alipay_value").removeAttr("disabled");
 			};
 			//添加付记录
 			var add_pay_info = function(pay_way,pay_amount,data){
@@ -1705,7 +1708,6 @@
 					return;
 				}
 				$(".credit_pay").attr("style","display:none;");
-				$(".choose_pay").removeAttr("style");
 				if (!order.order_id) {
 					do_get_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
 						order.order_id = data.row.order_id;
@@ -1751,7 +1753,6 @@
 					return;
 				}
 				$(".weixin_transfer_pay").attr("style","display:none;");
-				$(".choose_pay").removeAttr("style");
 				if (!order.order_id) {
 					do_get_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
 						order.order_id = data.row.order_id;
@@ -1797,7 +1798,6 @@
 					return;
 				}
 				$(".ali_transfer_pay").attr("style","display:none;");
-				$(".choose_pay").removeAttr("style");
 				if (!order.order_id) {
 					do_get_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
 						order.order_id = data.row.order_id;
@@ -1843,8 +1843,7 @@
 					alert("超过支付金额！");
 					return;
 				}
-				$(".alipay_value").attr("style","display:none;");
-				$(".choose_pay").removeAttr("style");
+				$(".alipay_value").attr("disabled","disabled");
 				if (!order.order_id) {
 					do_get_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
 						order.order_id = data.row.order_id;
@@ -1856,8 +1855,9 @@
 							"pay_amount":pay_amount
 						};
 						do_get_method("/ali_pay",params,function(data){
-							console.log("data:"+JSON.stringify(data));
-							add_pay_info("支付宝线下条码支付",pay_amount,data);
+							ali_id = data.order_id;
+							cnt = 0;
+							setTimeout(check_alipay,1000);
 						});
 					});
 				}else {
@@ -1865,14 +1865,32 @@
 						"order":JSON.stringify(order),
 						"store_address":store_address,
 						"person_id":person_id,
+						"alipay_code":alipay_code,
 						"pay_amount":pay_amount
 					};
-					do_get_method("/ali_pay",params,function(data){
-						add_pay_info("支付宝线下条码支付",pay_amount,data);
-					});
+					if (ali_id) {
+						alert("支付过了");
+					}else {
+						do_get_method("/ali_pay",params,function(data){
+							ali_id = data.order_id;
+							cnt = 0;
+							setTimeout(check_alipay,1000);
+						});
+					}
 				}
-
 			});
+			var check_alipay = function(){
+				cnt = cnt + 1;
+				$.post("/alipay_trade_query",{"order_id":ali_id},function(data){
+					if (data.success) {
+						add_pay_info("支付宝线下条码支付",parseFloat(data.row.total_amount),data);
+					}else if (cnt < 5){
+						setTimeout(check_alipay,1000);
+					}else {
+						alert("已超时，付款未成功！");
+					}
+				});
+			};
 			//点击支付方式
 			var click_pay_way = function(number){
 				pay_way_status = number;
