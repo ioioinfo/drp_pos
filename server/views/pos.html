@@ -91,7 +91,7 @@
       /*中间部分*/
       .middle{
         width: 100%;
-        height: 560px;
+        height: 540px;
         overflow: hidden;
       }
       .middle-tiaoma{
@@ -199,32 +199,32 @@
        overflow: hidden;
      }
      .footer-left{
-       width: 140px;
-       height: 130px;
+       width: 152px;
+       height: 144px;
        float: left;
-	   background: url(images/vip_card.png)no-repeat 0 0;
+	   background: url(images/shouyinqiang.png)no-repeat 0 0;
 	   background-size: contain;
 	       margin-left: 7.5px;
      }
      .footer-left p{
        font-size: 12px;
        font-weight: 400;
-       text-align: center;
+	   text-indent: 13px;
        line-height: 24px;
        color: #000;
     }
     .footer-left p:first-child{
-      margin-top: 18px;
+      margin-top: 68px;
     }
     .footer-center{
-      width: 714px;
+      width: 690px;
       height: 130px;
       float: left;
 	  margin-left: 15px;
     }
     .footer-center-nav{
       display: flex;
-      margin-top: 20px;
+      margin-top: 44px;
     }
     .footer-center-nav li{
       flex: 1;
@@ -246,21 +246,24 @@
     }
     .footer-right{
       float: right;
-      width: 140px;
-      height: 130px;
+      width: 152px;
+      height: 144px;
 	  cursor: pointer;
-	  background: url(images/jiesuan1.png)no-repeat 0 0;
+	  background: url(images/shouyinqiang.png)no-repeat 0 0;
 	  background-size: contain;
 	  margin-right: 7.5px;
     }
     .footer-right p{
-      text-align: center;
       color: #fff;
+	  margin-left: 10px;
     }
     .footer-right p:first-child{
-      margin-top: 18px;
-      font-size: 18px;
+		width: 76%;
+      margin-top: 78px;
+      font-size: 16px;
       font-weight: 600;
+	  white-space:normal;
+	  word-break:break-all;
     }
     .footer-right p:last-child{
         margin-top: 17px;
@@ -876,7 +879,7 @@
           </ul>
         </div>
         <div class="footer-right" id="pay">
-          <p><u id="amount" style="color:#000;font-size:30px;">￥0.00</u></p>
+          <p><u id="amount" style="color:#000;font-size:24px;">￥0.00</u></p>
           <p></p>
         </div>
       </div>
@@ -2000,6 +2003,7 @@
 			}else if (currKey == 113) {
 				$(".member_phone").val("");
 				$(".member_info").attr("style","display:block;");
+				$(".member_phone").focus();
 			}else if (currKey == 13) {
 				var member_phone = $(".member_phone").val();
 				if (member_phone) {
