@@ -1986,7 +1986,29 @@
 					member_click(member_phone);
 				}
 			});
+
+
 		});
+
+		function keyUp(e) {
+　　       　 var e=e||event;
+　　      　   currKey=e.keyCode||e.which||e.charCode;
+			if(currKey == 27){
+				e.preventDefault();
+				$(".member_phone").val("");
+				$(".member_info").attr("style","display:none;");
+			}else if (currKey == 113) {
+				$(".member_phone").val("");
+				$(".member_info").attr("style","display:block;");
+			}else if (currKey == 13) {
+				var member_phone = $(".member_phone").val();
+				if (member_phone) {
+					member_click(member_phone);
+				}
+			}
+
+　　       }
+　　       document.onkeyup = keyUp;
 	</script>
   </body>
 </html>
