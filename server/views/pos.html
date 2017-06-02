@@ -1186,7 +1186,7 @@
 				$(".alipay_value").val("");
 				$(".alipay_code").val("");
 				$(".credit_value").val("");
-				$(".pay_table").html("");
+				// $(".pay_table").html("");
 			};
 			//初始产品信息
 			var init_product_infos = function(){
@@ -1481,6 +1481,7 @@
 					pay_way_change(pay_way_status);
 					$("#pay_info").removeAttr("style");
 					$(".cash_value").focus();
+					payment_info_table();
 				}else {
 					alert("还没有购买商品！")
 				}
