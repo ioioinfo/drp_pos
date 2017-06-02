@@ -568,7 +568,7 @@
 	}
 
 	.margin_right{
-		margin-right: 65px;
+		margin-right:35px;
 		    font-size: 14px;
 	}
 	.padding_top{
@@ -583,7 +583,15 @@
 	}
 	.span_width{
 		display: inline-block;
-		width: 219.14px;
+		width: 305.14px;
+	}
+	.span_width1{
+		display: inline-block;
+		width: 209.14px;
+	}
+	.span_width2{
+		display: inline-block;
+    	width: 249.14px;
 	}
 	.leave{
 		color: #fff;
@@ -675,6 +683,21 @@
 	.cash_value{
 		font-size: 24px;
 	}
+
+	.alipay_value{
+		font-size: 24px;
+		width: 85px;
+		border: 1px solid #666;
+	}
+	.alipay_code{
+		width: 106px;
+		border: 1px solid #666;
+	}
+	.ali_transfer_value{
+		font-size: 24px;
+		width: 85px;
+		border: 1px solid #666;
+	}
 </style>
 </head>
   <body class="body">
@@ -730,10 +753,10 @@
 					<div style="clear:both;"></div>
 					<div style="margin-left:24px;" class="padding_top">
 						<span class="pay_amount margin_right"></span>
-						<span class="cash_pay margin_right span_width" style="display:none;">
+						<span class="cash_pay margin_right span_width2" style="display:none;">
 							现金：<input class="cash_value" type="text" value=""/>
 						</span>
-						<span class="alipay_pay margin_right span_width" style="display:none;">
+						<span class="alipay_pay span_width" style="display:none;">
 							支付宝 ：<input class="alipay_value" type="text" value="" data-id="1"/>
 							支付码 ：<input class="alipay_code" type="text" value="" />
 						</span>
@@ -745,10 +768,10 @@
 						<!-- <span class="credit_pay margin_right span_width" style="display:none;">
 							白条：<input class="credit_value" type="text" value=""/>
 						</span> -->
-						<span class="ali_transfer_pay margin_right span_width" style="display:none;">
+						<span class="ali_transfer_pay span_width" style="display:none;">
 							支付宝转账：<input class="ali_transfer_value" type="text" value=""/>
 						</span>
-						<span class="weixin_transfer_pay margin_right span_width" style="display:none;">
+						<span class="weixin_transfer_pay margin_right span_width1" style="display:none;">
 							微信转账：<input class="weixin_transfer_value" type="text" value=""/>
 						</span>
 						<span class="pay_more margin_right span_width" style="display:none;">
