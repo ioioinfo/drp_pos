@@ -171,7 +171,12 @@ var alipay_trade_pay = function(data,cb){
 	var url = "http://139.196.148.40:18008/alipay_trade_pay";
 	do_post_method(url,data,cb);
 }
-//阿里支付
+//阿里支付退款
+var alipay_trade_refund = function(data,cb){
+	var url = "http://139.196.148.40:18008/alipay_trade_refund";
+	do_post_method(url,data,cb);
+}
+//阿里支付查询
 var alipay_trade_query = function(data,cb){
 	var url = "http://139.196.148.40:18008/alipay_trade_query";
 	do_post_method(url,data,cb);
@@ -279,12 +284,51 @@ exports.register = function(server, options, next){
 	var i18n = server.plugins.i18n;
 
 	server.route([
+		//支付宝退款
+		{
+			method: 'POST',
+			path: '/alipay_trade_refund',
+			handler: function(request, reply){
+				var order_id = request.payload.order_id;
+				if (!order_id) {
+					return reply({"success":false,"message":"order_id null"});
+				}
+				var data = {
+					"order_id":order_id,
+					"sob_id": "ioio",
+					"platform_code" : "drp_pos"
+				};
+				alipay_trade_query(data,function(err,content){
+					if (!err) {
+						var pay_amount = content.row.total_amount;
+						var info = {
+							"order_id":order_id,
+							"sob_id": "ioio",
+							"pay_amount": pay_amount,
+							"platform_code" : "drp_pos"
+						};
+						alipay_trade_refund(info,function(err,content){
+							if (!err) {
+								return reply({"success":true,"row":content.row,"service_info":content.service_info});
+							}else {
+								return reply({"success":false,"message":content.message,"service_info":content.service_info});
+							}
+						});
+					}else {
+						return reply({"success":false,"message":"该订单没有付款！","service_info":content.service_info});
+					}
+				});
+			}
+		},
 		//查询支付宝付款情况
 		{
 			method: 'POST',
 			path: '/alipay_trade_query',
 			handler: function(request, reply){
 				var order_id = request.payload.order_id;
+				if (!order_id) {
+					return reply({"success":false,"message":"order_id null"});
+				}
 				var data = {
 					"order_id":order_id,
 					"sob_id": "ioio",
