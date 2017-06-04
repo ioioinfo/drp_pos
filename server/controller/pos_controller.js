@@ -295,6 +295,11 @@ var save_product_barcodes = function(data,cb){
 	var url = "http://211.149.248.241:12001/save_product_barcodes";
 	do_post_method(url,data,cb);
 };
+//查询产品
+var search_product_byId = function(product_id,cb){
+	var url = "http://211.149.248.241:18002/get_product?product_id="+product_id;
+	do_get_method(url,cb);
+};
 exports.register = function(server, options, next){
 	var i18n = server.plugins.i18n;
 
@@ -320,50 +325,63 @@ exports.register = function(server, options, next){
 					"product_sale_price" : product_sale_price,
 					"industry_id" : 102
 				};
-				save_product_simple(product,function(err,result){
-					if (!err) {
-						var instruction = {
-							"shipper" : "shantao",
-							"supplier_id" : 1,
-							"warehouse_id" : 1,
-							"region_id" : 1,
-							"point_id" : 1
-						}
-						var data = {
-							"product_id" : product_id,
-							"industry_id" : 102,
-							"instruction" : JSON.stringify(instruction),
-							"strategy" : "modify",
-							"quantity" : num,
-							"batch_id" : "test",
-							"platform_code" :"drp_pos"
-						};
-						save_stock_instruction(data,function(err,content){
-							if (!err) {
-								var product = {
-									"product_id":product_id,
-									"industry_id":102,
-									"bar_code":barcode
-								};
-								var products = []
-								products.push(product);
-								products = JSON.stringify(products);
-								var info = {"products":products};
-								save_product_barcodes(info,function(err,content){
-									if (!err) {
-										return reply({"success":true});
-									}else {
-										return reply({"success":false,"message":content.message});
+				search_product_byId(product_id,function(err,rows){
+					if (err) {
+						console.log(rows.rows.length);
+						if (rows.rows.length>0) {
+							return reply({"success":false,"message":"商品已存在"});
+						}else {
+							save_product_simple(product,function(err,result){
+								console.log(1111);
+								if (!err) {
+									var instruction = {
+										"shipper" : "shantao",
+										"supplier_id" : 1,
+										"warehouse_id" : 1,
+										"region_id" : 1,
+										"point_id" : 1
 									}
-								});
-							}else {
-								return reply({"success":false,"message":content.message});
-							}
-						});
+									var data = {
+										"product_id" : product_id,
+										"industry_id" : 102,
+										"instruction" : JSON.stringify(instruction),
+										"strategy" : "modify",
+										"quantity" : num,
+										"batch_id" : "test",
+										"platform_code" :"drp_pos"
+									};
+									save_stock_instruction(data,function(err,content){
+										if (!err) {
+											var product = {
+												"product_id":product_id,
+												"industry_id":102,
+												"barcode":barcode
+											};
+											var products = []
+											products.push(product);
+											products = JSON.stringify(products);
+											var info = {"products":products};
+											save_product_barcodes(info,function(err,content){
+												if (!err) {
+													return reply({"success":true});
+												}else {
+													return reply({"success":false,"message":content.message});
+												}
+											});
+										}else {
+											return reply({"success":false,"message":content.message});
+										}
+									});
+								}else {
+									return reply({"success":false,"message":result.message});
+								}
+							});
+						}
 					}else {
-						return reply({"success":false,"message":result.message});
+						return reply({"success":false,"message":rows.message});
 					}
 				});
+
 			}
 		},
 		//支付宝退款
@@ -646,9 +664,8 @@ exports.register = function(server, options, next){
 												}else {
 													ep.emit("picture_info", {});
 												}
-
 											}else {
-												return reply({"success":false,"message":"search product's picture fail"});
+												ep.emit("picture_info", {});
 											}
 										});
 										find_stock(product_id,industry_id,JSON.stringify(stock_options),function(err,row){

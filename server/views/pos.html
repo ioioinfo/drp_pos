@@ -1043,7 +1043,7 @@
 	<script id="products" type="text/template">
 		<% _.forEach(products, function(product,index) { %>
 			<li class="product-infor product_line imgAnimation" data-id="<%- index+1 %>" id="<%- product.barcode %>">
-              <div class="product-img">	<% if (product.delay) { %><img src="<%- product.picture %>" alt="" class="<%- product.barcode %>"><% }else{ %><img src="/images/delay.gif" alt="" class="<%- product.barcode %>" data-src="<%- product.picture %>" style="width:62px;height:62px;padding-top:50px;"> <% } %></div>
+              <div class="product-img">	<% if (product.delay) { %><img src="<%- product.picture %>" alt="" class="<%- product.barcode %>"><% }else{ %><img src="{{static_host}}/delay.gif" alt="" class="<%- product.barcode %>" data-src="<%- product.picture %>" style="width:62px;height:62px;padding-top:50px;"> <% } %></div>
               <p><%- product.product_name %>
 				  <% _.forEach(product.sale_properties, function(sale_property) { %>
 					  <% if (product.stock_options[sale_property.field_name]) { %>
@@ -1119,18 +1119,18 @@
 		<div class="normal">感谢光临善淘慈善店，期待您的下次光临</div>
 	</script>
 
-	<div class="alertWrap">
-		<p class="alertTitle">系统提示</p>
+	<div class="alertWrap" style="display:none;">
+		<p class="alertTitle">新增商品</p>
 		<div class="alertInfor">
-			<input type="text" name="" value="" placeholder="商品名称" />
-			<input type="text" name="" value="" placeholder="商品编号" />
-			<input type="text" name="" value="" placeholder="条形码" />
-			<input type="text" name="" value="" placeholder="数量" />
-			<input type="text" name="" value="" placeholder="价格" />
+			<input type="text" name="" value="" placeholder="商品名称" class="add_name"/>
+			<input type="text" name="" value="" placeholder="商品编号" class="add_id"/>
+			<input type="text" name="" value="" placeholder="条形码" class="add_barcode"/>
+			<input type="text" name="" value="" placeholder="数量" class="add_num"/>
+			<input type="text" name="" value="" placeholder="价格" class="add_price"/>
 		</div>
 		<p class="alertSubmit">
-			 <span class="button button-action">取 消</span>
-			 <span class="button button-action">确 认</span>
+			 <span class="button button-action add_cancel">取 消</span>
+			 <span class="button button-action add_sure">确 认</span>
 		 </p>
 	</div>
 	<script>
@@ -1439,15 +1439,12 @@
 							product.product_brand = data.row.product_brand;
 							product.product_discount = 1;
 							product.picture = data.picture_info.location;
-							if (product.picture == null) {
-								product.picture = "no_picture.png";
+							if (!product.picture) {
+								product.picture = "{{ static_host }}/no_picture.png";
 							}
 							product.sale_properties = data.sale_properties;
 							product.discount_product_price = product.product_price;
 							product.stock_options = data.stock_options;
-							if (!product.picture) {
-								product.picture = "delay.gif";
-							}
 							product.barcode = barcode;
 							var add = true;
 							for (var i = 0; i < order.products.length; i++) {
@@ -1466,11 +1463,54 @@
 							highlight(barcode);
 						} else {
 							bobang_fail();
+							$(".add_name").val(barcode);
+							$(".add_id").val(barcode);
+							$(".add_barcode").val(barcode);
+							$(".add_num").val(1);
 							$(".alertWrap").show();
-
 						}
 					});
 				}
+			});
+			//新增产品确认
+			$(".add_sure").click(function(){
+				var product_name = $(".add_name").val();
+				var product_sale_price = $(".add_price").val();
+				var barcode = $(".add_barcode").val();
+				var product_id = $(".add_id").val();
+				var num = $(".add_num").val();
+				if (!product_name) {
+					alert("商品名称没填");
+					return;
+				}else if (!product_sale_price) {
+					alert("商品价格没填");
+					return;
+				}else if (!barcode) {
+					alert("商品条形码没填");
+					return;
+				}else if (!product_id) {
+					alert("商品编码没填");
+					return;
+				}else if (!num) {
+					alert("商品库存没填");
+					return;
+				}
+				$.post("/save_product_simple",{"product_name":product_name,"product_sale_price":product_sale_price,"barcode":barcode,"product_id":product_id,"num":num},function(data){
+					if (data.success) {
+						$(".alertWrap").hide();
+					}else {
+						alert(data.message);
+					}
+				});
+			});
+			//新增取消
+			$(".add_cancel").click(function(){
+				$(".add_name").val("");
+				$(".add_id").val("");
+				$(".add_barcode").val("");
+				$(".add_num").val("");
+				$(".add_price").val("");
+				$(".alertWrap").hide();
 			});
 			//全屏回车事件
 			$(".body").keypress(function(e){
