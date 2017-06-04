@@ -126,11 +126,11 @@
 		  color: #fff;
       }
 	  input::-webkit-input-placeholder {
-		  color:#fff;
+		  color:#666;
 		  text-indent: 15px;
       }
       input:-moz-placeholder {
-          color:#fff;
+          color:#666;
 		  text-indent: 15px;
       }
 
@@ -711,6 +711,66 @@
 		width: 85px;
 		border: 1px solid #666;
 	}
+
+	.alertWrap{
+		width: 360px;
+		height: 287px;
+		position: absolute;
+		top: 200px;
+		left: 36.36%;
+		background: #fff;
+		border-radius: 4px;
+		border: 4px solid #E6E6FA;
+	}
+	.alertTitle{
+		width: 100%;
+		height: 50px;
+		line-height: 50px;
+		text-align: center;
+		text-indent: 10px;
+		font-size: 14px;
+		color: #666;
+		font-weight: bold;
+		background: #F7F7F7;
+		box-shadow: 1px 1px 7px  #E0EEEE;
+	}
+	.alertInfor{
+		width: 100%;
+		font-size: 12px;
+		color: #565656;
+		text-align: center;
+		margin-top: 15px;
+	}
+	.alertInfor input{
+		width: 80%;
+		padding: 4px 0;
+		margin: 4px 0;
+		text-indent: 15px;
+	}
+	.alertSubmit{
+		text-align: center;
+		margin-top: 12px;
+	}
+	.alertSubmit span:first-child{
+		margin-right: 20px;;
+		height: 30px;
+		line-height: 30px;
+		background: #1B9AF7;
+		padding: 5px 9px;
+		color: #FFF;
+		border-radius: 4PX;
+		cursor: pointer;
+	}
+	.alertSubmit span:last-child{
+		margin-left: 20px;
+		height: 30px;
+		line-height: 30px;
+		padding: 5px 9px;
+		background: #24533E;
+		color: #FFF;
+		border-radius: 4PX;
+		cursor: pointer;
+	}
 </style>
 </head>
   <body class="body">
@@ -1058,6 +1118,21 @@
 		</div>
 		<div class="normal">感谢光临善淘慈善店，期待您的下次光临</div>
 	</script>
+
+	<div class="alertWrap">
+		<p class="alertTitle">系统提示</p>
+		<div class="alertInfor">
+			<input type="text" name="" value="" placeholder="商品名称" />
+			<input type="text" name="" value="" placeholder="商品编号" />
+			<input type="text" name="" value="" placeholder="条形码" />
+			<input type="text" name="" value="" placeholder="数量" />
+			<input type="text" name="" value="" placeholder="价格" />
+		</div>
+		<p class="alertSubmit">
+			 <span class="button button-action">取 消</span>
+			 <span class="button button-action">确 认</span>
+		 </p>
+	</div>
 	<script>
 		$(function() {
 			var store = "{{store_info[0].point_name}}";
@@ -1391,6 +1466,8 @@
 							highlight(barcode);
 						} else {
 							bobang_fail();
+							$(".alertWrap").show();
+
 						}
 					});
 				}
