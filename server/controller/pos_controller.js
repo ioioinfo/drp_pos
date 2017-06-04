@@ -280,10 +280,92 @@ var find_products = function(product_ids,cb){
 	url = url + product_ids;
 	do_get_method(url,cb);
 };
+//简单保存
+var save_product_simple = function(data,cb){
+	var url = "http://211.149.248.241:18002/save_product_simple";
+	do_post_method(url,data,cb);
+}
+//保存库存
+var save_stock_instruction = function(data,cb){
+	var url = "http://211.149.248.241:12001/save_stock_instruction";
+	do_post_method(url,data,cb);
+};
+//生成条码
+var save_product_barcodes = function(data,cb){
+	var url = "http://211.149.248.241:12001/save_product_barcodes";
+	do_post_method(url,data,cb);
+};
 exports.register = function(server, options, next){
 	var i18n = server.plugins.i18n;
 
 	server.route([
+		//添加没有barcode的商品
+		{
+			method: 'POST',
+			path: '/save_product_simple',
+			handler: function(request, reply){
+				var product_name = request.payload.product_name;
+				var product_sale_price = request.payload.product_sale_price;
+				var barcode = request.payload.barcode;
+				var product_id = request.payload.product_id;
+				var num = request.payload.num;
+
+				if (!product_id|| !product_name|| !product_sale_price|| !barcode|| !num) {
+					return reply({"success":false,"message":"params wrong"});
+				}
+
+				var product = {
+					"product_id" : product_id,
+					"product_name" : product_name,
+					"product_sale_price" : product_sale_price,
+					"industry_id" : 102
+				};
+				save_product_simple(product,function(err,result){
+					if (!err) {
+						var instruction = {
+							"shipper" : "shantao",
+							"supplier_id" : 1,
+							"warehouse_id" : 1,
+							"region_id" : 1,
+							"point_id" : 1
+						}
+						var data = {
+							"product_id" : product_id,
+							"industry_id" : 102,
+							"instruction" : JSON.stringify(instruction),
+							"strategy" : "modify",
+							"quantity" : num,
+							"batch_id" : "test",
+							"platform_code" :"drp_pos"
+						};
+						save_stock_instruction(data,function(err,content){
+							if (!err) {
+								var product = {
+									"product_id":product_id,
+									"industry_id":102,
+									"bar_code":barcode
+								};
+								var products = []
+								products.push(product);
+								products = JSON.stringify(products);
+								var info = {"products":products};
+								save_product_barcodes(info,function(err,content){
+									if (!err) {
+										return reply({"success":true});
+									}else {
+										return reply({"success":false,"message":content.message});
+									}
+								});
+							}else {
+								return reply({"success":false,"message":content.message});
+							}
+						});
+					}else {
+						return reply({"success":false,"message":result.message});
+					}
+				});
+			}
+		},
 		//支付宝退款
 		{
 			method: 'POST',
