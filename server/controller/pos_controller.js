@@ -327,12 +327,10 @@ exports.register = function(server, options, next){
 				};
 				search_product_byId(product_id,function(err,rows){
 					if (err) {
-						console.log(rows.rows.length);
 						if (rows.rows.length>0) {
 							return reply({"success":false,"message":"商品已存在"});
 						}else {
 							save_product_simple(product,function(err,result){
-								console.log(1111);
 								if (!err) {
 									var instruction = {
 										"shipper" : "shantao",
@@ -575,7 +573,6 @@ exports.register = function(server, options, next){
 				var store_ids = [];
 				store_ids.push(store_id);
 				get_store_info(JSON.stringify(store_ids), org_code, function(err,rows){
-					console.log("rows:"+JSON.stringify(rows));
 					if (!err) {
 						if (rows.success) {
 							var store_info = rows.rows;
@@ -902,50 +899,48 @@ exports.register = function(server, options, next){
 							update_order_status(data,function(err,row){
 								if (!err) {
 									if (row.success) {
-										if (order.member) {
-											var info = {
-												order_id : order.order_id,
-												vip_id : order.member.vip_id,
-												order_desc : order.store + "购物",
-												amount : order.shopping_infos.total_price,
-												platform_code : "drp_pos"
-											};
-											var out_data = {"batch_id":order.order_id,"platform_code":"drp_pos"};
-											var product_ids = [];
-											for (var i = 0; i < order.products.length; i++) {
-												var product = order.products[i];
-												product_ids.push(product.product_id);
-											}
-											find_products(JSON.stringify(product_ids),function(err,rows){
-												if (!err) {
-													var products = rows.rows;
-													var product_map = {};
-													for (var i = 0; i < products.length; i++) {
-														product_map[products[i].id] = products[i].industry_id;
-													}
-													for (var i = 0; i < order.products.length; i++) {
-														order.products[i].industry_id = product_map[order.products[i].product_id];
-														order.products[i].quantity = order.products[i].product_number;
-													}
-													out_data.products = JSON.stringify(order.products);
-													console.log("platform_code: "+out_data.platform_code);
-													outbound(out_data,function(err,content){
-														if (!err) {
+										var out_data = {"batch_id":order.order_id,"platform_code":"drp_pos"};
+										var product_ids = [];
+										for (var i = 0; i < order.products.length; i++) {
+											var product = order.products[i];
+											product_ids.push(product.product_id);
+										}
+										find_products(JSON.stringify(product_ids),function(err,rows){
+											if (!err) {
+												var products = rows.rows;
+												var product_map = {};
+												for (var i = 0; i < products.length; i++) {
+													product_map[products[i].id] = products[i].industry_id;
+												}
+												for (var i = 0; i < order.products.length; i++) {
+													order.products[i].industry_id = product_map[order.products[i].product_id];
+													order.products[i].quantity = order.products[i].product_number;
+												}
+												out_data.products = JSON.stringify(order.products);
+												outbound(out_data,function(err,content){
+													if (!err) {
+														if (order.member) {
+															var info = {
+																order_id : order.order_id,
+																vip_id : order.member.vip_id,
+																order_desc : order.store + "购物",
+																amount : order.shopping_infos.total_price,
+																platform_code : "drp_pos"
+															};
 															order_finish(info,function(err,row){
 																return reply({"success":true});
 															});
 														}else {
-															return reply({"success":false,"message":content.message});
+															return reply({"success":true});
 														}
-													});
-												}else {
-													return reply({"success":false,"message":rows.message});
-												}
-											});
-
-										}else {
-											return reply({"success":true});
-										}
+													}else {
+														return reply({"success":false,"message":content.message});
+													}
+												});
+											}else {
+												return reply({"success":false,"message":rows.message});
+											}
+										});
 									}else {
 										return reply({"success":false});
 									}

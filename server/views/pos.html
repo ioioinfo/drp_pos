@@ -1497,6 +1497,7 @@
 				}
 				$.post("/save_product_simple",{"product_name":product_name,"product_sale_price":product_sale_price,"barcode":barcode,"product_id":product_id,"num":num},function(data){
 					if (data.success) {
+						$(".add_price").val("");
 						$(".alertWrap").hide();
 					}else {
 						alert(data.message);
@@ -1566,7 +1567,6 @@
 					}
 					order.shopping_infos.marketing_price = order.shopping_infos.marketing_price + order.products[i].product_price*order.products[i].product_number;
 					order.shopping_infos.total_price = parseFloat((order.shopping_infos.total_price + order.products[i].discount_product_price*order.products[i].product_number).toFixed(2));
-					console.log("marketing_price:"+order.shopping_infos.marketing_price);
 				}
 			};
 			//修改单条商品
