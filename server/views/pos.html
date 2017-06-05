@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -50,7 +50,6 @@
 	  .top-left a{
 		  display: inline-block;
 		  padding: 2px;
-		  border: 1px solid #999;
 		  color: #f4f4f4;
 	  }
       .top-center{
@@ -151,7 +150,7 @@
 
       .product-infor p{
         width: 170px;
-		max-height: 41px;
+		height: 41px;
         margin: 0 auto;
         font-size: 12px;
         padding-bottom: 5px;
@@ -574,32 +573,15 @@
 	.padding_top{
 		padding-top: 24px;
 	}
-	.back{
-		padding: 3px 5px;
-		background: #58C3E5;
-		border-radius: 2px;
-		color: #fff;
-		cursor: pointer;
-	}
 	.span_width{
 		display: inline-block;
-		width: 305.14px;
+		width: 30%;
+		font-size: 18px;
 	}
 	.span_width1{
 		display: inline-block;
-		width: 209.14px;
-	}
-	.span_width2{
-		display: inline-block;
-    	width: 249.14px;
-	}
-	.span_width3{
-		display: inline-block;
-		width: 305.14px;
-	}
-	.span_width4{
-		display: inline-block;
-    	width: 305.14px;
+		width: 64%;
+		font-size: 18px;
 	}
 	.leave{
 		color: #fff;
@@ -618,8 +600,22 @@
     	cursor: pointer;
 		margin-bottom: 7px;
 	}
+	.back{
+		padding: 12px 50px;
+		font-size: 12px;
+		line-height: 1.5;
+		border-radius: 3px;
+		display: inline-block;
+		font-weight: 400;
+		text-align: center;
+		white-space: nowrap;
+		vertical-align: middle;
+		touch-action: manipulation;
+		cursor: pointer;
+		margin-bottom: 7px;
+	}
 	.cash_value{
-		width: 110px;
+		width: 82px;
 	    border: 1px solid #999;
 	}
 	.print{
@@ -674,9 +670,10 @@
 		color: #000;
     	background-color: #ddd;
 		border-color: #999;
-		padding: 12px 50px;
 	    font-size: 12px;
 	    line-height: 1.5;
+		padding: 3px 8px;
+		background: #00A9F2;
 	    border-radius: 3px;
 		display: inline-block;
 		font-weight: 400;
@@ -686,32 +683,38 @@
 		touch-action: manipulation;
     	cursor: pointer;
 		margin-bottom: 7px;
-		display: none;
 	}
 	.cash_value{
-		font-size: 24px;
+		font-size: 18px;
 	}
 
 	.alipay_value{
-		font-size: 24px;
+		font-size: 18px;
 		width: 85px;
 		border: 1px solid #666;
 	}
 	.alipay_code{
-		width: 106px;
+		width: 150px;
+		font-size: 18px;
 		border: 1px solid #666;
 	}
 	.ali_transfer_value{
-		font-size: 24px;
+		font-size: 18px;
 		width: 85px;
 		border: 1px solid #666;
 	}
 	.weixin_transfer_value{
-		font-size: 24px;
+		font-size: 18px;
 		width: 85px;
 		border: 1px solid #666;
 	}
-
+	.ali_transfer_pay
+	{
+		width: 60%;
+	}
+	.weixin_transfer_pay {
+		width: 60%;
+	}
 	.alertWrap{
 		width: 360px;
 		height: 287px;
@@ -741,11 +744,22 @@
 		text-align: center;
 		margin-top: 15px;
 	}
-	.alertInfor input{
+	.alertInfor p{
 		width: 80%;
+		margin: 4px auto;
+
+	}
+	.alertInfor p span{
+		width: 20%;
+		display: inline-block;
+		text-align: right;
+		padding-right: 3px;
+	}
+	.alertInfor p input{
+		width: 76%;
 		padding: 4px 0;
-		margin: 4px 0;
-		text-indent: 15px;
+
+		text-indent: 10px;
 	}
 	.alertSubmit{
 		text-align: center;
@@ -756,7 +770,7 @@
 		height: 30px;
 		line-height: 30px;
 		background: #1B9AF7;
-		padding: 5px 9px;
+		padding: 8px 20px;
 		color: #FFF;
 		border-radius: 4PX;
 		cursor: pointer;
@@ -765,7 +779,7 @@
 		margin-left: 20px;
 		height: 30px;
 		line-height: 30px;
-		padding: 5px 9px;
+		padding: 8px 20px;
 		background: #24533E;
 		color: #FFF;
 		border-radius: 4PX;
@@ -825,15 +839,16 @@
 					<img src="/images/pay08.png" class="pay_img2 weixin_transfer"/>
 					<div style="clear:both;"></div>
 					<div style="margin-left:24px;" class="padding_top">
-						<span class="pay_amount margin_right"></span>
-						<span class="cash_pay  span_width3" style="display:none;">
+						<span class="pay_amount span_width"></span>
+						<span class="cash_pay  span_width" style="display:none;">
 							现金：<input class="cash_value" type="text" value=""/>
 						</span>
-						<span class="alipay_pay span_width" style="display:none;">
+						<span class="alipay_pay span_width1" style="display:none;">
 							支付宝 ：<input class="alipay_value" type="text" value="" data-id="1"/>
+							<br/>
 							支付码 ：<input class="alipay_code" type="text" value="" />
 						</span>
-						<span class="member_pay margin_right span_width" style="display:none;">
+						<span class="member_pay span_width " style="display:none;">
 							卡号：<input class="member_number" type="text" value="" placeholder="会员还未登记！" readonly style="width:90px;"/>
 							<span style="margin-left:20px;">金额：</span><input class="member_value" type="text" value="" style="width:90px;"/>
 							<span style="margin-left:20px;">支付码：</span><input class="member_pay_card" type="text" value="" style="width:90px;"/>
@@ -844,7 +859,7 @@
 						<span class="ali_transfer_pay span_width" style="display:none;">
 							支付宝转账：<input class="ali_transfer_value" type="text" value=""/>
 						</span>
-						<span class="weixin_transfer_pay span_width4" style="display:none;">
+						<span class="weixin_transfer_pay span_width" style="display:none;">
 							微信转账：<input class="weixin_transfer_value" type="text" value=""/>
 						</span>
 						<span class="pay_more margin_right span_width" style="display:none;">
@@ -853,14 +868,14 @@
 						<!-- <span class="choose_pay margin_right span_width" style="display:none;">
 							请选择其他支付方式
 						</span> -->
-						<span class="back" style="width: 50px;">返回</span>
 					</div>
 				</div>
 				<div class="pay_table">
 				</div>
 				<div class="" style="text-align:center">
+					<button class="back">返 回</button>
 					<button class="leave">确 认</button>
-					<button class="refund">退 款</button>
+
 					<input class="print" type="button" value="打印" style="display:none;"/>
 				</div>
 			</div>
@@ -877,7 +892,9 @@
 						<td><%- index+1 %></td>
 						<td><%- pay_info.pay_way %></td>
 						<td><%- pay_info.pay_amount %></td>
-						<td colspan="2"><%- pay_info.fin %></td>
+						<td colspan="2" id="liushuihao"><%- pay_info.fin %>
+							<% if (pay_info.pay_way=="支付宝线下条码支付") { %><button class="refund">退 款</button><% } %>
+						</td>
 					</tr>
 				<% }); %>
 			</div>
@@ -1122,11 +1139,11 @@
 	<div class="alertWrap" style="display:none;">
 		<p class="alertTitle">新增商品</p>
 		<div class="alertInfor">
-			<input type="text" name="" value="" placeholder="商品名称" class="add_name"/>
-			<input type="text" name="" value="" placeholder="商品编号" class="add_id"/>
-			<input type="text" name="" value="" placeholder="条形码" class="add_barcode"/>
-			<input type="text" name="" value="" placeholder="数量" class="add_num"/>
-			<input type="text" name="" value="" placeholder="价格" class="add_price"/>
+			<p><span>商品名称</span><input type="text" name="" value="" placeholder="" class="add_name"/></p>
+			<p><span>商品编号</span><input type="text" name="" value="" placeholder="" class="add_id"/></p>
+			<p><span>条形码</span><input type="text" name="" value="" placeholder="" class="add_barcode"/></p>
+			<p><span>数量</span><input type="text" name="" value="" placeholder="" class="add_num"/></p>
+			<p><span>价格</span><input type="text" name="" value="" placeholder="" class="add_price"/></p>
 		</div>
 		<p class="alertSubmit">
 			 <span class="button button-action add_cancel">取 消</span>
@@ -1208,6 +1225,7 @@
 					$(".weixin_transfer_pay").attr("style","display:none;");
 					$(".alipay_pay").removeAttr("style");
 					$(".alipay_code").focus();
+
 				}else if (pay_way_status == 2) {
 					order.shopping_infos.pre_pay = parseFloat((order.shopping_infos.total_price -  order.shopping_infos.ready_pay).toFixed(2));
 					$(".member_value").val(order.shopping_infos.pre_pay);
@@ -1647,7 +1665,6 @@
 						if (data.success) {
 							$(".print").removeAttr("style");
 							$(".leave").attr("disabled","disabled");
-							$(".refund").show();
 							// init_pay_infos();
 							// $("#pay_info").attr("style","display:none;");
 						}else {
@@ -1731,6 +1748,31 @@
 			var payment_info_table = function(){
 				var t = _.template($("#pay_table_infos").html());
 				$(".pay_table").html(t({pay_infos:order.pay_infos,shopping_infos:order.shopping_infos}));
+
+				// 退款
+				$(".refund").click(function(){
+					var order_id = order.order_id;
+					if(!order_id){
+						alert("该订单不存在");
+						return;
+					}
+					$.ajax({
+	                    url: "/alipay_trade_refund",
+	                    dataType: 'json',
+	                    type: 'POST',
+	                    data: {"order_id":order_id},
+	                    success: function(data) {
+	                        if (data.success) {
+	                            alert("退款成功");
+	                        }else {
+	                            alert("退款失败！");
+	                        }
+	                    }.bind(this),
+	                    error: function(xhr, status, err) {
+	                    }.bind(this)
+	                });
+
+				});
 			};
 			//付款get方法
 			var do_get_method = function(url,params,cb){
@@ -1986,6 +2028,7 @@
 				if ( !pay_amount || key != 13 || !alipay_code) {
 					return;
 				}
+
 				$(".alipay_code").val("");
 				var changes = parseFloat(0);
 				changes = pay_amount-order.shopping_infos.total_price;
@@ -2185,6 +2228,9 @@
 			}
 
 　　       }
+
+
+
 　　       document.onkeyup = keyUp;
 	</script>
   </body>
