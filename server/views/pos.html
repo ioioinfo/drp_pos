@@ -1764,6 +1764,17 @@
 	                    success: function(data) {
 	                        if (data.success) {
 	                            alert("退款成功");
+								for (var i = 0; i < order.pay_infos.length; i++) {
+									if (order.pay_infos[i].pay_way == "支付宝线下条码支付") {
+										order.shopping_infos.pre_pay = order.shopping_infos.pre_pay +order.pay_infos[i].pay_amount;
+										order.shopping_infos.ready_pay = order.shopping_infos.ready_pay-order.pay_infos[i].pay_amount;
+										order.pay_infos.splice(i, 1);
+									}
+								}
+								var t = _.template($("#pay_table_infos").html());
+								click_pay_way(1);
+								$(".pay_table").html(t({pay_infos:order.pay_infos,shopping_infos:order.shopping_infos}));
+								ali_id = "";
 	                        }else {
 	                            alert("退款失败！");
 	                        }
@@ -2085,6 +2096,7 @@
 						setTimeout(check_alipay,1000);
 					}else {
 						alert("已超时，付款未成功！");
+						ali_id = "";
 					}
 				});
 			};
