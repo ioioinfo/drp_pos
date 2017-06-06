@@ -58,7 +58,7 @@ class Wrap extends React.Component {
             render() {
                 return (
                     <div className="picture">
-                        <img src="{{static_host}}/dong.gif" alt="" />
+                        <img src="http://static.buy42.com/dong.gif" alt="" />
                     </div>
                 );
             }
