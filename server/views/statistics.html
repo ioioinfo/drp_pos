@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
         <title>今日统计</title>
-        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="{{static_host}}/bootstrap.min.css">
         <script src="{{static_host}}/react.min.js"></script>
         <script src="{{static_host}}/react-dom.min.js"></script>
         <script src="{{static_host}}/browser.min.js"></script>
@@ -103,13 +103,31 @@
 
         // 中间
         class Middle extends React.Component {
+            constructor(props) {
+                super(props);
+                // 初始化一个空对象
+                this.state = {items: {}};
+            }
+
+            componentDidMount() {
+                $.ajax({
+                  url: "/get_orders_byDate",
+                  dataType: 'json',
+                  type: 'GET',
+                  success: function(data) {
+                      this.setState({items:data});
+                  }.bind(this),
+                  error: function(xhr, status, err) {
+                  }.bind(this)
+              });
+            }
             render() {
                 return (
                     <div className="middle">
-                        <p className="back">统计时间:2017/6/6</p>
-                        <div className="col-xs-6 col-sm-6 number number1"><p>￥1000</p><p>营业额</p></div>
-                        <div className="col-xs-6 col-sm-6 number number2"><p>2</p><p>订单数</p></div>
-                        <div className="col-xs-6 col-sm-6 number number3"><p>5</p><p>件数</p></div>
+                        <p className="back">统计时间:{this.state.items.time}</p>
+                        <div className="col-xs-6 col-sm-6 number number1"><p>￥{this.state.items.total_sales}</p><p>营业额</p></div>
+                        <div className="col-xs-6 col-sm-6 number number2"><p>{this.state.items.order_num}</p><p>订单数</p></div>
+                        <div className="col-xs-6 col-sm-6 number number3"><p>{this.state.items.total_products}</p><p>件数</p></div>
                         <div className="col-xs-6 col-sm-6 number number4"><p>暂无</p></div>
                     </div>
                 );
