@@ -121,18 +121,6 @@
                 var total_sales = this.state.items.total_sales;
                 var order_num = this.state.items.order_num;
                 var total_products = this.state.items.total_products;
-                if (!time) {
-                    time = 0;
-                }
-                if (!total_sales) {
-                    total_sales = 0;
-                }
-                if (!order_num) {
-                    order_num = 0;
-                }
-                if (!total_products) {
-                    total_products = 0;
-                }
                 return (
                     <div className="middle">
                         <p className="back">统计时间:{time}</p>
