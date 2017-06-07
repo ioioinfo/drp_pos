@@ -122,12 +122,28 @@
               });
             }
             render() {
+                var time = this.state.items.time;
+                var total_sales = this.state.items.total_sales;
+                var order_num = this.state.items.order_num;
+                var total_products = this.state.items.total_products;
+                if (!time) {
+                    time = 0;
+                }
+                if (!total_sales) {
+                    total_sales = 0;
+                }
+                if (!order_num) {
+                    order_num = 0;
+                }
+                if (!total_products) {
+                    total_products = 0;
+                }
                 return (
                     <div className="middle">
-                        <p className="back">统计时间:{this.state.items.time}</p>
-                        <div className="col-xs-6 col-sm-6 number number1"><p>￥{this.state.items.total_sales}</p><p>营业额</p></div>
-                        <div className="col-xs-6 col-sm-6 number number2"><p>{this.state.items.order_num}</p><p>订单数</p></div>
-                        <div className="col-xs-6 col-sm-6 number number3"><p>{this.state.items.total_products}</p><p>件数</p></div>
+                        <p className="back">统计时间:{time}</p>
+                        <div className="col-xs-6 col-sm-6 number number1"><p>￥{total_sales}</p><p>营业额</p></div>
+                        <div className="col-xs-6 col-sm-6 number number2"><p>{order_num}</p><p>订单数</p></div>
+                        <div className="col-xs-6 col-sm-6 number number3"><p>{total_products}</p><p>件数</p></div>
                         <div className="col-xs-6 col-sm-6 number number4"><p>暂无</p></div>
                     </div>
                 );
