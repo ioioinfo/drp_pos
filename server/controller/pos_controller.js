@@ -64,16 +64,16 @@ var get_cookie_loginId = function(request){
 	}
 	return login_id;
 };
-//获取当前cookie store_id
-var get_cookie_store_id = function(request){
-	var store_id;
+//获取当前cookie login_id
+var get_cookie_personId = function(request){
+	var person_id;
 	if (request.state && request.state.cookie) {
 		var cookie = request.state.cookie;
-		if (cookie.login_id) {
-			store_id = cookie.store_id;
+		if (cookie.person_id) {
+			person_id = cookie.person_id;
 		}
 	}
-	return store_id;
+	return person_id;
 };
 //获取当前cookie store_id
 var get_cookie_storeId = function(request){
@@ -633,6 +633,7 @@ exports.register = function(server, options, next){
 							do_login(data, function(err,content){
 								if (!err) {
 									var login_id = content.row.login_id;
+									var person_id = content.row.person_id;
 									var store_id = content.stores[0].org_store_id;
 									var cookie = request.state.cookie;
 									if (!cookie) {
@@ -640,6 +641,7 @@ exports.register = function(server, options, next){
 									}
 									cookie.login_id = login_id;
 									cookie.store_id = store_id;
+									cookie.person_id = person_id;
 									return reply({"success":true,"service_info":service_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
 								} else {
 									return reply({"success":false,"message":i18n._n(content.message)});
@@ -694,7 +696,7 @@ exports.register = function(server, options, next){
 						ep.emit("person_info", null);
 					}
 				});
-				var store_id = get_cookie_store_id(request);
+				var store_id = get_cookie_storeId(request);
 				if (!store_id) {
 					return reply({"succss":false,"messsage":"no store_id"});
 				}
@@ -863,11 +865,13 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/save_order_detail',
 			handler: function(request, reply){
-				var login_id = get_cookie_loginId(request);
-				if (!login_id) {
+				var operation_person = get_cookie_personId(request);
+				if (!operation_person) {
 					return reply.redirect("/login");
 				}
+				console.log("operation_person:"+operation_person);
 				var data = order_params(request);
+				data.operation_person = operation_person;
 				save_order(data,function(err, row){
 					if (!err) {
 						return reply({"success":true,"row":row,"service_info":service_info});
@@ -1026,58 +1030,54 @@ exports.register = function(server, options, next){
 
 							update_order_status(data,function(err,row){
 								if (!err) {
-									if (row.success) {
-										var out_data = {"batch_id":order.order_id,"platform_code":"drp_pos"};
-										var product_ids = [];
-										for (var i = 0; i < order.products.length; i++) {
-											var product = order.products[i];
-											product_ids.push(product.product_id);
-										}
-										find_products(JSON.stringify(product_ids),function(err,rows){
-											if (!err) {
-												var products = rows.rows;
-												var product_map = {};
-												for (var i = 0; i < products.length; i++) {
-													product_map[products[i].id] = products[i].industry_id;
-												}
-												for (var i = 0; i < order.products.length; i++) {
-													order.products[i].industry_id = product_map[order.products[i].product_id];
-													order.products[i].quantity = order.products[i].product_number;
-												}
-												out_data.products = JSON.stringify(order.products);
-												outbound(out_data,function(err,content){
-													if (!err) {
-														if (order.member) {
-															var info = {
-																order_id : order.order_id,
-																vip_id : order.member.vip_id,
-																order_desc : order.store + "购物",
-																amount : order.shopping_infos.total_price,
-																platform_code : "drp_pos"
-															};
-															order_finish(info,function(err,row){
-																return reply({"success":true});
-															});
-														}else {
-															return reply({"success":true});
-														}
-													}else {
-														return reply({"success":false,"message":content.message});
-													}
-												});
-											}else {
-												return reply({"success":false,"message":rows.message});
-											}
-										});
-									}else {
-										return reply({"success":false});
+									var out_data = {"batch_id":order.order_id,"platform_code":"drp_pos"};
+									var product_ids = [];
+									for (var i = 0; i < order.products.length; i++) {
+										var product = order.products[i];
+										product_ids.push(product.product_id);
 									}
+									find_products(JSON.stringify(product_ids),function(err,rows){
+										if (!err) {
+											var products = rows.rows;
+											var product_map = {};
+											for (var i = 0; i < products.length; i++) {
+												product_map[products[i].id] = products[i].industry_id;
+											}
+											for (var i = 0; i < order.products.length; i++) {
+												order.products[i].industry_id = product_map[order.products[i].product_id];
+												order.products[i].quantity = order.products[i].product_number;
+											}
+											out_data.products = JSON.stringify(order.products);
+											outbound(out_data,function(err,content){
+												if (!err) {
+													if (order.member) {
+														var info = {
+															order_id : order.order_id,
+															vip_id : order.member.vip_id,
+															order_desc : order.store + "购物",
+															amount : order.shopping_infos.total_price,
+															platform_code : "drp_pos"
+														};
+														order_finish(info,function(err,row){
+															return reply({"success":true});
+														});
+													}else {
+														return reply({"success":true});
+													}
+												}else {
+													return reply({"success":false,"message":content.message});
+												}
+											});
+										}else {
+											return reply({"success":false,"message":rows.message});
+										}
+									});
 								}else {
-									return reply({"success":false});
+									return reply({"success":false,"message":row.message});
 								}
 							});
 						}else {
-							return reply({"success":false,"message":"row.message"});
+							return reply({"success":false,"message":row.message});
 						}
 					}else {
 						return reply({"success":false,"message":"fail"});
