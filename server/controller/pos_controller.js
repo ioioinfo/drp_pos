@@ -300,10 +300,130 @@ var search_product_byId = function(product_id,cb){
 	var url = "http://211.149.248.241:18002/get_product?product_id="+product_id;
 	do_get_method(url,cb);
 };
+//获取所有订单
+var get_all_orders = function(params,cb){
+	var url = "http://211.149.248.241:18010/get_all_orders?params="+encodeURI(params);
+	do_get_method(url,cb);
+};
+//根据personids找昵称
+var get_person_avatar = function(person_ids, cb){
+	var url = "http://139.196.148.40:18003/get_person_avatar?person_ids=";
+	url = url + person_ids + "&scope_code=" +org_code;
+	do_get_method(url,cb);
+};
+//获取所有订单数量
+var get_all_num = function(params,cb){
+	var url = "http://211.149.248.241:18010/get_all_num?params="+encodeURI(params);
+	do_get_method(url,cb);
+};
+//获取所有门店
+var get_all_mendian = function(cb){
+	var url = "http://211.149.248.241:19999/store/list?org_code="+org_code;
+	do_get_method(url,cb);
+};
 exports.register = function(server, options, next){
 	var i18n = server.plugins.i18n;
 
 	server.route([
+		//获取所有订单 及数量
+		{
+			method: 'POST',
+			path: '/get_all_orders',
+			handler: function(request, reply){
+				var params = request.payload.params;
+				if (!params) {
+					return reply({"success":false,"message":"params wrong","service_info":service_info});
+				}
+				var ep =  eventproxy.create("orders","num","mendians",
+					function(orders,num,mendians){
+						for (var i = 0; i < orders.length; i++) {
+							var order = orders[i];
+							for (var j = 0; j < mendians.length; j++) {
+								if (mendians[j].org_store_id == order.store_id) {
+									order.org_store_name = mendians[j].org_store_name;
+								}
+							}
+						}
+					return reply({"success":true,"orders":orders,"num":num,"message":"ok"});
+				});
+
+				get_all_orders(params,function(err,rows){
+					if (!err) {
+						if (rows.success) {
+							var orders = rows.rows;
+							var person_ids = [];
+							for (var i = 0; i < orders.length; i++) {
+								person_ids.push(orders[i].person_id);
+								orders[i].status_name = pos_order_status[orders[i].order_status];
+							}
+							get_person_avatar(JSON.stringify(person_ids),function(err,content){
+								if (!err) {
+									if (content.success) {
+										var persons = content.rows;
+										for (var i = 0; i < persons.length; i++) {
+											var person = persons[i];
+											for (var j = 0; j < orders.length; j++) {
+												if (person.person_id == orders[j].person_id) {
+													orders[j].nickname = person.nickname;
+												}
+											}
+										}
+										for (var i = 0; i < orders.length; i++) {
+											if (!orders[i].nickname) {
+												orders[i].nickname = "无名氏";
+											}
+										}
+										ep.emit("orders", orders);
+									}else {
+										ep.emit("orders", orders);
+									}
+								}else {
+									ep.emit("orders", orders);
+								}
+							});
+						}else {
+							ep.emit("orders", []);
+						}
+					}else {
+						ep.emit("orders", []);
+					}
+				});
+				get_all_num(params,function(err,row){
+					if (!err) {
+						if (row.success) {
+							var num = row.num;
+							ep.emit("num", num);
+						}else {
+							ep.emit("num", 0);
+						}
+					}else {
+						ep.emit("num", 0);
+					}
+				});
+				get_all_mendian(function(err,rows){
+					if (!err) {
+						if (rows.success) {
+							var mendians = rows.rows
+							ep.emit("mendians", mendians);
+						}else {
+							ep.emit("mendians", []);
+						}
+					}else {
+						ep.emit("mendians", []);
+					}
+				});
+
+
+			}
+		},
+		//订单页面
+		{
+			method: 'GET',
+			path: '/order_list',
+			handler: function(request, reply){
+				return reply.view("order_list");
+			}
+		},
 		//添加没有barcode的商品
 		{
 			method: 'POST',
