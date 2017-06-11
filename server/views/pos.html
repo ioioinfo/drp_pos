@@ -787,12 +787,27 @@
 
     .jinriyeji{
         position: fixed;
-        right: 4.44%;
+        right: 2.44%;
         top: 35%;
         color: #000;
         border: 1px solid #EDEDED;
-        padding: 7px 9px;
+        padding: 7px 0;
+        width: 92px;
+        text-align: center;
         font-size: 18px;
+
+    }
+    .return_order{
+        position: fixed;
+        right: 2.44%;
+        top: 48%;
+        color: #000;
+        border: 1px solid #EDEDED;
+        padding: 7px 0;
+        width: 92px;
+        text-align: center;
+        font-size: 18px;
+
     }
 </style>
 </head>
@@ -1147,6 +1162,7 @@
 		 </p>
 	</div>
     <p class="jinriyeji"><a href="statistics" target="_blank">今日业绩</a> </p>
+    <p class="return_order"><a href="order_list" target="_blank">退 货</a> </p>
 	<script>
 		$(function() {
 			var store = "{{store_info[0].point_name}}";
