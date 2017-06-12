@@ -82,6 +82,31 @@
             .product_list li span:nth-child(4n+2){
                 flex: 2;
             }
+
+
+
+            .return_product_list{
+                padding: 0;
+                border: 1px solid #D9D9D9;
+                margin: 17px 7px;
+                min-height: 50px;
+            }
+            .return_product_list li{
+                width: 100%;
+                display: flex;
+            }
+            .return_product_list li span{
+                display: inline-block;
+                font-size: 12px;
+                padding: 7.5px 0;
+                flex: 1;
+                text-align: center;
+            }
+            .return_product_list li span:nth-child(4n+2){
+                flex: 2;
+            }
+
+
             .return_price{
                 width: 100%;
                 margin: 0 17px 0 17px;
@@ -211,13 +236,13 @@
     			super(props);
                 this.onKeyPress = this.onKeyPress.bind(this);
                 this.handleClick = this.handleClick.bind(this);
-                this.state = {order_details:[],payitem:[],item:{}};
+                this.state = {order_details:[],payitem:[],item:{},returnitems:[],returndetail:[],order_id:""};
     		}
             // enter事件
             onKeyPress(e){
 				var key = e.which;
 				if (key== 13) {
-                    var order_id = $(".product_id_input").val();
+                    order_id = $(".product_id_input").val();
                     $.ajax({
                          url: "/search_order_infos",
                          dataType: 'json',
@@ -242,6 +267,17 @@
                          }.bind(this)
                     });
 
+                    $.ajax({
+                         url: "/get_return_order",
+                         dataType: 'json',
+                         type: 'GET',
+                         data:{"order_id":order_id},
+                         success: function(data) {
+                            this.setState({returnitems:data.rows[0],returndetail:data.details_map});
+                         }.bind(this),
+                         error: function(xhr, status, err) {
+                         }.bind(this)
+                    });
 				}
             };
             // 不同支付方式选择退款方式
@@ -320,6 +356,18 @@
                             {this.state.order_details.map((item,index )=> (
                                 <ProductList key={item.product_id} item={item} index={index} order_details={this.state.order_details} />))
                             }
+
+                        </ul>
+                        <ul className="return_product_list">
+                            <li className="return_product_list_li">
+                                <span>名称</span>
+                                <span>价格</span>
+                                <span>退货价格</span>
+                                <span>已退数量</span>
+                            </li>
+                            {this.state.returndetail.map(item=> (
+                                <ReturnList key={item[this.state.order_id].product_id} item={item}/>))
+                            }
                         </ul>
                         <p className="return_time">购买日期:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="return_time_num">{this.state.item.order_date_text}</span></p>
                         <p className="pay_way">支付方式:</p>
@@ -378,6 +426,21 @@
                         <span className="product_li2">{this.props.item.product.product_sale_price}</span>
                         <span className="product_li3">{this.props.item.number}</span>
                         <span className="product_li3"><input type="text" className="return_product_num" onBlur={this.handChange} /></span>
+                    </li>
+                );
+            }
+        };
+
+        // 头部
+        class ReturnList extends React.Component {
+            render() {
+                return (
+                    <li className="return_product_list_li">
+
+                        <span className="product_li1" >1</span>
+                        <span className="product_li2">1</span>
+                        <span className="product_li3">1</span>
+                        <span className="product_li3">1</span>
                     </li>
                 );
             }
