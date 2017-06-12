@@ -76,13 +76,15 @@
                 display: inline-block;
                 font-size: 12px;
                 padding: 7.5px 0;
-                flex: 1;
+                flex: 2;
                 text-align: center;
             }
             .product_list li span:nth-child(4n+2){
-                flex: 2;
+                flex: 3;
             }
-
+            .product_list li span:first-child{
+                flex: 1;
+            }
 
 
             .return_product_list{
@@ -101,9 +103,6 @@
                 padding: 7.5px 0;
                 flex: 1;
                 text-align: center;
-            }
-            .return_product_list li span:nth-child(4n+2){
-                flex: 2;
             }
 
 
@@ -156,7 +155,7 @@
                 font-size: 14px;
 
             }
-            .return_way{
+            .return_way,.return_name{
                 width: 96%;
                 margin: 0 auto;
                 padding: 10px 0;
@@ -198,6 +197,10 @@
             .return_time_num{
                 font-size: 20px;
             }
+
+            .return_product_list_li span:first-child{
+                flex: 2;
+            }
         </style>
     </head>
     <body>
@@ -236,13 +239,13 @@
     			super(props);
                 this.onKeyPress = this.onKeyPress.bind(this);
                 this.handleClick = this.handleClick.bind(this);
-                this.state = {order_details:[],payitem:[],item:{},returnitems:[],returndetail:[],order_id:""};
+                this.state = {order_details:[],payitem:[],item:{},retdetail:[],products_map:{}};
     		}
             // enter事件
             onKeyPress(e){
 				var key = e.which;
 				if (key== 13) {
-                    order_id = $(".product_id_input").val();
+                    var order_id = $(".product_id_input").val();
                     $.ajax({
                          url: "/search_order_infos",
                          dataType: 'json',
@@ -267,16 +270,30 @@
                          }.bind(this)
                     });
 
+
                     $.ajax({
-                         url: "/get_return_order",
-                         dataType: 'json',
-                         type: 'GET',
-                         data:{"order_id":order_id},
-                         success: function(data) {
-                            this.setState({returnitems:data.rows[0],returndetail:data.details_map});
-                         }.bind(this),
-                         error: function(xhr, status, err) {
-                         }.bind(this)
+                        url: "/get_return_order",
+                        dataType: 'json',
+                        type: 'GET',
+                        data:{"order_id":order_id},
+                        success: function(data) {
+                            if (!data.orders) {
+                                return;
+                            }
+                            var retdetail = [];
+                            for (var i = 0; i < data.orders.length; i++) {
+                                var row = data.orders[i];
+                                var order_id = row.order_id;
+                                var details = data.details_map[order_id];
+                                for (var j = 0; j < details.length; j++) {
+                                    retdetail.push(details[j]);
+                                }
+                            }
+                            var products_map = data.products_map;
+                            this.setState({retdetail:retdetail,products_map:products_map});
+                        }.bind(this),
+                            error: function(xhr, status, err) {
+                        }.bind(this)
                     });
 				}
             };
@@ -354,10 +371,11 @@
                                 <span>退款数量</span>
                             </li>
                             {this.state.order_details.map((item,index )=> (
-                                <ProductList key={item.product_id} item={item} index={index} order_details={this.state.order_details} />))
+                                <ProductList key={item.product_id} item={item} index={index}  />))
                             }
 
                         </ul>
+                        <p className="return_name">已退货商品</p>
                         <ul className="return_product_list">
                             <li className="return_product_list_li">
                                 <span>名称</span>
@@ -365,8 +383,8 @@
                                 <span>退货价格</span>
                                 <span>已退数量</span>
                             </li>
-                            {this.state.returndetail.map(item=> (
-                                <ReturnList key={item[this.state.order_id].product_id} item={item}/>))
+                            {this.state.retdetail.map(item=> (
+                                <ReturnList key={item.product_id} item={item} products_map={this.state.products_map}/>))
                             }
                         </ul>
                         <p className="return_time">购买日期:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="return_time_num">{this.state.item.order_date_text}</span></p>
@@ -436,11 +454,10 @@
             render() {
                 return (
                     <li className="return_product_list_li">
-
-                        <span className="product_li1" >1</span>
-                        <span className="product_li2">1</span>
-                        <span className="product_li3">1</span>
-                        <span className="product_li3">1</span>
+                        <span className="product_li1" >{this.props.products_map[this.props.item.product_id].product_name}</span>
+                        <span className="product_li2">{this.props.item.price}</span>
+                        <span className="product_li3">{this.props.item.total_price}</span>
+                        <span className="product_li3">{this.props.item.number}</span>
                     </li>
                 );
             }
