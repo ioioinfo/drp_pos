@@ -327,7 +327,11 @@ var get_all_mendian = function(cb){
 	var url = "http://211.149.248.241:19999/store/list?org_code="+org_code;
 	do_get_method(url,cb);
 };
-
+//退款查询
+var get_return_order = function(order_id,cb){
+	var url = "http://211.149.248.241:18010/get_return_order?order_id="+order_id;
+	do_get_method(url,cb);
+};
 //pos退款
 var return_pos_order = function(data,cb){
 	var url = "http://211.149.248.241:18010/return_pos_order";
@@ -337,6 +341,21 @@ exports.register = function(server, options, next){
 	var i18n = server.plugins.i18n;
 
 	server.route([
+		//退款查询
+		{
+			method: 'GET',
+			path: '/get_return_order',
+			handler: function(request, reply){
+				var order_id = request.query.order_id;
+				get_return_order(order_id,function(err,rows){
+					if (!err) {
+						return reply({"success":true,"orders":rows.orders,"details_map":rows.details_map,"products_map":rows.products_map});
+					}else {
+						return reply({"success":false,"message":rows.message});
+					}
+				});
+			}
+		},
 		//付款情况
 		{
 			method: 'GET',
