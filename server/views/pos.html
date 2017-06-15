@@ -881,7 +881,7 @@
 							支付码 ：<input class="alipay_code" type="text" value="" />
 						</span>
 						<span class="member_pay span_width1 " style="display:none;">
-							
+
 							<p><span class= "memeber_span_style">金额：</span><input class="member_value" type="text" value="" /></p>
 							<p><span class= "memeber_span_style">支付码：</span><input class="member_pay_card" type="text" value="" /></p>
 						</span>
@@ -1916,7 +1916,9 @@
 								"pay_amount":pay_amount
 							};
 							do_get_method("/deal_card_pay",params,function(data){
-								add_pay_info("会员卡",pay_amount,data);
+                                if (data.success) {
+                                    add_pay_info("会员卡",pay_amount,data);
+                                }
 							});
 						});
 					}else {
@@ -1928,7 +1930,9 @@
 							"pay_amount":pay_amount
 						};
 						do_get_method("/deal_card_pay",params,function(data){
-							add_pay_info("会员卡",pay_amount,data);
+                            if (data.success) {
+                                add_pay_info("会员卡",pay_amount,data);
+                            }
 						});
 					}
 				}

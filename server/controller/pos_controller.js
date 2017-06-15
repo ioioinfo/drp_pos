@@ -710,7 +710,7 @@ exports.register = function(server, options, next){
 					if (!err) {
 						return reply({"success":true,"image":content.image,"service_info":service_info});
 					}else {
-
+						return reply({"success":false,"message":content.message,"service_info":service_info});
 					}
 				});
 			}
@@ -994,7 +994,7 @@ exports.register = function(server, options, next){
 					if (!err) {
 						return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
 					}else {
-
+						return reply({"success":false,"message":row.message,"service_info":service_info});
 					}
 				});
 			}
@@ -1006,15 +1006,13 @@ exports.register = function(server, options, next){
 			handler: function(request, reply){
 				var data = pay_params(request);
 				data.auth_code = request.query.paycode;
+				data.operator = 1;
+				data.platform_code = "drp_pos";
 				member_card_pay(data,function(err,row){
 					if (!err) {
-						if (row.success) {
-							return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
-						}else {
-							return reply({"success":false,"message":"余额不足","order_id":data.order_id,"service_info":service_info});
-						}
+						return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
 					}else {
-						return reply({"success":false,"service_info":service_info});
+						return reply({"success":false,"message":row.message,"service_info":service_info});
 					}
 				});
 			}
@@ -1027,11 +1025,9 @@ exports.register = function(server, options, next){
 				var data = pay_params(request);
 				credit_pay_method(data,function(err,row){
 					if (!err) {
-						if (row.success) {
-							return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
-						}else {
-						}
+						return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
 					}else {
+						return reply({"success":false,"message":row.message,"service_info":service_info});
 					}
 				});
 			}
@@ -1044,11 +1040,9 @@ exports.register = function(server, options, next){
 				var data = pay_params(request);
 				order_wxtransferpay(data,function(err,row){
 					if (!err) {
-						if (row.success) {
-							return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
-						}else {
-						}
+						return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
 					}else {
+						return reply({"success":false,"message":row.message,"service_info":service_info});
 					}
 				});
 			}
@@ -1069,11 +1063,9 @@ exports.register = function(server, options, next){
 				data.auth_code = request.query.alipay_code;
 				alipay_trade_pay(data,function(err,row){
 					if (!err) {
-						if (row.success) {
-							return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
-						}else {
-						}
+						return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
 					}else {
+						return reply({"success":false,"message":row.message,"service_info":service_info});
 					}
 				});
 			}
@@ -1086,11 +1078,9 @@ exports.register = function(server, options, next){
 				var data = pay_params(request);
 				order_alitransferpay(data,function(err,row){
 					if (!err) {
-						if (row.success) {
-							return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
-						}else {
-						}
+						return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
 					}else {
+						return reply({"success":false,"message":row.message,"service_info":service_info});
 					}
 				});
 			}
@@ -1233,6 +1223,8 @@ exports.register = function(server, options, next){
 									ep.emit("order_details", null);
 								}
 							}else {
+								ep.emit("order", null);
+								ep.emit("order_details", null);
 							}
 						});
 						get_order_pay_infos(order_id, function(err,row){
@@ -1244,7 +1236,7 @@ exports.register = function(server, options, next){
 									ep.emit("pay_infos", null);
 								}
 							}else {
-
+								ep.emit("pay_infos", null);
 							}
 						});
 					}else {
