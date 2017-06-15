@@ -248,6 +248,12 @@ var get_order_pay_infos = function(order_id,cb){
 	url = url + order_id;
 	do_get_method(url,cb);
 }
+//批量订单支付信息
+var get_orders_pay_infos = function(order_ids,cb){
+	var url = "http://139.196.148.40:18008/get_orders_pay_infos?sob_id=ioio&order_ids=";
+	url = url + order_ids;
+	do_get_method(url,cb);
+}
 //find_pos_order
 var find_pos_order = function(order_id,cb){
 	var url = "http://211.149.248.241:18010/find_pos_order?order_id=";
@@ -1279,10 +1285,32 @@ exports.register = function(server, options, next){
 						var order_num = rows.rows.length;
 						var total_products =  rows.prducts_num;
 						var total_sales = 0;
+						var order_ids = [];
 						for (var i = 0; i < rows.rows.length; i++) {
 							total_sales = total_sales + rows.rows[i].actual_price;
+							order_ids.push(rows.rows[i].order_id);
 						}
-						return reply({"success":true,"time":date2,"order_num":order_num,"total_sales":total_sales,"total_products":total_products,"service_info":service_info});
+						order_ids = JSON.stringify(order_ids);
+						get_orders_pay_infos(order_ids,function(err,rows){
+							if (!err) {
+								var pay_infos = rows.rows;
+								var pay_map = {};
+								var pay_ways = [];
+								for (var i = 0; i < pay_infos.length; i++) {
+									var pay = pay_infos[i];
+									if (!pay_map[pay.pay_way]) {
+										pay_map[pay.pay_way] = pay.pay_amount;
+										pay_ways.push(pay.pay_way);
+									}else {
+										pay_map[pay.pay_way] = pay_map[pay.pay_way] + pay.pay_amount;
+									}
+								}
+
+								return reply({"success":true,"time":date2,"order_num":order_num,"total_sales":total_sales,"total_products":total_products,"pay_map":pay_map,"pay_ways":pay_ways,"service_info":service_info});
+							}else {
+								return reply({"success":false,"message":rows.message,"service_info":service_info});
+							}
+						});
 					}else {
 						return reply({"success":true,"rows":rows.message,"service_info":service_info});
 					}
