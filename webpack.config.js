@@ -26,7 +26,7 @@ module.exports = {
         alias: {
 
         },
-        extensions: ['.js','.jsx']
+        extensions: ['.js','.jsx','.babel']
     },
     module: {
         loaders: [
@@ -35,7 +35,7 @@ module.exports = {
                 query: {
                     presets: ['react', 'es2015']
                 },
-                test: /\.jsx?$/,
+                test: /\.babel?$/,
                 exclude: /(node_modules|bower_components)/
             }
         ]
