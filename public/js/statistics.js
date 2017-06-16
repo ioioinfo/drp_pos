@@ -146,7 +146,7 @@ var Middle = function (_React$Component3) {
         // 初始化一个空对象
         var _this3 = _possibleConstructorReturn(this, (Middle.__proto__ || Object.getPrototypeOf(Middle)).call(this, props));
 
-        _this3.state = { items: {} };
+        _this3.state = { items: {}, ways: [], pay_map: {} };
         return _this3;
     }
 
@@ -158,7 +158,7 @@ var Middle = function (_React$Component3) {
                 dataType: 'json',
                 type: 'GET',
                 success: function (data) {
-                    this.setState({ items: data });
+                    this.setState({ items: data, ways: data.pay_ways, pay_map: data.pay_map });
                 }.bind(this),
                 error: function (xhr, status, err) {}.bind(this)
             });
@@ -166,66 +166,94 @@ var Middle = function (_React$Component3) {
     }, {
         key: "render",
         value: function render() {
+            var _this4 = this;
+
             return React.createElement(
                 "div",
                 { className: "middle" },
                 React.createElement(
-                    "p",
-                    { className: "back" },
-                    "\u7EDF\u8BA1\u65F6\u95F4:",
-                    this.state.items.time
-                ),
-                React.createElement(
                     "div",
-                    { className: "col-xs-6 col-sm-6 number number1" },
+                    { className: "middle_one overflow" },
                     React.createElement(
                         "p",
-                        null,
-                        "\uFFE5",
-                        this.state.items.total_sales
+                        { className: "back" },
+                        "\u7EDF\u8BA1\u65F6\u95F4:",
+                        this.state.items.time
                     ),
                     React.createElement(
-                        "p",
-                        null,
-                        "\u8425\u4E1A\u989D"
-                    )
-                ),
-                React.createElement(
-                    "div",
-                    { className: "col-xs-6 col-sm-6 number number2" },
-                    React.createElement(
-                        "p",
-                        null,
-                        this.state.items.order_num
+                        "div",
+                        { className: "col-xs-6 col-sm-6 number number1" },
+                        React.createElement(
+                            "p",
+                            null,
+                            "\uFFE5",
+                            this.state.items.total_sales
+                        ),
+                        React.createElement(
+                            "p",
+                            null,
+                            "\u8425\u4E1A\u989D"
+                        )
                     ),
                     React.createElement(
-                        "p",
-                        null,
-                        "\u8BA2\u5355\u6570"
-                    )
-                ),
-                React.createElement(
-                    "div",
-                    { className: "col-xs-6 col-sm-6 number number3" },
-                    React.createElement(
-                        "p",
-                        null,
-                        this.state.items.total_products
+                        "div",
+                        { className: "col-xs-6 col-sm-6 number number2" },
+                        React.createElement(
+                            "p",
+                            null,
+                            this.state.items.order_num
+                        ),
+                        React.createElement(
+                            "p",
+                            null,
+                            "\u8BA2\u5355\u6570"
+                        )
                     ),
                     React.createElement(
-                        "p",
-                        null,
-                        "\u4EF6\u6570"
+                        "div",
+                        { className: "col-xs-6 col-sm-6 number number3" },
+                        React.createElement(
+                            "p",
+                            null,
+                            this.state.items.total_products
+                        ),
+                        React.createElement(
+                            "p",
+                            null,
+                            "\u4EF6\u6570"
+                        )
+                    ),
+                    React.createElement(
+                        "div",
+                        { className: "col-xs-6 col-sm-6 number number4" },
+                        React.createElement(
+                            "p",
+                            null,
+                            "\u6682\u65E0"
+                        )
                     )
                 ),
+                React.createElement("hr", null),
                 React.createElement(
                     "div",
-                    { className: "col-xs-6 col-sm-6 number number4" },
-                    React.createElement(
-                        "p",
-                        null,
-                        "\u6682\u65E0"
-                    )
+                    { className: "middle_two overflow" },
+                    this.state.ways.map(function (item) {
+                        return React.createElement(
+                            "div",
+                            { className: "col-xs-6 col-sm-6 number number1" },
+                            React.createElement(
+                                "p",
+                                null,
+                                "\uFFE5",
+                                _this4.state.pay_map[item]
+                            ),
+                            React.createElement(
+                                "p",
+                                null,
+                                item
+                            )
+                        );
+                    })
                 )
             );
         }
