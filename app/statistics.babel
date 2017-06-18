@@ -26,7 +26,7 @@ class Wrap extends React.Component {
             constructor(props) {
                 super(props);
                 // 初始化一个空对象
-                this.state = {items: {}};
+                this.state = {items: {},ways:[],pay_map:{}};
             }
 
             componentDidMount() {
@@ -35,7 +35,7 @@ class Wrap extends React.Component {
                   dataType: 'json',
                   type: 'GET',
                   success: function(data) {
-                      this.setState({items:data});
+                      this.setState({items:data,ways:data.pay_ways,pay_map:data.pay_map});
                   }.bind(this),
                   error: function(xhr, status, err) {
                   }.bind(this)
@@ -44,11 +44,20 @@ class Wrap extends React.Component {
             render() {
                 return (
                     <div className="middle">
-                        <p className="back">统计时间:{this.state.items.time}</p>
-                        <div className="col-xs-6 col-sm-6 number number1"><p>￥{this.state.items.total_sales}</p><p>营业额</p></div>
-                        <div className="col-xs-6 col-sm-6 number number2"><p>{this.state.items.order_num}</p><p>订单数</p></div>
-                        <div className="col-xs-6 col-sm-6 number number3"><p>{this.state.items.total_products}</p><p>件数</p></div>
-                        <div className="col-xs-6 col-sm-6 number number4"><p>暂无</p></div>
+                        <div className="middle_one overflow">
+                            <p className="back">统计时间:{this.state.items.time}</p>
+                            <div className="col-xs-6 col-sm-6 number number1"><p>￥{this.state.items.total_sales}</p><p>营业额</p></div>
+                            <div className="col-xs-6 col-sm-6 number number2"><p>{this.state.items.order_num}</p><p>订单数</p></div>
+                            <div className="col-xs-6 col-sm-6 number number3"><p>{this.state.items.total_products}</p><p>件数</p></div>
+                            <div className="col-xs-6 col-sm-6 number number4"><p>暂无</p></div>
+                        </div>
+                        <hr/>
+                        <div className="middle_two overflow">
+                            {this.state.ways.map(item => (
+                                <div className="col-xs-6 col-sm-6 number number1"><p>￥{this.state.pay_map[item]}</p><p>{item}</p></div>))
+                            }
+
+                        </div>
                     </div>
                 );
             }

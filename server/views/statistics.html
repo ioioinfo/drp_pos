@@ -25,8 +25,16 @@
                 background: #44a338;
             }
             .middle{
-                background: #fff;
+
+            }
+            .overflow{
                 overflow: hidden;
+            }
+            .middle_one,.middle_two{
+                background: #fff;
+            }
+            .middle_two{
+                padding-top: 10px;
             }
             .number{
                 font-size: 18px;
@@ -65,91 +73,13 @@
                 text-align: center;
                 margin-top: 17px;
             }
+
         </style>
     </head>
     <body>
         <div id="statistics"></div>
-
-
-        <script type="text/babel">
-
-        class Wrap extends React.Component {
-            render() {
-                return (
-                    <div className="wrap">
-                        <Head/>
-                        <Middle/>
-                        <Picture/>
-                    </div>
-                );
-            }
-        };
-
-        // 头部
-        class Head extends React.Component {
-            render() {
-                return (
-                    <div className="head">
-                        今日销售
-                    </div>
-                );
-            }
-        };
-
-        // 中间
-        class Middle extends React.Component {
-            constructor(props) {
-                super(props);
-                // 初始化一个空对象
-                this.state = {items: {}};
-            }
-
-            componentDidMount() {
-                $.ajax({
-                  url: "/get_orders_byDate",
-                  dataType: 'json',
-                  type: 'GET',
-                  success: function(data) {
-                      this.setState({items:data});
-                  }.bind(this),
-                  error: function(xhr, status, err) {
-                  }.bind(this)
-              });
-            }
-            render() {
-                var time = this.state.items.time;
-                var total_sales = this.state.items.total_sales;
-                var order_num = this.state.items.order_num;
-                var total_products = this.state.items.total_products;
-                return (
-                    <div className="middle">
-                        <p className="back">统计时间:{time}</p>
-                        <div className="col-xs-6 col-sm-6 number number1"><p>￥{total_sales}</p><p>营业额</p></div>
-                        <div className="col-xs-6 col-sm-6 number number2"><p>{order_num}</p><p>订单数</p></div>
-                        <div className="col-xs-6 col-sm-6 number number3"><p>{total_products}</p><p>件数</p></div>
-                        <div className="col-xs-6 col-sm-6 number number4"><p>暂无</p></div>
-                    </div>
-                );
-            }
-        };
-        // 图片
-        class Picture extends React.Component {
-            render() {
-                return (
-                    <div className="picture">
-                        <img src="{{static_host}}/dong.gif" alt="" />
-                    </div>
-                );
-            }
-        };
-
-        // 返回到页面
-        ReactDOM.render(
-            <Wrap/>,
-            document.getElementById("statistics")
-        );
+        <script type="text/javascript">
         </script>
-
 
         <!-- <script language="JavaScript">
         function myrefresh(){
@@ -163,6 +93,6 @@
         <script src="{{static_host}}/react-dom.min.js"></script>
         <script src="{{static_host}}/jquery-3.1.1.min.js" type="text/javascript"></script>
         <script src="{{static_host}}/bootstrap.min.js"></script>
-        <script src="{{static_host}}/statistics.min.js"></script>
+        <script src="/js/statistics.js"></script>
     </body>
 </html>

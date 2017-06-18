@@ -45,7 +45,6 @@
                 display: inline-block;
                 width: 100%;
                 border-radius: 4px;
-                border: 1px solid #D9D9D9;
             }
             .product_id_input{
                 width: 100%;
@@ -53,7 +52,6 @@
                 text-indent: 10px;
                 font-size: 18px;
                 outline: none;
-                border: none;
             }
             .glass{
                 width: 22px;
@@ -282,9 +280,12 @@
                                 var row = data.orders[i];
                                 var order_id = row.order_id;
                                 var details = data.details_map[order_id];
-                                for (var j = 0; j < details.length; j++) {
-                                    retdetail.push(details[j]);
+                                if(details){
+                                    for (var j = 0; j < details.length; j++) {
+                                        retdetail.push(details[j]);
+                                    }
                                 }
+
                             }
                             var products_map = data.products_map;
                             this.setState({retdetail:retdetail,products_map:products_map});
@@ -354,7 +355,7 @@
                 return (
                     <div className="middle">
                         <div className="input">
-                            <span>
+                            <span className="product_id_input_span">
                                 <input type="text" placeholder="请输入单号" className="product_id_input" onKeyPress={this.onKeyPress} />
                             </span>
                             <img src="images/glass.png" alt="" className="glass" />
@@ -368,7 +369,7 @@
                                 <span>退款数量</span>
                             </li>
                             {this.state.order_details.map((item,index )=> (
-                                <ProductList key={item.product_id} item={item} index={index}  />))
+                                <ProductList key={item.product_id} item={item} order_details={this.state.order_details} index={index}  />))
                             }
 
                         </ul>
