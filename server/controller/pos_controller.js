@@ -1279,8 +1279,10 @@ exports.register = function(server, options, next){
 				var date2 = date1 +" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
 				get_orders_byDate(date1,date2,function(err,rows){
 					if (!err) {
+						var pay_map = {};
+						var pay_ways = [];
 						if (rows.rows.length == 0) {
-							return reply({"success":true,"time":date2,"order_num":0,"total_sales":0,"total_products":0,"service_info":service_info});
+							return reply({"success":true,"time":date2,"order_num":0,"total_sales":0,"total_products":0,"pay_map":pay_map,"pay_ways":pay_ways,"service_info":service_info});
 						}
 						var order_num = rows.rows.length;
 						var total_products =  rows.prducts_num;
@@ -1296,8 +1298,6 @@ exports.register = function(server, options, next){
 						get_orders_pay_infos(order_ids,function(err,rows){
 							if (!err) {
 								var pay_infos = rows.rows;
-								var pay_map = {};
-								var pay_ways = [];
 								for (var i = 0; i < pay_infos.length; i++) {
 									var pay = pay_infos[i];
 									if (!pay_map[pay.pay_way]) {
