@@ -1286,8 +1286,10 @@ exports.register = function(server, options, next){
 						var total_products =  rows.prducts_num;
 						var total_sales = 0;
 						var order_ids = [];
+						var total_changes = 0;
 						for (var i = 0; i < rows.rows.length; i++) {
 							total_sales = total_sales + rows.rows[i].actual_price;
+							total_changes = total_changes + rows.rows[i].changes;
 							order_ids.push(rows.rows[i].order_id);
 						}
 						order_ids = JSON.stringify(order_ids);
@@ -1305,8 +1307,14 @@ exports.register = function(server, options, next){
 										pay_map[pay.pay_way] = pay_map[pay.pay_way] + pay.pay_amount;
 									}
 								}
+								for (var i = 0; i < pay_ways.length; i++) {
+									pay_map[pay_ways[i]] = parseFloat(pay_map[pay_ways[i]].toFixed(2));
+								}
 
-								return reply({"success":true,"time":date2,"order_num":order_num,"total_sales":total_sales,"total_products":total_products,"pay_map":pay_map,"pay_ways":pay_ways,"service_info":service_info});
+								pay_map["找零"] = parseFloat(total_changes.toFixed(2));
+								pay_ways.push("找零");
+
+								return reply({"success":true,"time":date2,"order_num":order_num,"total_sales":parseFloat(total_sales.toFixed(2)),"total_products":total_products,"pay_map":pay_map,"pay_ways":pay_ways,"service_info":service_info});
 							}else {
 								return reply({"success":false,"message":rows.message,"service_info":service_info});
 							}
