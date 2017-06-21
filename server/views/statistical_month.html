@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-        <title>退货</title>
+        <title>月统计</title>
         <link rel="stylesheet" href="{{static_host}}/bootstrap.min.css">
         <script src="{{static_host}}/react.min.js"></script>
         <script src="{{static_host}}/react-dom.min.js"></script>
@@ -61,8 +61,15 @@
               display: inline-block;
             }
 
-            .form-inline{
+            .inline{
               margin-bottom: 7px;
+              overflow: hidden;
+            }
+            @media screen and (max-width:640px){
+                .btn-default{
+                    width: 100%;
+                    margin-top: 17px;
+                }
             }
         </style>
     </head>
@@ -97,6 +104,7 @@
         class Middle extends React.Component {
           constructor(props) {
               super(props);
+              this.handleClick=this.handleClick.bind(this);
               // 初始化一个空对象
               this.state = {rows:[]};
           }
@@ -117,25 +125,38 @@
              }.bind(this),
              error: function(xhr, status, err) {
              }.bind(this)
+           });
+        }
+
+        handleClick(e){
+            var date2 = $("#input1").val();
+            var date3 = $("#input2").val();
+
+            $.ajax({
+             url: "/get_orders_byDate2?date1="+date2+"&"+"date2="+date3,
+             dataType: 'json',
+             type: 'GET',
+             success: function(data) {
+                this.setState({rows:data.rows});
+             }.bind(this),
+             error: function(xhr, status, err) {
+             }.bind(this)
         });
-
-
-
-          }
+        }
           render() {
               return (
                   <div className="wrapLeft col-sm-12">
-                    <form className="form-inline">
-                      <div className="inline_block">
+                    <div className="inline">
+                      <div className="inline_block col-sm-2 col-xs-12">
                         <input type="text" className="form-control" id="input1" />
                       </div>
                       &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
-                      <div className="inline_block">
+                      <div className="inline_block col-sm-2 col-xs-12">
                         <input type="text" className="form-control" id="input2" />
                       </div>
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      <button type="submit" className="btn btn-default">查 询</button>
-                    </form>
+                      <div className="col-sm-1"><button type="submit" className="btn btn-default" onClick={this.handleClick}>查 询</button></div>
+                    </div>
                     <div className="table_style">
                       <ul className="product_ul">
                         <li>日期</li>
