@@ -518,6 +518,14 @@ exports.register = function(server, options, next){
 
 			}
 		},
+		//月统计  statistical_month
+		{
+			method: 'GET',
+			path: '/statistical_month',
+			handler: function(request, reply){
+				return reply.view("statistical_month");
+			}
+		},
 		//订单页面
 		{
 			method: 'GET',
