@@ -1282,9 +1282,16 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/get_orders_byDate',
 			handler: function(request, reply){
-				var date = new Date();
-				var date1 = date.toLocaleDateString();
-				var date2 = date1 +" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+				var date,date1,date2;
+				if (request.query.date) {
+					date1 = request.query.date;
+					date2 = date1 + " 23:59:59";
+				}else {
+					date = new Date();
+					date1 = date.toLocaleDateString();
+					date2 = date1 +" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+				}
+
 				get_orders_byDate(date1,date2,function(err,rows){
 					if (!err) {
 						var pay_map = {};
