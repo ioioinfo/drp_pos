@@ -317,10 +317,11 @@
                     var return_num = $($(".return_product_num")[index]).val();
                     product_ids.push(item.product_id);
                     number_list.push(return_num);
-                    if(!return_num){
-                        alert("请输入退货数量");
-                        return false;
+                    if (!return_num) {
+                        alert("请填写退货数量商品");
+                        return;
                     }
+
                 });
 
                 if (product_ids.length == 0) {
