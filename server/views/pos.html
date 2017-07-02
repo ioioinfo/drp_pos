@@ -2138,7 +2138,18 @@
 				cnt = cnt + 1;
 				$.post("/alipay_trade_query",{"order_id":ali_id},function(data){
 					if (data.success) {
-						add_pay_info("支付宝线下条码支付",parseFloat(data.row.total_amount),data);
+                        var trade_status = data.row.trade_status;
+                        if (trade_status=="TRADE_SUCCESS"||trade_status=="TRADE_FINISHED") {
+                            add_pay_info("支付宝线下条码支付",parseFloat(data.row.total_amount),data);
+                        }else if (trade_status=="TRADE_CLOSED") {
+                            alert("付款失败！");
+                            return;
+                        } else if (cnt < 5){
+    						setTimeout(check_alipay,1000);
+                        } else {
+                            alert("已超时，付款未成功！");
+    						ali_id = "";
+                        }
 					}else if (cnt < 5){
 						setTimeout(check_alipay,1000);
 					}else {
