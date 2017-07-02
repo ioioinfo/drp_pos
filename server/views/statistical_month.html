@@ -40,6 +40,7 @@
             }
             .table_style{
               background: #fff;
+              margin-top: 7px;
             }
             .product_ul{
               display: flex;
@@ -65,12 +66,16 @@
               margin-bottom: 7px;
               overflow: hidden;
             }
+            ul li:first-child{
+              width: 130px;
+            }
             @media screen and (max-width:640px){
                 .btn-default{
                     width: 100%;
-                    margin-top: 17px;
+                    margin-bottom: 17px;
                 }
             }
+
         </style>
     </head>
     <body>
@@ -111,7 +116,7 @@
 
 
           componentDidMount(){
-            var date = GetDateStr(0);
+            var date = GetDateStr(1);
             var date1 = GetDateStr(-30);
             $("#input1").val(date1);
             $("#input2").val(date);
@@ -146,17 +151,13 @@
           render() {
               return (
                   <div className="wrapLeft col-sm-12">
-                    <div className="inline">
-                      <div className="inline_block col-sm-2 col-xs-12">
-                        <input type="text" className="form-control" id="input1" />
-                      </div>
-                      &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
-                      <div className="inline_block col-sm-2 col-xs-12">
-                        <input type="text" className="form-control" id="input2" />
-                      </div>
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      <div className="col-sm-1"><button type="submit" className="btn btn-default" onClick={this.handleClick}>查 询</button></div>
-                    </div>
+                  <div className="container-fluid ">
+                  <div className="row form-inline">
+                    <input type="text" className="form-control  col-xs-12 col-sm-2 col-md-2" id="input1" />
+                    <input type="text" className="form-control  col-xs-12 col-sm-2 col-md-2 col-md-offset-1" id="input2" />
+                    <button type="button" className="btn btn-default col-sm-2 col-md-1 col-md-offset-1" onClick={this.handleClick}>查 询</button>
+                  </div>
+                  </div>
                     <div className="table_style">
                       <ul className="product_ul">
                         <li>日期</li>
