@@ -391,8 +391,16 @@ exports.register = function(server, options, next){
 					return reply({"success":false,"message":"没有退款商品"});
 				}
 				var number_list = request.payload.number_list;
-				if (!number_list) {
-					return reply({"success":false,"message":"数量"});
+				var nums = JSON.parse(number_list);
+				var products = JSON.parse(product_ids);
+				var re = /^(0|[1-9][0-9]*)$/;
+				for (var i = 0; i < nums.length; i++) {
+					if (!re.test(nums[i])) {
+						return reply({"success":false,"message":"没有数量"});
+					}
+				}
+				if (nums.length!=products.length) {
+					return reply({"success":false,"message":"商品和数量不匹配"});
 				}
 				var cash = 0;
 				if (request.payload.cash) {
