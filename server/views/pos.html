@@ -882,13 +882,9 @@
 						</span>
 						<span class="member_pay span_width1 " style="display:none;">
 
-<<<<<<< HEAD
 							<p><span class= "memeber_span_style">金额：</span><input class="member_value" type="text" value="" /></p>
 							<p><span class= "memeber_span_style">支付码：</span><input class="member_pay_card" type="text" value="" /></p>
-=======
-							<p><span class= "memeber_span_style1">金额：</span><input class="member_value" type="text" value="" /></p>
-							<p><span class= "memeber_span_style1">支付码：</span><input class="member_pay_card" type="text" value="" /></p>
->>>>>>> 76d038da122d612919f7fd805173262974bc2b4a
+
 						</span>
 						<!-- <span class="credit_pay margin_right span_width" style="display:none;">
 							白条：<input class="credit_value" type="text" value=""/>
@@ -1183,6 +1179,28 @@
     <p class="return_order"><a href="order_list" target="_blank">退 货</a> </p>
 	<script>
 		$(function() {
+            //挂单小数字标记
+			var small_number = function(){
+				var num = temp_products.length;
+				if (num == 0) {
+					$("#put_order").children(".nav-img").children(".num_rank").remove();
+					return;
+				}
+				$("#put_order").children(".nav-img").children(".num_rank").remove();
+				$("#put_order").children(".nav-img").append("<span class='num_rank'>"+num+"</span>");
+			};
+            //挂单用的临时变量
+			var temp_products = [];
+            //取挂单数字
+            var strStoreDate = window.localStorage? localStorage.getItem("temp_products"): Cookie.read("temp_products");
+            strStoreDate = JSON.parse(strStoreDate);
+            if (strStoreDate.length>0) {
+                for (var i = 0; i < strStoreDate.length; i++) {
+                    temp_products.push(strStoreDate[i]);
+                }
+                small_number();
+            }
+
 			var store = "{{store_info[0].point_name}}";
 			var store_id = "{{store_info[0].store_id}}"
 			var store_address = "{{store_info[0].detail_address}}";
@@ -1209,8 +1227,7 @@
 			};
 			var cnt =0;
 			var ali_id;
-			//挂单用的临时变量
-			var temp_products = [];
+
 			//回到商品扫描
 			var comefocus = function(){
 				$("#barcode").focus();
@@ -1400,25 +1417,21 @@
 				}
 				payment_info_table();
 			};
-			//挂单小数字标记
-			var small_number = function(){
-				var num = temp_products.length;
-				if (num == 0) {
-					$("#put_order").children(".nav-img").children(".num_rank").remove();
-					return;
-				}
-				$("#put_order").children(".nav-img").children(".num_rank").remove();
-				$("#put_order").children(".nav-img").append("<span class='num_rank'>"+num+"</span>");
-			};
+
 			//挂单
 			$("#put_order").click(function(){
-				if (order.products.length >0 && temp_products.length < 3) {
+				if (order.products.length >0 && temp_products.length < 10) {
 					order.guadan_time = new Date().toLocaleString();
 					temp_products.push(order);
+                    if (window.localStorage) {
+                        localStorage.setItem("temp_products", JSON.stringify(temp_products));
+                    } else {
+                        Cookie.write("temp_products", temp_products);
+                    }
 					init_product_infos();
 					member_update();
 					small_number();
-				}else if (order.products.length >0 && temp_products.length >= 3) {
+				}else if (order.products.length >0 && temp_products.length >= 10) {
 					alert("挂单已满");
 				}
 				else {
@@ -1427,6 +1440,12 @@
 			});
 			//取单
 			$("#get_order").click(function(){
+                temp_products = [];
+                var strStoreDate = window.localStorage? localStorage.getItem("temp_products"): Cookie.read("temp_products");
+                strStoreDate = JSON.parse(strStoreDate);
+                for (var i = 0; i < strStoreDate.length; i++) {
+                    temp_products.push(strStoreDate[i]);
+                }
 				if (temp_products.length >0) {
 					$("#guadan").removeAttr("style");
 					guadan_info();
@@ -1456,6 +1475,11 @@
 					$("#barcode").val("");
 					$("#guadan").attr("style","display:none;");
 					small_number();
+                    if (window.localStorage) {
+                        localStorage.setItem("temp_products", JSON.stringify(temp_products));
+                    } else {
+                        Cookie.write("temp_products", temp_products);
+                    }
 				});
 				$(".back_product_info").click(function(){
 					$("#guadan").attr("style","display:none;");
