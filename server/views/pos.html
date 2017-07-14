@@ -338,7 +338,6 @@
 		overflow: hidden;
 	}
 	#guadan_info{
-		height:600px;
 		width:100%;
 
 	}
@@ -482,8 +481,7 @@
 	.weui_dialog4 {
 		position: fixed;
 		z-index: 13;
-		width: 300px;
-		height: 400px;
+		width: 520px;
 		top: 50%;
 		left: 50%;
 		-webkit-transform: translate(-50%, -50%);
@@ -496,20 +494,24 @@
 	.guadan_top{
 		/*background: url({{static_host}}/guadan01.png) no-repeat;
 		background-size:100% 100%;*/
+    background: #fff;
 		height: 70px;
 	}
 	.guadan_body{
 		/*background: url({{static_host}}/guadan02.png) no-repeat;
 		background-size:100% 100%;*/
+    background: #fff;
 		height: 350px;
 		overflow: auto;
-    	padding: 0 12px;
+  	padding: 0 12px;
+    padding-bottom: 30px;
 	}
 	.guadan01{
 		font-size:12px;
 		line-height:14px;
-		width: 40%;
+		width: 38%;
 		display: inline-block;
+    text-align: left;
 	}
 	.guadan02{
 		font-size:14px;
@@ -526,10 +528,19 @@
 		vertical-align: top;
 	}
 	.back_product_info{
-		position: absolute;
-    	top: 46px;
-    	left: 20px;
+    position: absolute;
+    top: 22px;
+    left: 20px;
+    padding: 1px 4px;
+    border: none;
+    background: #655D98;
+    color: #fff;
+    border-radius: 2px;
+    font-size: 12px;
 	}
+  .back_product_info:hover{
+    padding: 1px 6px;
+  }
 	.weui_dialog5 {
 		position: fixed;
 		z-index: 13;
@@ -1064,13 +1075,13 @@
 			<div>
 				<input type="button" value="返回" class="back_product_info"/>
 			</div>
-			<div style="padding: 45px 0 5px 110px;font-size:20px;line-height:20px;">挂单信息</div>
+			<div style="font-size:20px;line-height:70px;text-align: center;">挂单信息</div>
 		</div>
 		<div class="guadan_body">
 			<% _.forEach(temp_products, function(order,index) { %>
-			<div style="padding: 5px;text-align: center;">
+			<div style="padding: 5px;">
 				<!-- <p style="display: inline-block;"><%- index+1 %>.</p>&nbsp;&nbsp;&nbsp; -->
-				<p  style="display: inline-block;">时间：<%- order.guadan_time %></p>
+				<p  style="display: inline-block;color:#3CC723;">时间：<%- order.guadan_time %></p>
 			</div>
 			<div style="padding: 5px;text-align: center;">
 				<P class="guadan01">商品名称</P>
