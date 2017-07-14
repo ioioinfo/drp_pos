@@ -109,44 +109,50 @@
         class Middle extends React.Component {
           constructor(props) {
               super(props);
+              this.loadData=this.loadData.bind(this);
               this.handleClick=this.handleClick.bind(this);
               // 初始化一个空对象
-              this.state = {rows:[]};
+              this.state = {rows:[],total:{}};
           }
 
+          loadData(date1,date2) {
+              $.ajax({
+               url: "/get_orders_byDate2?date1="+date1+"&"+"date2="+date2,
+               dataType: 'json',
+               type: 'GET',
+               success: function(data) {
+                 var rows = data.rows;
+                 var total = {actual_price:0,product_number:0,number:0};
+                 for (var i = 0; i < rows.length; i++) {
+                   total.actual_price = total.actual_price + rows[i].actual_price;
+                   total.product_number = total.product_number + rows[i].product_number;
+                   total.number = total.number + rows[i].number;
+                 }
+                  total.actual_price = total.actual_price.toFixed(2);
+                  this.setState({rows:rows,total:total});
+               }.bind(this),
+               error: function(xhr, status, err) {
+               }.bind(this)
+             });
+          }
 
           componentDidMount(){
-            var date = GetDateStr(1);
             var date1 = GetDateStr(-30);
-            $("#input1").val(date1);
-            $("#input2").val(date);
+            var date2 = GetDateStr(1);
 
-            $.ajax({
-             url: "/get_orders_byDate2?date1="+date1+"&"+"date2="+date,
-             dataType: 'json',
-             type: 'GET',
-             success: function(data) {
-                this.setState({rows:data.rows});
-             }.bind(this),
-             error: function(xhr, status, err) {
-             }.bind(this)
-           });
+            $("#input1").val(date1);
+            $("#input2").val(date2);
+
+            this.loadData(date1,date2);
+
+            $(".red").css("color","red");
         }
 
         handleClick(e){
-            var date2 = $("#input1").val();
-            var date3 = $("#input2").val();
+            var date1 = $("#input1").val();
+            var date2 = $("#input2").val();
 
-            $.ajax({
-             url: "/get_orders_byDate2?date1="+date2+"&"+"date2="+date3,
-             dataType: 'json',
-             type: 'GET',
-             success: function(data) {
-                this.setState({rows:data.rows});
-             }.bind(this),
-             error: function(xhr, status, err) {
-             }.bind(this)
-        });
+            this.loadData(date1,date2);
         }
           render() {
               return (
@@ -175,6 +181,12 @@
                         </ul>
                       ))
                       }
+                      <ul className="product_ul">
+                        <li className="red">合计</li>
+                        <li className="red">{this.state.total.actual_price}</li>
+                        <li className="red">{this.state.total.product_number}</li>
+                        <li className="red">{this.state.total.number}</li>
+                      </ul>
                     </div>
                   </div>
               );
@@ -190,9 +202,6 @@
             document.getElementById("return")
         );
         </script>
-
-
-
 
     </body>
 </html>
