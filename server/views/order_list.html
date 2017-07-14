@@ -318,6 +318,7 @@
                     var index = parseInt($(this).data("index"));
                     var item = order_details[index];
                     var return_num = $($(".return_product_num")[index]).val();
+                    console.log(return_num);
                     product_ids.push(item.product_id);
                     number_list.push(return_num);
                     if (!return_num) {
