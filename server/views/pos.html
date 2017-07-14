@@ -1192,12 +1192,14 @@
 			var temp_products = [];
             //取挂单数字
             var strStoreDate = window.localStorage? localStorage.getItem("temp_products"): Cookie.read("temp_products");
-            strStoreDate = JSON.parse(strStoreDate);
-            if (strStoreDate.length>0) {
-                for (var i = 0; i < strStoreDate.length; i++) {
-                    temp_products.push(strStoreDate[i]);
+            if (strStoreDate && strStoreDate!="") {
+                strStoreDate = JSON.parse(strStoreDate);
+                if (strStoreDate.length>0) {
+                    for (var i = 0; i < strStoreDate.length; i++) {
+                        temp_products.push(strStoreDate[i]);
+                    }
+                    small_number();
                 }
-                small_number();
             }
 
 			var store = "{{store_info[0].point_name}}";
