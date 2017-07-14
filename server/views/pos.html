@@ -1192,7 +1192,7 @@
 			var temp_products = [];
             //取挂单数字
             var strStoreDate = window.localStorage? localStorage.getItem("temp_products"): Cookie.read("temp_products");
-            if (strStoreDate) {
+            if (strStoreDate && strStoreDate!="") {
                 strStoreDate = JSON.parse(strStoreDate);
                 if (strStoreDate.length>0) {
                     for (var i = 0; i < strStoreDate.length; i++) {
