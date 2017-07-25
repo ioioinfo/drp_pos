@@ -1741,10 +1741,16 @@
 				}
 			});
 			//更新订单状态
+            var flag = 0;
 			$(".leave").click(function(){
+                if (flag == 1) {
+                    return;
+                }
+                flag = 1;
 				order.store = store;
 				if (order.shopping_infos.ready_pay+order.shopping_infos.small_change >= order.shopping_infos.total_price) {
 					$.post("/update_order_status",{"order":JSON.stringify(order)},function(data){
+                        flag = 0;
 						if (data.success) {
 							$(".print").removeAttr("style");
 							$(".leave").attr("disabled","disabled");
@@ -1755,6 +1761,7 @@
 						}
 					});
 				}else {
+                    flag = 0;
 					alert("尚未付清全款");
 				}
 			});
@@ -2184,13 +2191,13 @@
                         }else if (trade_status=="TRADE_CLOSED") {
                             alert("付款失败！");
                             return;
-                        } else if (cnt < 5){
+                        } else if (cnt < 20){
     						setTimeout(check_alipay,1000);
                         } else {
                             alert("已超时，付款未成功！");
     						ali_id = "";
                         }
-					}else if (cnt < 5){
+					}else if (cnt < 20){
 						setTimeout(check_alipay,1000);
 					}else {
 						alert("已超时，付款未成功！");
