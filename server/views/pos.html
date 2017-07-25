@@ -1562,6 +1562,10 @@
             var add_product = function(){
                 var product_name = $(".add_name").val();
 				var product_sale_price = $(".add_price").val();
+                if (product_sale_price>9999) {
+                    alert("输入商品价格过高，请重新输入");
+                    return;
+                }
 				var barcode = $(".add_barcode").val();
 				var product_id = $(".add_id").val();
 				var num = $(".add_num").val();
