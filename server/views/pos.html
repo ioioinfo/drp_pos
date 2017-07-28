@@ -1139,14 +1139,14 @@
 		<div class="pp_info">
 			<% _.forEach(print_infos.order_details, function(order_detail,index) { %>
 			<div class="normal" style="overflow: hidden;width: 96%;margin: 10px auto;">
-				<span style="display: inline-block;font-size: 12px;color: #999;width: 68%;word-break: keep-all;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><%- order_detail.product.product_name %></span>
-				<span style="display: inline-block;font-size: 12px;color: #999;width: 22px;text-align: center;"><%- order_detail.price %>X<%- order_detail.number %></span>
-				<span style="display: inline-block;font-size: 12px;color: #999;float: right;width: 48px;text-align: right;margin-top: 2px;"><%- order_detail.price*order_detail.number %></span>
+				<span style="display: inline-block;font-size: 12px;width: 68%;word-break: keep-all;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><%- order_detail.product.product_name %></span>
+				<span style="display: inline-block;font-size: 12px;width: 22px;text-align: center;"><%- order_detail.price %>X<%- order_detail.number %></span>
+				<span style="display: inline-block;font-size: 12px;float: right;width: 48px;text-align: right;margin-top: 2px;"><%- order_detail.price*order_detail.number %></span>
 			</div>
 			<% }); %>
 		</div>
 		<% _.forEach(print_infos.pay_infos, function(pay_info,index) { %>
-			<div class="pp_info" style="width: 96%;margin: 0 auto;font-size: 12px;color: #999;">
+			<div class="pp_info" style="width: 96%;margin: 0 auto;font-size: 12px;">
         <div class="normal">
     			<span>日期</span>
     			<span style="float: right;"><%- print_infos.order.order_date_text %></span>
@@ -1160,13 +1160,14 @@
           <span style="float: right;"><%- pay_info.pay_amount %></span>
         </div>
 				<!-- <div class="normal">支付宝账号:182****6882</div> -->
-				<div class="normal" style="padding: 4px 0;">
-          <span>流水号</span>
-    			<span style="float: right;"><%- pay_info.pay_log_id %></span>
-        </div>
+
 			</div>
 		<% }); %>
-		<div class="pp_info" style="width: 96%;margin: 0 auto;font-size: 12px;color: #999;">
+		<div class="pp_info" style="width: 96%;margin: 0 auto;font-size: 12px;">
+      <div class="normal" style="padding: 4px 0;">
+        <span>收据号</span>
+        <span style="float: right;"><%- print_infos.order.order_id %></span>
+      </div>
 			<div class="normal" style="padding: 4px 0;">
 				<span>商品小计</span>
 				<span style="float: right;"><%- print_infos.order.marketing_price %></span>
