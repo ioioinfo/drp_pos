@@ -188,11 +188,11 @@ var pay_params = function(request){
 	order = JSON.parse(order);
 	var shopping_infos = order.shopping_infos;
 	data.order_id = order.order_id;
-	data.address = request.query.store_address;
-	data.operator = request.query.person_id;
+	data.address = request.payload.store_address;
+	data.operator = request.payload.person_id;
 	data.sob_id = "ioio";
 	data.platform_code = "drp_pos";
-	data.pay_amount = request.query.pay_amount;
+	data.pay_amount = request.payload.pay_amount;
 	data.main_role_id = "0";
 	if (order.member) {
 		data.main_role_id = order.member.vip_id;
@@ -1027,7 +1027,7 @@ exports.register = function(server, options, next){
 			path: '/deal_card_pay',
 			handler: function(request, reply){
 				var data = pay_params(request);
-				data.auth_code = request.query.paycode;
+				data.auth_code = request.payload.paycode;
 				data.operator = 1;
 				data.platform_code = "drp_pos";
 				member_card_pay(data,function(err,row){
