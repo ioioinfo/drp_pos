@@ -1901,9 +1901,9 @@
 
 				});
 			};
-			//付款get方法
-			var do_get_method = function(url,params,cb){
-				$.get(url,params,function(data){
+			//post请求方法
+			var do_post_method = function(url,params,cb){
+				$.post(url,params,function(data){
 					if (data.success) {
 						cb(data);
 					}else {
@@ -1931,7 +1931,7 @@
 				}
 				$(".cash_pay").attr("style","display:none;");
 				if (!order.order_id) {
-					do_get_method("/save_order_detail",{"order":JSON.stringify(order)},function(data){
+					do_post_method("/save_order_detail",{"order":JSON.stringify(order)},function(data){
 						order.order_id = data.row.order_id;
 						var params = {
 							"order":JSON.stringify(order),
@@ -1939,7 +1939,7 @@
 							"person_id":person_id,
 							"pay_amount":pay_amount
 						};
-						do_get_method("/deal_cash_pay",params,function(data){
+						do_post_method("/deal_cash_pay",params,function(data){
 							order.shopping_infos.cash_pay = order.shopping_infos.cash_pay+pay_amount;
 							add_pay_info("现金",pay_amount,data);
 						});
@@ -1951,7 +1951,7 @@
 						"person_id":person_id,
 						"pay_amount":pay_amount
 					};
-					do_get_method("/deal_cash_pay",params,function(data){
+					do_post_method("/deal_cash_pay",params,function(data){
 						order.shopping_infos.cash_pay = order.shopping_infos.cash_pay+pay_amount;
 						add_pay_info("现金",pay_amount,data);
 					});
@@ -1984,7 +1984,7 @@
 				if (changes <= 0) {
 					//一次支付，并生成订单
 					if (!order.order_id) {
-						do_get_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
+						do_post_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
 							order.order_id = data.row.order_id;
 							var params = {
 								"order":JSON.stringify(order),
@@ -1993,7 +1993,7 @@
 								"person_id":person_id,
 								"pay_amount":pay_amount
 							};
-							do_get_method("/deal_card_pay",params,function(data){
+							do_post_method("/deal_card_pay",params,function(data){
                                 if (data.success) {
                                     add_pay_info("会员卡",pay_amount,data);
                                 }
@@ -2007,7 +2007,7 @@
 							"person_id":person_id,
 							"pay_amount":pay_amount
 						};
-						do_get_method("/deal_card_pay",params,function(data){
+						do_post_method("/deal_card_pay",params,function(data){
                             if (data.success) {
                                 add_pay_info("会员卡",pay_amount,data);
                             }
@@ -2036,7 +2036,7 @@
 				}
 				$(".credit_pay").attr("style","display:none;");
 				if (!order.order_id) {
-					do_get_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
+					do_post_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
 						order.order_id = data.row.order_id;
 						var params = {
 							"order":JSON.stringify(order),
@@ -2044,7 +2044,7 @@
 							"person_id":person_id,
 							"pay_amount":pay_amount
 						};
-						do_get_method("/deal_credit_pay",params,function(data){
+						do_post_method("/deal_credit_pay",params,function(data){
 							add_pay_info("白条",pay_amount,data);
 						});
 					});
@@ -2055,7 +2055,7 @@
 						"person_id":person_id,
 						"pay_amount":pay_amount
 					};
-					do_get_method("/deal_credit_pay",params,function(data){
+					do_post_method("/deal_credit_pay",params,function(data){
 						add_pay_info("白条",pay_amount,data);
 					});
 				}
@@ -2081,7 +2081,7 @@
 				}
 				$(".weixin_transfer_pay").attr("style","display:none;");
 				if (!order.order_id) {
-					do_get_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
+					do_post_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
 						order.order_id = data.row.order_id;
 						var params = {
 							"order":JSON.stringify(order),
@@ -2089,7 +2089,7 @@
 							"person_id":person_id,
 							"pay_amount":pay_amount
 						};
-						do_get_method("/order_wxtransferpay",params,function(data){
+						do_post_method("/order_wxtransferpay",params,function(data){
 							add_pay_info("微信转账",pay_amount,data);
 						});
 					});
@@ -2100,7 +2100,7 @@
 						"person_id":person_id,
 						"pay_amount":pay_amount
 					};
-					do_get_method("/order_wxtransferpay",params,function(data){
+					do_post_method("/order_wxtransferpay",params,function(data){
 						add_pay_info("微信转账",pay_amount,data);
 					});
 				}
@@ -2126,7 +2126,7 @@
 				}
 				$(".ali_transfer_pay").attr("style","display:none;");
 				if (!order.order_id) {
-					do_get_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
+					do_post_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
 						order.order_id = data.row.order_id;
 						var params = {
 							"order":JSON.stringify(order),
@@ -2134,7 +2134,7 @@
 							"person_id":person_id,
 							"pay_amount":pay_amount
 						};
-						do_get_method("/order_alitransferpay",params,function(data){
+						do_post_method("/order_alitransferpay",params,function(data){
 							add_pay_info("支付宝转账",pay_amount,data);
 						});
 					});
@@ -2145,7 +2145,7 @@
 						"person_id":person_id,
 						"pay_amount":pay_amount
 					};
-					do_get_method("/order_alitransferpay",params,function(data){
+					do_post_method("/order_alitransferpay",params,function(data){
 						add_pay_info("支付宝转账",pay_amount,data);
 					});
 				}
@@ -2173,7 +2173,7 @@
 				}
 				$(".alipay_value").attr("disabled","disabled");
 				if (!order.order_id) {
-					do_get_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
+					do_post_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
 						order.order_id = data.row.order_id;
 						var params = {
 							"order":JSON.stringify(order),
@@ -2182,7 +2182,7 @@
 							"alipay_code":alipay_code,
 							"pay_amount":pay_amount
 						};
-						do_get_method("/ali_pay",params,function(data){
+						do_post_method("/ali_pay",params,function(data){
 							ali_id = data.order_id;
 							cnt = 0;
 							setTimeout(check_alipay,1000);
@@ -2199,7 +2199,7 @@
 					if (ali_id) {
 						alert("支付过了");
 					}else {
-						do_get_method("/ali_pay",params,function(data){
+						do_post_method("/ali_pay",params,function(data){
 							ali_id = data.order_id;
 							cnt = 0;
 							setTimeout(check_alipay,1000);

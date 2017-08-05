@@ -184,7 +184,7 @@ var alipay_trade_query = function(data,cb){
 //支付参数
 var pay_params = function(request){
 	var data = {};
-	var order = request.query.order;
+	var order = request.payload.order;
 	order = JSON.parse(order);
 	var shopping_infos = order.shopping_infos;
 	data.order_id = order.order_id;
@@ -202,7 +202,7 @@ var pay_params = function(request){
 //订单参数
 var order_params = function(request){
 	var data = {};
-	var order = request.query.order;
+	var order = request.payload.order;
 	order = JSON.parse(order);
 	var shopping_infos = order.shopping_infos;
 	data.products = JSON.stringify(order.products);
@@ -987,7 +987,7 @@ exports.register = function(server, options, next){
 		},
 		//保存购物车订单及详细
 		{
-			method: 'GET',
+			method: 'POST',
 			path: '/save_order_detail',
 			handler: function(request, reply){
 				var operation_person = get_cookie_personId(request);
@@ -1008,7 +1008,7 @@ exports.register = function(server, options, next){
 		},
 		//现金支付处理订单
 		{
-			method: 'GET',
+			method: 'POST',
 			path: '/deal_cash_pay',
 			handler: function(request, reply){
 				var data = pay_params(request);
@@ -1023,7 +1023,7 @@ exports.register = function(server, options, next){
 		},
 		//会员卡支付处理订单
 		{
-			method: 'GET',
+			method: 'POST',
 			path: '/deal_card_pay',
 			handler: function(request, reply){
 				var data = pay_params(request);
@@ -1041,7 +1041,7 @@ exports.register = function(server, options, next){
 		},
 		//白条支付处理订单
 		{
-			method: 'GET',
+			method: 'POST',
 			path: '/deal_credit_pay',
 			handler: function(request, reply){
 				var data = pay_params(request);
@@ -1056,7 +1056,7 @@ exports.register = function(server, options, next){
 		},
 		//微信支付处理订单
 		{
-			method: 'GET',
+			method: 'POST',
 			path: '/order_wxtransferpay',
 			handler: function(request, reply){
 				var data = pay_params(request);
@@ -1071,7 +1071,7 @@ exports.register = function(server, options, next){
 		},
 		//支付宝付款
 		{
-			method: 'GET',
+			method: 'POST',
 			path: '/ali_pay',
 			handler: function(request, reply){
 				var data = pay_params(request);
@@ -1094,7 +1094,7 @@ exports.register = function(server, options, next){
 		},
 		//支付宝支付处理订单
 		{
-			method: 'GET',
+			method: 'POST',
 			path: '/order_alitransferpay',
 			handler: function(request, reply){
 				var data = pay_params(request);
