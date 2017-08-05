@@ -1079,10 +1079,10 @@ exports.register = function(server, options, next){
 				data.subject = "门店消费";
 				data.body = "ali_pay";
 				data.callback_url = "http://shop.buy42.com/return";
-				if (!request.query.alipay_code) {
+				if (!request.payload.alipay_code) {
 					return reply({"success":false,"message":"请扫支付码"});
 				}
-				data.auth_code = request.query.alipay_code;
+				data.auth_code = request.payload.alipay_code;
 				alipay_trade_pay(data,function(err,row){
 					if (!err) {
 						return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
