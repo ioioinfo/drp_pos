@@ -564,7 +564,7 @@ exports.register = function(server, options, next){
 					"industry_id" : 102
 				};
 				search_product_byId(product_id,function(err,rows){
-					if (err) {
+					if (!err) {
 						if (rows.rows.length>0) {
 							return reply({"success":false,"message":"商品已存在"});
 						}else {
