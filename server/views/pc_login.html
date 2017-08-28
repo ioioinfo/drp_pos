@@ -217,29 +217,29 @@
           password = $ ("#password").val();
           vertify = $("#vertify").val();
 
-          if (!username) {
-              $(".alertinfor").show();
-             $(".alertinfor span").html("请输入用户名");
-              return;
-          }else if (!password) {
-              $(".alertinfor").show();
-              $(".alertinfor span").html("请输入密码");
-              return;
-          }else if (!vertify) {
-              $(".alertinfor").show();
-              $(".alertinfor span").html("请输入验证码");
-              return;
-          }
-          $.post("/do_login",{"username":username,"password":password,"vertify":vertify},function(data){
-              if (data.success) {
-                  location.href = "/";
-                }else {
-                    $(".alertinfor").show();
-                    $(".alertinfor span").html(data.message);
-                  $("#vertify").val("");
-                  change_picture();
-                }
-            })
+              if (!username) {
+                  $(".alertinfor").show();
+                 $(".alertinfor span").html("请输入用户名");
+                  return;
+              }else if (!password) {
+                  $(".alertinfor").show();
+                  $(".alertinfor span").html("请输入密码");
+                  return;
+              }else if (!vertify) {
+                  $(".alertinfor").show();
+                  $(".alertinfor span").html("请输入验证码");
+                  return;
+              }
+                $.post("/do_login",{"username":username,"password":password,"vertify":vertify},function(data){
+                  if (data.success) {
+                      location.href = "/";
+                    }else {
+                        $(".alertinfor").show();
+                        $(".alertinfor span").html(data.message);
+                      $("#vertify").val("");
+                      change_picture();
+                    }
+                })
           };
 		$("#img").click(function(){
 			change_picture();

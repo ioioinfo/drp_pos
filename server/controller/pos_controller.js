@@ -557,6 +557,12 @@ exports.register = function(server, options, next){
 					return reply({"success":false,"message":"params wrong"});
 				}
 
+				var store_id = get_cookie_storeId(request);
+				if (!store_id) {
+					return reply({"succss":false,"messsage":"no store_id"});
+				}
+				var store_ids = [];
+				store_ids.push(store_id);
 				var product = {
 					"product_id" : product_id,
 					"product_name" : product_name,
@@ -564,52 +570,66 @@ exports.register = function(server, options, next){
 					"industry_id" : 102
 				};
 				search_product_byId(product_id,function(err,rows){
-					if (err) {
+					if (!err) {
 						if (rows.rows.length>0) {
 							return reply({"success":false,"message":"商品已存在"});
 						}else {
-							save_product_simple(product,function(err,result){
+							console.log(1111);
+							get_store_info(JSON.stringify(store_ids), org_code, function(err,rows){
+								console.log("rows:"+JSON.stringify(rows));
 								if (!err) {
-									var instruction = {
-										"shipper" : "shantao",
-										"supplier_id" : 1,
-										"warehouse_id" : 1,
-										"region_id" : 1,
-										"point_id" : 1
-									}
-									var data = {
-										"product_id" : product_id,
-										"industry_id" : 102,
-										"instruction" : JSON.stringify(instruction),
-										"strategy" : "modify",
-										"quantity" : num,
-										"batch_id" : "test",
-										"platform_code" :"drp_pos"
-									};
-									save_stock_instruction(data,function(err,content){
-										if (!err) {
-											var product = {
-												"product_id":product_id,
-												"industry_id":102,
-												"barcode":barcode
-											};
-											var products = []
-											products.push(product);
-											products = JSON.stringify(products);
-											var info = {"products":products};
-											save_product_barcodes(info,function(err,content){
-												if (!err) {
-													return reply({"success":true});
-												}else {
-													return reply({"success":false,"message":content.message});
+									if (rows.rows.length==0) {
+										return reply({"success":false,"message":"门店不存在"});
+									}else {
+										product.origin = rows.rows[0].abbr;
+										console.log("origin:"+product.origin);
+										save_product_simple(product,function(err,result){
+											if (!err) {
+												var instruction = {
+													"shipper" : "shantao",
+													"supplier_id" : 1,
+													"warehouse_id" : 1,
+													"region_id" : 1,
+													"point_id" : 1
 												}
-											});
-										}else {
-											return reply({"success":false,"message":content.message});
-										}
-									});
+												var data = {
+													"product_id" : product_id,
+													"industry_id" : 102,
+													"instruction" : JSON.stringify(instruction),
+													"strategy" : "modify",
+													"quantity" : num,
+													"batch_id" : "test",
+													"platform_code" :"drp_pos"
+												};
+												save_stock_instruction(data,function(err,content){
+													if (!err) {
+														var product = {
+															"product_id":product_id,
+															"industry_id":102,
+															"barcode":barcode
+														};
+														var products = []
+														products.push(product);
+														products = JSON.stringify(products);
+														var info = {"products":products};
+														save_product_barcodes(info,function(err,content){
+															if (!err) {
+																return reply({"success":true});
+															}else {
+																return reply({"success":false,"message":content.message});
+															}
+														});
+													}else {
+														return reply({"success":false,"message":content.message});
+													}
+												});
+											}else {
+												return reply({"success":false,"message":result.message});
+											}
+										});
+									}
 								}else {
-									return reply({"success":false,"message":result.message});
+									return reply({"success":false,"message":rows.message});
 								}
 							});
 						}
