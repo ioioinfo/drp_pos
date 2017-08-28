@@ -1127,48 +1127,74 @@
 		<% }); %>
 	</script>
 	<script id="print_receipt_infos" type="text/template">
-		<div class="normal">
-			<span style="width:63%;"><%- print_infos.order.order_date_text %></span>
-			<span style="width:35%;">机：<%- print_infos.order.pos_id %></span>
-		</div>
+    <div>
+      <p style="width:100%;height:42px;line-height: 50px;text-align: center;font-size: 18px;font-weight: bold;"><span>Buy For Two</span></p>
+    </div>
+    <div class="mendian_infor" style="overflow:hidden">
+      <p style="text-align: center;height: 20px;line-height: 20px;font-size: 12px;">欢迎光临善淘网新闸路店</p>
+      <p style="text-align: center;height: 20px;line-height: 20px;font-size: 12px;">地址：静安区新闸路1132号</p>
+      <p style="text-align: center;height: 20px;line-height: 20px;font-size: 12px;">电话：021-62600655</p>
+    </div>
+
 		<div class="pp_info">
 			<% _.forEach(print_infos.order_details, function(order_detail,index) { %>
-			<div class="normal">
-				<span style="width:50%;vertical-align: middle;"><%- order_detail.product.product_name %></span>
-				<span style="width:26%;"><%- order_detail.price %>X<%- order_detail.number %></span>
-				<span style="width:20%;text-align:right;"><%- order_detail.price*order_detail.number %></span>
+			<div class="normal" style="overflow: hidden;width: 96%;margin: 10px auto;">
+				<span style="display: inline-block;font-size: 12px;width: 68%;word-break: keep-all;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><%- order_detail.product.product_name %></span>
+				<span style="display: inline-block;font-size: 12px;width: 22px;text-align: center;"><%- order_detail.price %>X<%- order_detail.number %></span>
+				<span style="display: inline-block;font-size: 12px;float: right;width: 48px;text-align: right;margin-top: 2px;"><%- order_detail.price*order_detail.number %></span>
 			</div>
 			<% }); %>
 		</div>
 		<% _.forEach(print_infos.pay_infos, function(pay_info,index) { %>
-			<div class="pp_info">
-				<div class="normal"><%- pay_info.pay_way %>：<%- pay_info.pay_amount %></div>
+			<div class="pp_info" style="width: 96%;margin: 0 auto;font-size: 12px;">
+        <div class="normal">
+    			<span>日期</span>
+    			<span style="float: right;"><%- print_infos.order.order_date_text %></span>
+    		</div>
+        <div class="normal">
+    			<span>打印机</span>
+    			<span style="float: right;"><%- print_infos.order.pos_id %></span>
+    		</div>
+        <div class="normal" style="padding: 4px 0;">
+          <span style=""><%- pay_info.pay_way %></span>
+          <span style="float: right;"><%- pay_info.pay_amount %></span>
+        </div>
 				<!-- <div class="normal">支付宝账号:182****6882</div> -->
-				<div class="normal">流水号：</div>
-				<div class="normal"><%- pay_info.pay_log_id %></div>
+
 			</div>
 		<% }); %>
-		<div class="pp_info">
-			<div class="normal">
-				<span style="width:26%">商品小计：</span>
-				<span style="width:20%;text-align:right;"><%- print_infos.order.marketing_price %></span>
+		<div class="pp_info" style="width: 96%;margin: 0 auto;font-size: 12px;">
+      <div class="normal" style="padding: 4px 0;">
+        <span>收据号</span>
+        <span style="float: right;"><%- print_infos.order.order_id %></span>
+      </div>
+			<div class="normal" style="padding: 4px 0;">
+				<span>商品小计</span>
+				<span style="float: right;"><%- print_infos.order.marketing_price %></span>
 			</div>
-			<div class="normal">
-				<span style="width:26%">折扣合计：</span>
-				<span style="width:20%;text-align:right;"><%- print_infos.order.card_reduce %></span>
+			<div class="normal"  style="padding: 4px 0;">
+				<span>折扣合计：</span>
+				<span style="float: right;"><%- print_infos.order.card_reduce %></span>
 			</div>
-			<div class="normal">
-				<span style="width:26%">分头舍去</span>
-				<span style="width:20%;text-align:right;"><%- print_infos.order.small_change %></span>
+			<div class="normal"  style="padding: 4px 0;">
+				<span>分头舍去</span>
+				<span style="float: right;"><%- print_infos.order.small_change %></span>
 			</div>
-			<div class="normal">
-				<span style="width:26%">金额合计：</span>
-				<span style="width:20%;text-align:right;"><%- print_infos.order.actual_price %></span>
-				<span style="width:25%;text-align:center;">找&nbsp;&nbsp;&nbsp;零：</span>
-				<span style="width:23%;text-align:right;"><%- print_infos.order.changes %></span>
+			<div class="normal"  style="padding: 4px 0;">
+				<span style="width:26%">金额合计</span>
+				<span style="float: right;"><%- print_infos.order.actual_price %></span>
+      </div>
+      <div class="normal" style="padding: 4px 0;">
+        <span style="width:25%;text-align:center;">找零</span>
+				<span style="float: right;"><%- print_infos.order.changes %></span>
 			</div>
 		</div>
-		<div class="normal">感谢光临善淘慈善店，期待您的下次光临</div>
+    <div class="product_intor" style="overflow: hidden;width: 96%;margin: 0 auto;">
+        <p class="product_intor_left" style="display: inline-block;width:30%;vertical-align:middle;height:30px;">
+            <img src="http://pos.buy42.com/images/wangdianerweima.jpg" style="width:100%" alt="">
+        </p>
+        <p class="product_intor_right" style="display: inline-block;box-sizing: border-boxwidth: 67%;vertical-align: middle;">欢迎关注公众号"善淘网"，进入在线慈善商店<br></p>
+    </div>
 	</script>
 
 	<div class="alertWrap" style="display:none;">
@@ -1875,9 +1901,9 @@
 
 				});
 			};
-			//付款get方法
-			var do_get_method = function(url,params,cb){
-				$.get(url,params,function(data){
+			//post请求方法
+			var do_post_method = function(url,params,cb){
+				$.post(url,params,function(data){
 					if (data.success) {
 						cb(data);
 					}else {
@@ -1905,7 +1931,7 @@
 				}
 				$(".cash_pay").attr("style","display:none;");
 				if (!order.order_id) {
-					do_get_method("/save_order_detail",{"order":JSON.stringify(order)},function(data){
+					do_post_method("/save_order_detail",{"order":JSON.stringify(order)},function(data){
 						order.order_id = data.row.order_id;
 						var params = {
 							"order":JSON.stringify(order),
@@ -1913,7 +1939,7 @@
 							"person_id":person_id,
 							"pay_amount":pay_amount
 						};
-						do_get_method("/deal_cash_pay",params,function(data){
+						do_post_method("/deal_cash_pay",params,function(data){
 							order.shopping_infos.cash_pay = order.shopping_infos.cash_pay+pay_amount;
 							add_pay_info("现金",pay_amount,data);
 						});
@@ -1925,7 +1951,7 @@
 						"person_id":person_id,
 						"pay_amount":pay_amount
 					};
-					do_get_method("/deal_cash_pay",params,function(data){
+					do_post_method("/deal_cash_pay",params,function(data){
 						order.shopping_infos.cash_pay = order.shopping_infos.cash_pay+pay_amount;
 						add_pay_info("现金",pay_amount,data);
 					});
@@ -1958,7 +1984,7 @@
 				if (changes <= 0) {
 					//一次支付，并生成订单
 					if (!order.order_id) {
-						do_get_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
+						do_post_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
 							order.order_id = data.row.order_id;
 							var params = {
 								"order":JSON.stringify(order),
@@ -1967,7 +1993,7 @@
 								"person_id":person_id,
 								"pay_amount":pay_amount
 							};
-							do_get_method("/deal_card_pay",params,function(data){
+							do_post_method("/deal_card_pay",params,function(data){
                                 if (data.success) {
                                     add_pay_info("会员卡",pay_amount,data);
                                 }
@@ -1981,7 +2007,7 @@
 							"person_id":person_id,
 							"pay_amount":pay_amount
 						};
-						do_get_method("/deal_card_pay",params,function(data){
+						do_post_method("/deal_card_pay",params,function(data){
                             if (data.success) {
                                 add_pay_info("会员卡",pay_amount,data);
                             }
@@ -2010,7 +2036,7 @@
 				}
 				$(".credit_pay").attr("style","display:none;");
 				if (!order.order_id) {
-					do_get_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
+					do_post_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
 						order.order_id = data.row.order_id;
 						var params = {
 							"order":JSON.stringify(order),
@@ -2018,7 +2044,7 @@
 							"person_id":person_id,
 							"pay_amount":pay_amount
 						};
-						do_get_method("/deal_credit_pay",params,function(data){
+						do_post_method("/deal_credit_pay",params,function(data){
 							add_pay_info("白条",pay_amount,data);
 						});
 					});
@@ -2029,7 +2055,7 @@
 						"person_id":person_id,
 						"pay_amount":pay_amount
 					};
-					do_get_method("/deal_credit_pay",params,function(data){
+					do_post_method("/deal_credit_pay",params,function(data){
 						add_pay_info("白条",pay_amount,data);
 					});
 				}
@@ -2055,7 +2081,7 @@
 				}
 				$(".weixin_transfer_pay").attr("style","display:none;");
 				if (!order.order_id) {
-					do_get_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
+					do_post_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
 						order.order_id = data.row.order_id;
 						var params = {
 							"order":JSON.stringify(order),
@@ -2063,7 +2089,7 @@
 							"person_id":person_id,
 							"pay_amount":pay_amount
 						};
-						do_get_method("/order_wxtransferpay",params,function(data){
+						do_post_method("/order_wxtransferpay",params,function(data){
 							add_pay_info("微信转账",pay_amount,data);
 						});
 					});
@@ -2074,7 +2100,7 @@
 						"person_id":person_id,
 						"pay_amount":pay_amount
 					};
-					do_get_method("/order_wxtransferpay",params,function(data){
+					do_post_method("/order_wxtransferpay",params,function(data){
 						add_pay_info("微信转账",pay_amount,data);
 					});
 				}
@@ -2100,7 +2126,7 @@
 				}
 				$(".ali_transfer_pay").attr("style","display:none;");
 				if (!order.order_id) {
-					do_get_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
+					do_post_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
 						order.order_id = data.row.order_id;
 						var params = {
 							"order":JSON.stringify(order),
@@ -2108,7 +2134,7 @@
 							"person_id":person_id,
 							"pay_amount":pay_amount
 						};
-						do_get_method("/order_alitransferpay",params,function(data){
+						do_post_method("/order_alitransferpay",params,function(data){
 							add_pay_info("支付宝转账",pay_amount,data);
 						});
 					});
@@ -2119,7 +2145,7 @@
 						"person_id":person_id,
 						"pay_amount":pay_amount
 					};
-					do_get_method("/order_alitransferpay",params,function(data){
+					do_post_method("/order_alitransferpay",params,function(data){
 						add_pay_info("支付宝转账",pay_amount,data);
 					});
 				}
@@ -2147,7 +2173,7 @@
 				}
 				$(".alipay_value").attr("disabled","disabled");
 				if (!order.order_id) {
-					do_get_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
+					do_post_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
 						order.order_id = data.row.order_id;
 						var params = {
 							"order":JSON.stringify(order),
@@ -2156,7 +2182,7 @@
 							"alipay_code":alipay_code,
 							"pay_amount":pay_amount
 						};
-						do_get_method("/ali_pay",params,function(data){
+						do_post_method("/ali_pay",params,function(data){
 							ali_id = data.order_id;
 							cnt = 0;
 							setTimeout(check_alipay,1000);
@@ -2173,7 +2199,7 @@
 					if (ali_id) {
 						alert("支付过了");
 					}else {
-						do_get_method("/ali_pay",params,function(data){
+						do_post_method("/ali_pay",params,function(data){
 							ali_id = data.order_id;
 							cnt = 0;
 							setTimeout(check_alipay,1000);

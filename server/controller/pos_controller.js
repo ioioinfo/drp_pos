@@ -184,15 +184,15 @@ var alipay_trade_query = function(data,cb){
 //支付参数
 var pay_params = function(request){
 	var data = {};
-	var order = request.query.order;
+	var order = request.payload.order;
 	order = JSON.parse(order);
 	var shopping_infos = order.shopping_infos;
 	data.order_id = order.order_id;
-	data.address = request.query.store_address;
-	data.operator = request.query.person_id;
+	data.address = request.payload.store_address;
+	data.operator = request.payload.person_id;
 	data.sob_id = "ioio";
 	data.platform_code = "drp_pos";
-	data.pay_amount = request.query.pay_amount;
+	data.pay_amount = request.payload.pay_amount;
 	data.main_role_id = "0";
 	if (order.member) {
 		data.main_role_id = order.member.vip_id;
@@ -202,7 +202,7 @@ var pay_params = function(request){
 //订单参数
 var order_params = function(request){
 	var data = {};
-	var order = request.query.order;
+	var order = request.payload.order;
 	order = JSON.parse(order);
 	var shopping_infos = order.shopping_infos;
 	data.products = JSON.stringify(order.products);
@@ -1007,7 +1007,7 @@ exports.register = function(server, options, next){
 		},
 		//保存购物车订单及详细
 		{
-			method: 'GET',
+			method: 'POST',
 			path: '/save_order_detail',
 			handler: function(request, reply){
 				var operation_person = get_cookie_personId(request);
@@ -1028,7 +1028,7 @@ exports.register = function(server, options, next){
 		},
 		//现金支付处理订单
 		{
-			method: 'GET',
+			method: 'POST',
 			path: '/deal_cash_pay',
 			handler: function(request, reply){
 				var data = pay_params(request);
@@ -1043,11 +1043,11 @@ exports.register = function(server, options, next){
 		},
 		//会员卡支付处理订单
 		{
-			method: 'GET',
+			method: 'POST',
 			path: '/deal_card_pay',
 			handler: function(request, reply){
 				var data = pay_params(request);
-				data.auth_code = request.query.paycode;
+				data.auth_code = request.payload.paycode;
 				data.operator = 1;
 				data.platform_code = "drp_pos";
 				member_card_pay(data,function(err,row){
@@ -1061,7 +1061,7 @@ exports.register = function(server, options, next){
 		},
 		//白条支付处理订单
 		{
-			method: 'GET',
+			method: 'POST',
 			path: '/deal_credit_pay',
 			handler: function(request, reply){
 				var data = pay_params(request);
@@ -1076,7 +1076,7 @@ exports.register = function(server, options, next){
 		},
 		//微信支付处理订单
 		{
-			method: 'GET',
+			method: 'POST',
 			path: '/order_wxtransferpay',
 			handler: function(request, reply){
 				var data = pay_params(request);
@@ -1091,7 +1091,7 @@ exports.register = function(server, options, next){
 		},
 		//支付宝付款
 		{
-			method: 'GET',
+			method: 'POST',
 			path: '/ali_pay',
 			handler: function(request, reply){
 				var data = pay_params(request);
@@ -1099,10 +1099,10 @@ exports.register = function(server, options, next){
 				data.subject = "门店消费";
 				data.body = "ali_pay";
 				data.callback_url = "http://shop.buy42.com/return";
-				if (!request.query.alipay_code) {
+				if (!request.payload.alipay_code) {
 					return reply({"success":false,"message":"请扫支付码"});
 				}
-				data.auth_code = request.query.alipay_code;
+				data.auth_code = request.payload.alipay_code;
 				alipay_trade_pay(data,function(err,row){
 					if (!err) {
 						return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
@@ -1114,7 +1114,7 @@ exports.register = function(server, options, next){
 		},
 		//支付宝支付处理订单
 		{
-			method: 'GET',
+			method: 'POST',
 			path: '/order_alitransferpay',
 			handler: function(request, reply){
 				var data = pay_params(request);
