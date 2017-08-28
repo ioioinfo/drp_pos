@@ -573,10 +573,8 @@ exports.register = function(server, options, next){
 					if (!err) {
 						if (rows.rows.length>0) {
 							return reply({"success":false,"message":"商品已存在"});
-						}else {
-							console.log(1111);
+						}else{
 							get_store_info(JSON.stringify(store_ids), org_code, function(err,rows){
-								console.log("rows:"+JSON.stringify(rows));
 								if (!err) {
 									if (rows.rows.length==0) {
 										return reply({"success":false,"message":"门店不存在"});
