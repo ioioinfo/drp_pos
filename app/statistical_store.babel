@@ -15,10 +15,21 @@ class Wrap extends React.Component {
           constructor(props) {
               super(props);
               this.handlerClick=this.handlerClick.bind(this);
-              this.state={status:1};
+              this.state={status:1,storItems:[]};
           }
           componentDidMount(){
             this.setState({status:1});
+            $.ajax({
+                 url: "/store_list",
+                 dataType: 'json',
+                 type: 'GET',
+                 data:{},
+                 success: function(data) {
+                    this.setState({storItems:data.rows});
+                 }.bind(this),
+                 error: function(xhr, status, err) {
+                 }.bind(this)
+            });
           }
           handlerClick(e){
             if(this.state.status==1){
@@ -37,10 +48,9 @@ class Wrap extends React.Component {
                         今日销售(石门二路店)
                         <i className="fa fa-caret-right head_icon" onClick={this.handlerClick}></i>
                         <div id="store">
-                          <p>石门二路店</p>
-                          <p>中山路店</p>
-                          <p>江宁路店</p>
-                          <p>人民广场店</p>
+                        {this.state.storItems.map(item => (
+                          <p>{item.org_store_name}</p>
+                          ))}
                         </div>
                     </div>
                 );
