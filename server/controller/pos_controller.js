@@ -171,6 +171,11 @@ var alipay_trade_pay = function(data,cb){
 	var url = "http://139.196.148.40:18008/alipay_trade_pay";
 	do_post_method(url,data,cb);
 }
+//卡卷支付
+var cash_coupon_pay = function(data,cb){
+	var url = "http://139.196.148.40:18008/cash_coupon_pay";
+	do_post_method(url,data,cb);
+}
 //阿里支付退款
 var alipay_trade_refund = function(data,cb){
 	var url = "http://139.196.148.40:18008/alipay_trade_refund";
@@ -1049,6 +1054,25 @@ exports.register = function(server, options, next){
 				data.operator = 1;
 				data.platform_code = "drp_pos";
 				member_card_pay(data,function(err,row){
+					if (!err) {
+						return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
+					}else {
+						return reply({"success":false,"message":row.message,"service_info":service_info});
+					}
+				});
+			}
+		},
+		//卡卷支付处理订单
+		{
+			method: 'POST',
+			path: '/cash_coupon_pay',
+			handler: function(request, reply){
+				var data = pay_params(request);
+				if (!request.payload.coupon_code) {
+					return reply({"success":false,"message":"请扫卡卷码"});
+				}
+				data.coupon_code = request.payload.coupon_code;
+				cash_coupon_pay(data,function(err,row){
 					if (!err) {
 						return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
 					}else {
