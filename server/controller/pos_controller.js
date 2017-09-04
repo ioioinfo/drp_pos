@@ -1474,31 +1474,35 @@ exports.register = function(server, options, next){
 								order_ids.push(rows.rows[i].order_id);
 							}
 						}
-						order_ids = JSON.stringify(order_ids);
-						get_orders_pay_infos(order_ids,function(err,rows){
-							if (!err) {
-								var pay_infos = rows.rows;
-								for (var i = 0; i < pay_infos.length; i++) {
-									var pay = pay_infos[i];
-									if (!pay_map[pay.pay_way]) {
-										pay_map[pay.pay_way] = pay.pay_amount;
-										pay_ways.push(pay.pay_way);
-									}else {
-										pay_map[pay.pay_way] = pay_map[pay.pay_way] + pay.pay_amount;
+						if (order_ids.length ==0) {
+							return reply({"success":true,"time":date2,"order_num":0,"total_sales":0,"total_products":0,"pay_map":pay_map,"pay_ways":pay_ways,"service_info":service_info});
+						}else {
+							order_ids = JSON.stringify(order_ids);
+							get_orders_pay_infos(order_ids,function(err,rows){
+								if (!err) {
+									var pay_infos = rows.rows;
+									for (var i = 0; i < pay_infos.length; i++) {
+										var pay = pay_infos[i];
+										if (!pay_map[pay.pay_way]) {
+											pay_map[pay.pay_way] = pay.pay_amount;
+											pay_ways.push(pay.pay_way);
+										}else {
+											pay_map[pay.pay_way] = pay_map[pay.pay_way] + pay.pay_amount;
+										}
 									}
-								}
-								for (var i = 0; i < pay_ways.length; i++) {
-									pay_map[pay_ways[i]] = parseFloat(pay_map[pay_ways[i]].toFixed(2));
-								}
+									for (var i = 0; i < pay_ways.length; i++) {
+										pay_map[pay_ways[i]] = parseFloat(pay_map[pay_ways[i]].toFixed(2));
+									}
 
-								pay_map["找零"] = parseFloat(total_changes.toFixed(2));
-								pay_ways.push("找零");
+									pay_map["找零"] = parseFloat(total_changes.toFixed(2));
+									pay_ways.push("找零");
 
-								return reply({"success":true,"time":date2,"order_num":order_num,"total_sales":parseFloat(total_sales.toFixed(2)),"total_products":total_products,"pay_map":pay_map,"pay_ways":pay_ways,"service_info":service_info});
-							}else {
-								return reply({"success":false,"message":rows.message,"service_info":service_info});
-							}
-						});
+									return reply({"success":true,"time":date2,"order_num":order_num,"total_sales":parseFloat(total_sales.toFixed(2)),"total_products":total_products,"pay_map":pay_map,"pay_ways":pay_ways,"service_info":service_info});
+								}else {
+									return reply({"success":false,"message":rows.message,"service_info":service_info});
+								}
+							});
+						}
 					}else {
 						return reply({"success":true,"rows":rows.message,"service_info":service_info});
 					}
