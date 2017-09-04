@@ -1142,7 +1142,14 @@ exports.register = function(server, options, next){
 			handler: function(request, reply){
 				store_list(function(err,rows){
 					if (!err) {
-						return reply({"success":true,"rows":rows.rows,"service_info":service_info});
+						var stores = [];
+						for (var i = 0; i < rows.rows.length; i++) {
+							var store = rows.rows[i];
+							if (store.is_store == 1) {
+								stores.push(store);
+							}
+						}
+						return reply({"success":true,"rows":stores,"service_info":service_info});
 					}else {
 						return reply({"success":false,"message":rows.message,"service_info":service_info});
 					}
