@@ -86,6 +86,17 @@ var get_cookie_storeId = function(request){
 	}
 	return store_id;
 };
+//获取当前cookie pos_id
+var get_cookie_posId = function(request){
+	var pos_id;
+	if (request.state && request.state.cookie) {
+		var cookie = request.state.cookie;
+		if (cookie.pos_id) {
+			pos_id = cookie.pos_id;
+		}
+	}
+	return pos_id;
+};
 
 //获取验证图片
 var get_captcha = function(cookie_id,cb){
@@ -96,6 +107,12 @@ var get_captcha = function(cookie_id,cb){
 var check_captcha = function(vertify,cookie_id,cb){
 	var url = "http://139.196.148.40:11111/api/verify?cookie_id=" +cookie_id + "&text=" + vertify;
 	do_get_method(url,cb);
+};
+//POS登入
+var do_pos_login = function(data, cb){
+	var url = "http://139.196.148.40:18666/cash_register/login_check";
+	data.platform_code = "drp_pos";
+	do_post_method(url,data,cb);
 };
 //登入账号验证
 var do_login = function(data, cb){
@@ -730,6 +747,11 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/login',
 			handler: function(request, reply){
+				var store_id = get_cookie_storeId(request);
+				if (!store_id) {
+					return reply("未登入收银机");
+				}
+
 				var cookie_id = get_cookie_id(request);
 				if (!cookie_id) {
 					cookie_id = uuidV1();
@@ -768,11 +790,43 @@ exports.register = function(server, options, next){
 				return reply.view("machine_login");
 			}
 		},
+		//pos登入
+		{
+			method: 'POST',
+			path: '/do_pos_login',
+			handler: function(request, reply){
+				var data = {};
+				data.cash_register_code = request.payload.username;
+				data.password = request.payload.password;
+				data.org_code = "ioio";
+
+				do_pos_login(data, function(err,row){
+					if (!err) {
+						var store_id = row.row.store_id;
+						var pos_id = row.row.cash_register_code;
+						var cookie = request.state.cookie;
+						if (!cookie) {
+							cookie = {};
+						}
+						cookie.store_id = store_id;
+						cookie.pos_id = pos_id;
+						return reply({"success":true,"service_info":service_info}).state('cookie', cookie, {ttl:1000*365*24*60*60*1000});
+					} else {
+						return reply({"success":false,"message":i18n._n(row.message)});
+					}
+				});
+
+			}
+		},
 		//登入验证
 		{
 			method: 'POST',
 			path: '/do_login',
 			handler: function(request, reply){
+				var store_id = get_cookie_storeId(request);
+				if (!store_id) {
+					return reply.redirect("/machine_login");
+				}
 				var data = {};
 				data.username = request.payload.username;
 				data.password = request.payload.password;
@@ -790,15 +844,23 @@ exports.register = function(server, options, next){
 								if (!err) {
 									var login_id = content.row.login_id;
 									var person_id = content.row.person_id;
-									var store_id = content.stores[0].org_store_id;
 									var cookie = request.state.cookie;
 									if (!cookie) {
 										cookie = {};
 									}
 									cookie.login_id = login_id;
-									cookie.store_id = store_id;
 									cookie.person_id = person_id;
-									return reply({"success":true,"service_info":service_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
+									var stores = content.stores;
+									var store_map = {};
+									for (var i = 0; i < stores.length; i++) {
+										var store = stores[i];
+										store_map[store.org_store_id] = store;
+									}
+									if (store_map[store_id]) {
+										return reply({"success":true,"service_info":service_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
+									}else {
+										return reply({"success":false,"message":i18n._n("vertify wrong")});
+									}
 								} else {
 									return reply({"success":false,"message":i18n._n(content.message)});
 								}
