@@ -238,7 +238,11 @@ var order_params = function(request){
 	data.actual_price = shopping_infos.total_price;
 	data.marketing_price = shopping_infos.marketing_price;
 	data.small_change = order.shopping_infos.small_change;
-	data.pos_id = "pos001";
+	var pos_id = get_cookie_posId(request);
+	if (!pos_id) {
+		pos_id = "pos001"
+	}
+	data.pos_id = pos_id;
 	data.operation_system = "pos_system001";
 	data.origin = "pos_origin";
 	return data;
@@ -859,7 +863,7 @@ exports.register = function(server, options, next){
 									if (store_map[store_id]) {
 										return reply({"success":true,"service_info":service_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
 									}else {
-										return reply({"success":false,"message":i18n._n("vertify wrong")});
+										return reply({"success":false,"message":"没有权限")});
 									}
 								} else {
 									return reply({"success":false,"message":i18n._n(content.message)});
@@ -879,6 +883,10 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/',
 			handler: function(request, reply){
+				var store_id = get_cookie_storeId(request);
+				if (!store_id) {
+					return reply.redirect("/machine_login");
+				}
 				var cookie_id = get_cookie_id(request);
 				if (!cookie_id) {
 					return reply.redirect("/login");
