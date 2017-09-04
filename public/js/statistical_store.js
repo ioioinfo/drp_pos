@@ -63,12 +63,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */,
-/* 1 */
+/* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -92,11 +91,11 @@ var Wrap = function (_React$Component) {
     }
 
     _createClass(Wrap, [{
-        key: "render",
+        key: 'render',
         value: function render() {
             return React.createElement(
-                "div",
-                { className: "wrap" },
+                'div',
+                { className: 'wrap' },
                 React.createElement(Head, null),
                 React.createElement(Middle, null),
                 React.createElement(Picture, null)
@@ -114,19 +113,66 @@ var Wrap = function (_React$Component) {
 var Head = function (_React$Component2) {
     _inherits(Head, _React$Component2);
 
-    function Head() {
+    function Head(props) {
         _classCallCheck(this, Head);
 
-        return _possibleConstructorReturn(this, (Head.__proto__ || Object.getPrototypeOf(Head)).apply(this, arguments));
+        var _this2 = _possibleConstructorReturn(this, (Head.__proto__ || Object.getPrototypeOf(Head)).call(this, props));
+
+        _this2.handlerClick = _this2.handlerClick.bind(_this2);
+        _this2.state = { status: 1 };
+        return _this2;
     }
 
     _createClass(Head, [{
-        key: "render",
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            this.setState({ status: 1 });
+        }
+    }, {
+        key: 'handlerClick',
+        value: function handlerClick(e) {
+            if (this.state.status == 1) {
+                $('.head_icon').attr('id', 'animate');
+                $('#store').css('display', 'block');
+                this.setState({ status: 2 });
+            } else {
+                $('.head_icon').removeAttr('id', 'animate');
+                $('#store').css('display', 'none');
+                this.setState({ status: 1 });
+            }
+        }
+    }, {
+        key: 'render',
         value: function render() {
             return React.createElement(
-                "div",
-                { className: "head" },
-                "\u4ECA\u65E5\u9500\u552E"
+                'div',
+                { className: 'head' },
+                '\u4ECA\u65E5\u9500\u552E(\u77F3\u95E8\u4E8C\u8DEF\u5E97)',
+                React.createElement('i', { className: 'fa fa-caret-right head_icon', onClick: this.handlerClick }),
+                React.createElement(
+                    'div',
+                    { id: 'store' },
+                    React.createElement(
+                        'p',
+                        null,
+                        '\u77F3\u95E8\u4E8C\u8DEF\u5E97'
+                    ),
+                    React.createElement(
+                        'p',
+                        null,
+                        '\u4E2D\u5C71\u8DEF\u5E97'
+                    ),
+                    React.createElement(
+                        'p',
+                        null,
+                        '\u6C5F\u5B81\u8DEF\u5E97'
+                    ),
+                    React.createElement(
+                        'p',
+                        null,
+                        '\u4EBA\u6C11\u5E7F\u573A\u5E97'
+                    )
+                )
             );
         }
     }]);
@@ -152,7 +198,7 @@ var Middle = function (_React$Component3) {
     }
 
     _createClass(Middle, [{
-        key: "componentDidMount",
+        key: 'componentDidMount',
         value: function componentDidMount() {
             $.ajax({
                 url: "/get_orders_byDate",
@@ -165,91 +211,91 @@ var Middle = function (_React$Component3) {
             });
         }
     }, {
-        key: "render",
+        key: 'render',
         value: function render() {
             var _this4 = this;
 
             return React.createElement(
-                "div",
-                { className: "middle" },
+                'div',
+                { className: 'middle' },
                 React.createElement(
-                    "div",
-                    { className: "middle_one overflow" },
+                    'div',
+                    { className: 'middle_one overflow' },
                     React.createElement(
-                        "p",
-                        { className: "back" },
-                        "\u7EDF\u8BA1\u65F6\u95F4:",
+                        'p',
+                        { className: 'back' },
+                        '\u7EDF\u8BA1\u65F6\u95F4:',
                         this.state.items.time
                     ),
                     React.createElement(
-                        "div",
-                        { className: "col-xs-6 col-sm-6 number number1" },
+                        'div',
+                        { className: 'col-xs-6 col-sm-6 number number1' },
                         React.createElement(
-                            "p",
+                            'p',
                             null,
-                            "\uFFE5",
+                            '\uFFE5',
                             this.state.items.total_sales
                         ),
                         React.createElement(
-                            "p",
+                            'p',
                             null,
-                            "\u8425\u4E1A\u989D"
+                            '\u8425\u4E1A\u989D'
                         )
                     ),
                     React.createElement(
-                        "div",
-                        { className: "col-xs-6 col-sm-6 number number2" },
+                        'div',
+                        { className: 'col-xs-6 col-sm-6 number number2' },
                         React.createElement(
-                            "p",
+                            'p',
                             null,
                             this.state.items.order_num
                         ),
                         React.createElement(
-                            "p",
+                            'p',
                             null,
-                            "\u8BA2\u5355\u6570"
+                            '\u8BA2\u5355\u6570'
                         )
                     ),
                     React.createElement(
-                        "div",
-                        { className: "col-xs-6 col-sm-6 number number3" },
+                        'div',
+                        { className: 'col-xs-6 col-sm-6 number number3' },
                         React.createElement(
-                            "p",
+                            'p',
                             null,
                             this.state.items.total_products
                         ),
                         React.createElement(
-                            "p",
+                            'p',
                             null,
-                            "\u4EF6\u6570"
+                            '\u4EF6\u6570'
                         )
                     ),
                     React.createElement(
-                        "div",
-                        { className: "col-xs-6 col-sm-6 number number4" },
+                        'div',
+                        { className: 'col-xs-6 col-sm-6 number number4' },
                         React.createElement(
-                            "p",
+                            'p',
                             null,
-                            "\u6682\u65E0"
+                            '\u6682\u65E0'
                         )
                     )
                 ),
-                React.createElement("hr", null),
+                React.createElement('hr', null),
                 React.createElement(
-                    "div",
-                    { className: "middle_two overflow" },
+                    'div',
+                    { className: 'middle_two overflow' },
                     this.state.ways.map(function (item) {
                         return React.createElement(
-                            "div",
-                            { className: "col-xs-6 col-sm-6 number number1" },
+                            'div',
+                            { className: 'col-xs-6 col-sm-6 number number1' },
                             React.createElement(
-                                "p",
+                                'p',
                                 null,
-                                "\uFFE5",
+                                '\uFFE5',
                                 _this4.state.pay_map[item]
                             ),
                             React.createElement(
-                                "p",
+                                'p',
                                 null,
                                 item
                             )
@@ -276,12 +322,12 @@ var Picture = function (_React$Component4) {
     }
 
     _createClass(Picture, [{
-        key: "render",
+        key: 'render',
         value: function render() {
             return React.createElement(
-                "div",
-                { className: "picture" },
-                React.createElement("img", { src: "http://static.buy42.com/dong.gif", alt: "" })
+                'div',
+                { className: 'picture' },
+                React.createElement('img', { src: 'http://static.buy42.com/dong.gif', alt: '' })
             );
         }
     }]);

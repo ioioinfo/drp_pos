@@ -24,6 +24,14 @@ exports.register = function(server, options, next){
                 directory: { path: './public/css' }
             }
         },
+
+        {
+            method: 'GET',
+            path: '/fonts/{path*}',
+            handler: {
+                directory: { path: './public/fonts' }
+            }
+        },
 		{
 			method: 'GET',
 			path: '/sound/{path*}',

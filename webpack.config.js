@@ -15,7 +15,8 @@
 
 module.exports = {
     entry: {
-        statistics: './app/statistics.babel'
+        statistics: './app/statistics.babel',
+        statistical_store: './app/statistical_store.babel'
     },
     output: {
         path: __dirname,

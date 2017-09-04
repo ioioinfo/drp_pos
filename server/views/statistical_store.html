@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
         <title>今日统计</title>
         <link rel="stylesheet" href="{{static_host}}/bootstrap.min.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
         <style media="screen">
             body{
                 background: #EDEDED;
@@ -23,13 +24,46 @@
                 font-size: 16px;
                 color: #fff;
                 background: #44a338;
+                position: relative;
             }
-            .middle{
+            .head_icon{
+              position: absolute;
+              right: 17px;
+              font-size: 20px;
+              top: 22px;
+              cursor: pointer;
+            }
 
+            #animate{
+              transform: rotate(90deg);
+              -ms-transform: rotate(90deg);		/* IE 9 */
+              -webkit-transform: rotate(90deg);	/* Safari and Chrome */
+              -o-transform: rotate(90deg);		/* Opera */
+              -moz-transform: rotate(90deg);		/* Firefox */
+            }
+
+            #store{
+              position: absolute;
+              right: 17px;
+              top: 42px;
+              background: #000;
+              padding: 0 17px;
+              z-index: 999;
+              display: none;
+              border-radius: 4px;
+            }
+            #store p{
+              height: 27px;
+              line-height: 27px;
+              cursor: pointer;
+            }
+            #store p:hover{
+              color: blue;
             }
             .overflow{
                 overflow: hidden;
             }
+
             .middle_one,.middle_two{
                 background: #fff;
             }
@@ -93,6 +127,6 @@
         <script src="{{static_host}}/react-dom.min.js"></script>
         <script src="{{static_host}}/jquery-3.1.1.min.js" type="text/javascript"></script>
         <script src="{{static_host}}/bootstrap.min.js"></script>
-        <script src="/js/statistics.js"></script>
+        <script src="/js/statistical_store.js"></script>
     </body>
 </html>
