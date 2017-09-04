@@ -103,6 +103,11 @@ var get_captcha = function(cookie_id,cb){
 	var url = "http://139.196.148.40:11111/api/captcha.png?cookie_id="+cookie_id;
 	do_get_method(url,cb);
 };
+//门店列表
+var store_list = function(cb){
+	var url = "http://139.196.148.40:18001/store/list_by_org?org_code="+org_code;
+	do_get_method(url,cb);
+};
 //验证码验证
 var check_captcha = function(vertify,cookie_id,cb){
 	var url = "http://139.196.148.40:11111/api/verify?cookie_id=" +cookie_id + "&text=" + vertify;
@@ -1126,6 +1131,20 @@ exports.register = function(server, options, next){
 						return reply({"success":true,"row":row.row,"order_id":data.order_id,"service_info":service_info});
 					}else {
 						return reply({"success":false,"message":row.message,"service_info":service_info});
+					}
+				});
+			}
+		},
+		//store_list 门店列表
+		{
+			method: 'get',
+			path: '/store_list',
+			handler: function(request, reply){
+				store_list(function(err,rows){
+					if (!err) {
+						return reply({"success":true,"rows":rows.rows,"service_info":service_info});
+					}else {
+						return reply({"success":false,"message":rows.message,"service_info":service_info});
 					}
 				});
 			}
