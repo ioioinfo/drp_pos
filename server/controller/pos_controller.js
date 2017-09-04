@@ -1444,6 +1444,7 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/get_orders_byDate',
 			handler: function(request, reply){
+				var store_id = request.query.store_id;
 				var date,date1,date2;
 				if (request.query.date) {
 					date1 = request.query.date;
@@ -1467,9 +1468,11 @@ exports.register = function(server, options, next){
 						var order_ids = [];
 						var total_changes = 0;
 						for (var i = 0; i < rows.rows.length; i++) {
-							total_sales = total_sales + rows.rows[i].actual_price;
-							total_changes = total_changes + rows.rows[i].changes;
-							order_ids.push(rows.rows[i].order_id);
+							if (!store_id || rows.rows[i].store_id == store_id) {
+								total_sales = total_sales + rows.rows[i].actual_price;
+								total_changes = total_changes + rows.rows[i].changes;
+								order_ids.push(rows.rows[i].order_id);
+							}
 						}
 						order_ids = JSON.stringify(order_ids);
 						get_orders_pay_infos(order_ids,function(err,rows){
