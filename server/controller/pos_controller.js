@@ -560,6 +560,14 @@ exports.register = function(server, options, next){
 				return reply.view("statistical_month");
 			}
 		},
+		//月统计  statistical_month
+		{
+			method: 'GET',
+			path: '/statistical_store',
+			handler: function(request, reply){
+				return reply.view("statistical_store");
+			}
+		},
 		//订单页面
 		{
 			method: 'GET',
@@ -863,7 +871,7 @@ exports.register = function(server, options, next){
 									if (store_map[store_id]) {
 										return reply({"success":true,"service_info":service_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
 									}else {
-										return reply({"success":false,"message":"没有权限")});
+										return reply({"success":false,"message":"没有权限"});
 									}
 								} else {
 									return reply({"success":false,"message":i18n._n(content.message)});
