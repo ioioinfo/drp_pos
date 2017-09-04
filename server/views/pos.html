@@ -892,7 +892,7 @@
 							支付码 ：<input class="alipay_code" type="text" value="" />
 						</span>
 
-            <span class="xianjinquan_pay span_width1" style="display:none;">
+                        <span class="xianjinquan_pay span_width1" style="display:none;">
 							现金券 ：<input class="xianjinquan_value" type="text" value="" data-id="1"/>
 							<br/>
 							支付码 ：<input class="xianjinquan_pay_code" type="text" value="" />
@@ -1279,7 +1279,7 @@
 			};
 			comefocus();
 			//支付方式选择
-			var pay_way_status = 0; //现金 0，支付宝 1，会员卡 2, 挂单 3，付款超额 10
+			var pay_way_status = 0; //现金 0，支付宝 1，会员卡 2, 挂单 3，付款超额 10，现金券6
 			var pay_way_change = function(pay_way_status){
 				$(".pay_amount").html("应付："+order.shopping_infos.total_price);
 				if (pay_way_status != 10) {
@@ -1304,6 +1304,7 @@
 					$(".choose_pay").attr("style","display:none;");
 					$(".ali_transfer_pay").attr("style","display:none;");
 					$(".weixin_transfer_pay").attr("style","display:none;");
+                    $(".xianjinquan_pay").attr("style","display:none;");
 					$(".cash_pay").removeAttr("style");
 					$(".cash_value").focus();
 				}else if (pay_way_status == 1) {
@@ -1316,6 +1317,7 @@
 					$(".choose_pay").attr("style","display:none;");
 					$(".ali_transfer_pay").attr("style","display:none;");
 					$(".weixin_transfer_pay").attr("style","display:none;");
+                    $(".xianjinquan_pay").attr("style","display:none;");
 					$(".alipay_pay").removeAttr("style");
 					$(".alipay_code").focus();
 
@@ -1329,6 +1331,7 @@
 					$(".choose_pay").attr("style","display:none;");
 					$(".ali_transfer_pay").attr("style","display:none;");
 					$(".weixin_transfer_pay").attr("style","display:none;");
+                    $(".xianjinquan_pay").attr("style","display:none;");
 					$(".member_pay").removeAttr("style");
 					$(".member_pay_card").focus();
 				}else if (pay_way_status == 3) {
@@ -1341,6 +1344,7 @@
 					$(".choose_pay").attr("style","display:none;");
 					$(".ali_transfer_pay").attr("style","display:none;");
 					$(".weixin_transfer_pay").attr("style","display:none;");
+                    $(".xianjinquan_pay").attr("style","display:none;");
 					$(".credit_pay").removeAttr("style");
 					$(".credit_value").focus();
 				}else if (pay_way_status == 4) {
@@ -1352,6 +1356,7 @@
 					$(".choose_pay").attr("style","display:none;");
 					$(".credit_pay").attr("style","display:none;");
 					$(".weixin_transfer_pay").attr("style","display:none;");
+                    $(".xianjinquan_pay").attr("style","display:none;");
 					$(".ali_transfer_pay").removeAttr("style");
 					$(".ali_transfer_value").focus();
 				}else if (pay_way_status == 5) {
@@ -1363,8 +1368,20 @@
 					$(".choose_pay").attr("style","display:none;");
 					$(".ali_transfer_pay").attr("style","display:none;");
 					$(".credit_pay").attr("style","display:none;");
+                    $(".xianjinquan_pay").attr("style","display:none;");
 					$(".weixin_transfer_pay").removeAttr("style");
 					$(".weixin_transfer_value").focus();
+				}else if (pay_way_status == 6) {
+                    $(".weixin_transfer_pay").attr("style","display:none;");
+					$(".alipay_pay").attr("style","display:none;");
+					$(".cash_pay").attr("style","display:none;");
+					$(".pay_more").attr("style","display:none;");
+					$(".member_pay").attr("style","display:none;");
+					$(".choose_pay").attr("style","display:none;");
+					$(".ali_transfer_pay").attr("style","display:none;");
+					$(".credit_pay").attr("style","display:none;");
+					$(".xianjinquan_pay").removeAttr("style");
+					$(".xianjinquan_value").focus();
 				}else if (pay_way_status == 10) {
 					$(".member_pay").attr("style","display:none;");
 					$(".alipay_pay").attr("style","display:none;");
@@ -1373,6 +1390,7 @@
 					$(".choose_pay").attr("style","display:none;");
 					$(".ali_transfer_pay").attr("style","display:none;");
 					$(".weixin_transfer_pay").attr("style","display:none;");
+                    $(".xianjinquan_pay").attr("style","display:none;");
 					$(".pay_more").removeAttr("style");
 				}
 			};
@@ -2067,7 +2085,53 @@
 					});
 				}
 			});
-			//微信转账支付
+            //现金券输入
+			$(".xianjinquan_pay_code").keypress(function(e){
+				var pay_amount = $(".xianjinquan_value").val();
+                var coupon_code = $(".xianjinquan_pay_code").val();
+				pay_amount = parseFloat(pay_amount);
+				var key = e.which;
+				if (!pay_amount || key != 13 || !coupon_code) {
+					return;
+				}
+				order.pay_way.push("6");
+				var changes = parseFloat(0);
+				changes = pay_amount-order.shopping_infos.total_price;
+
+                if (pay_amount+order.shopping_infos.ready_pay-order.shopping_infos.total_price > order.shopping_infos.cash_pay ) {
+                    alert("不能套现");
+					return;
+				}
+
+				$(".xianjinquan_pay").attr("style","display:none;");
+				if (!order.order_id) {
+					do_post_method("/save_order_detail",{"order":JSON.stringify(order),"person_id":person_id},function(data){
+						order.order_id = data.row.order_id;
+						var params = {
+							"order":JSON.stringify(order),
+							"store_address":store_address,
+							"person_id":person_id,
+                            "coupon_code":coupon_code,
+							"pay_amount":pay_amount
+						};
+						do_post_method("/cash_coupon_pay",params,function(data){
+							add_pay_info("现金券",pay_amount,data);
+						});
+					});
+				}else {
+					var params = {
+						"order":JSON.stringify(order),
+						"store_address":store_address,
+						"person_id":person_id,
+                        "coupon_code":coupon_code,
+						"pay_amount":pay_amount
+					};
+					do_post_method("/cash_coupon_pay",params,function(data){
+						add_pay_info("现金券",pay_amount,data);
+					});
+				}
+			});
+        	//微信转账支付
 			$(".weixin_transfer_value").keypress(function(e){
 				var pay_amount = $(".weixin_transfer_value").val();
 				pay_amount = parseFloat(pay_amount);
@@ -2124,6 +2188,7 @@
 				var changes = parseFloat(0);
 				changes = pay_amount-order.shopping_infos.total_price;
 				if (pay_amount+order.shopping_infos.ready_pay-order.shopping_infos.total_price > order.shopping_infos.cash_pay ) {
+                    alert("不能套现");
 					return;
 				}
 				//一次支付
@@ -2270,6 +2335,13 @@
 					return;
 				}
 				click_pay_way(5);
+			});
+            //现金券
+            $(".xianjinquan_transfer").click(function(){
+				if (pay_way_status == 10) {
+					return;
+				}
+				click_pay_way(6);
 			});
 			//挂账点击
 			$(".credit").click(function(){
