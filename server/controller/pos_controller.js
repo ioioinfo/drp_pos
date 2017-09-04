@@ -760,6 +760,14 @@ exports.register = function(server, options, next){
 				});
 			}
 		},
+		//收银机登入
+		{
+			method: 'GET',
+			path: '/machine_login',
+			handler: function(request, reply){
+				return reply.view("machine_login");
+			}
+		},
 		//登入验证
 		{
 			method: 'POST',
