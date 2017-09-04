@@ -15,7 +15,8 @@ class Wrap extends React.Component {
           constructor(props) {
               super(props);
               this.handlerClick=this.handlerClick.bind(this);
-              this.state={status:1,storItems:[]};
+              this.handlerClick1=this.handlerClick1.bind(this);
+              this.state={status:1,storItems:[],name:"选择门店"};
           }
           componentDidMount(){
             this.setState({status:1});
@@ -42,14 +43,20 @@ class Wrap extends React.Component {
               this.setState({status:1});
             }
           }
+          handlerClick1(id,name){
+            refreshData(id);
+            $('.head_icon').removeAttr('id','animate');
+            $('#store').css('display','none');
+            this.setState({status:1,name:name});
+          }
             render() {
                 return (
                     <div className="head">
-                        今日销售(石门二路店)
+                        今日销售({this.state.name})
                         <i className="fa fa-caret-right head_icon" onClick={this.handlerClick}></i>
                         <div id="store">
                         {this.state.storItems.map(item => (
-                          <p>{item.org_store_name}</p>
+                          <p onClick={this.handlerClick1.bind(this,item.org_store_id,item.abbr)}>{item.abbr}</p>
                           ))}
                         </div>
                     </div>
@@ -61,21 +68,25 @@ class Wrap extends React.Component {
         class Middle extends React.Component {
             constructor(props) {
                 super(props);
+                this.loadData=this.loadData.bind(this);
                 // 初始化一个空对象
                 this.state = {items: {},ways:[],pay_map:{}};
             }
-
-            componentDidMount() {
-                $.ajax({
-                  url: "/get_orders_byDate",
-                  dataType: 'json',
-                  type: 'GET',
-                  success: function(data) {
-                      this.setState({items:data,ways:data.pay_ways,pay_map:data.pay_map});
-                  }.bind(this),
-                  error: function(xhr, status, err) {
-                  }.bind(this)
+            loadData(id){
+              $.ajax({
+                url: "/get_orders_byDate?store_id=" + id,
+                dataType: 'json',
+                type: 'GET',
+                success: function(data) {
+                    this.setState({items:data,ways:data.pay_ways,pay_map:data.pay_map});
+                }.bind(this),
+                error: function(xhr, status, err) {
+                }.bind(this)
               });
+            }
+            componentDidMount() {
+                refreshData = this.loadData;
+                this.loadData("");
             }
             render() {
                 return (

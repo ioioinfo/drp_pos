@@ -119,7 +119,8 @@ var Head = function (_React$Component2) {
         var _this2 = _possibleConstructorReturn(this, (Head.__proto__ || Object.getPrototypeOf(Head)).call(this, props));
 
         _this2.handlerClick = _this2.handlerClick.bind(_this2);
-        _this2.state = { status: 1, storItems: [] };
+        _this2.handlerClick1 = _this2.handlerClick1.bind(_this2);
+        _this2.state = { status: 1, storItems: [], name: "选择门店" };
         return _this2;
     }
 
@@ -152,12 +153,24 @@ var Head = function (_React$Component2) {
             }
         }
     }, {
+        key: "handlerClick1",
+        value: function handlerClick1(id, name) {
+            refreshData(id);
+            $('.head_icon').removeAttr('id', 'animate');
+            $('#store').css('display', 'none');
+            this.setState({ status: 1, name: name });
+        }
+    }, {
         key: "render",
         value: function render() {
+            var _this3 = this;
+
             return React.createElement(
                 "div",
                 { className: "head" },
-                "\u4ECA\u65E5\u9500\u552E(\u77F3\u95E8\u4E8C\u8DEF\u5E97)",
+                "\u4ECA\u65E5\u9500\u552E(",
+                this.state.name,
+                ")",
                 React.createElement("i", { className: "fa fa-caret-right head_icon", onClick: this.handlerClick }),
                 React.createElement(
                     "div",
@@ -165,8 +178,8 @@ var Head = function (_React$Component2) {
                     this.state.storItems.map(function (item) {
                         return React.createElement(
                             "p",
-                            null,
-                            item.org_store_name
+                            { onClick: _this3.handlerClick1.bind(_this3, item.org_store_id, item.abbr) },
+                            item.abbr
                         );
                     })
                 )
@@ -187,18 +200,19 @@ var Middle = function (_React$Component3) {
     function Middle(props) {
         _classCallCheck(this, Middle);
 
-        // 初始化一个空对象
-        var _this3 = _possibleConstructorReturn(this, (Middle.__proto__ || Object.getPrototypeOf(Middle)).call(this, props));
+        var _this4 = _possibleConstructorReturn(this, (Middle.__proto__ || Object.getPrototypeOf(Middle)).call(this, props));
 
-        _this3.state = { items: {}, ways: [], pay_map: {} };
-        return _this3;
+        _this4.loadData = _this4.loadData.bind(_this4);
+        // 初始化一个空对象
+        _this4.state = { items: {}, ways: [], pay_map: {} };
+        return _this4;
     }
 
     _createClass(Middle, [{
-        key: "componentDidMount",
-        value: function componentDidMount() {
+        key: "loadData",
+        value: function loadData(id) {
             $.ajax({
-                url: "/get_orders_byDate",
+                url: "/get_orders_byDate?store_id=" + id,
                 dataType: 'json',
                 type: 'GET',
                 success: function (data) {
@@ -208,9 +222,15 @@ var Middle = function (_React$Component3) {
             });
         }
     }, {
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            refreshData = this.loadData;
+            this.loadData("");
+        }
+    }, {
         key: "render",
         value: function render() {
-            var _this4 = this;
+            var _this5 = this;
 
             return React.createElement(
                 "div",
@@ -289,7 +309,7 @@ var Middle = function (_React$Component3) {
                                 "p",
                                 null,
                                 "\uFFE5",
-                                _this4.state.pay_map[item]
+                                _this5.state.pay_map[item]
                             ),
                             React.createElement(
                                 "p",
