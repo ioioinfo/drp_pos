@@ -1462,13 +1462,15 @@ exports.register = function(server, options, next){
 						if (rows.rows.length == 0) {
 							return reply({"success":true,"time":date2,"order_num":0,"total_sales":0,"total_products":0,"pay_map":pay_map,"pay_ways":pay_ways,"service_info":service_info});
 						}
-						var order_num = rows.rows.length;
-						var total_products =  rows.prducts_num;
+						var order_num = 0;
+						var total_products =  0;
 						var total_sales = 0;
 						var order_ids = [];
 						var total_changes = 0;
 						for (var i = 0; i < rows.rows.length; i++) {
 							if (!store_id || rows.rows[i].store_id == store_id) {
+								order_num = order_num + 1;
+								total_products = total_products + rows.rows[i].num;
 								total_sales = total_sales + rows.rows[i].actual_price;
 								total_changes = total_changes + rows.rows[i].changes;
 								order_ids.push(rows.rows[i].order_id);
