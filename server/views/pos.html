@@ -1234,6 +1234,8 @@
 			};
             //挂单用的临时变量
 			var temp_products = [];
+            //商品删除全局变量
+            var ready_only = true;
             //取挂单数字
             var strStoreDate = window.localStorage? localStorage.getItem("temp_products"): Cookie.read("temp_products");
             if (strStoreDate && strStoreDate!="") {
@@ -1777,7 +1779,21 @@
 			});
 			//删除商品
 			$(".delete").click(function(){
-				delete_one_line();
+                if (ready_only) {
+                    delete_one_line();
+                }else {
+                    var r=confirm("订单已结账是否要清空商品")
+                    if (r==true){
+                        init_product_infos();
+    					init_pay_infos();
+    					product_infos();
+    					member_update();
+                        $(".content").attr("style","display:none;");
+                        $(".print").attr("style","display:none;");
+                    }else{
+                        return;
+                    }
+                }
 			});
 			//结算
 			$("#pay").click(function(){
@@ -1805,6 +1821,7 @@
 						if (data.success) {
 							$(".print").removeAttr("style");
 							$(".leave").attr("disabled","disabled");
+                            ready_only = false;
 							// init_pay_infos();
 							// $("#pay_info").attr("style","display:none;");
 						}else {
@@ -1872,6 +1889,7 @@
 					init_pay_infos();
 					product_infos();
 					member_update();
+                    $(".print").attr("style","display:none;");
 				}
 			});
 			//作废是
