@@ -27,6 +27,8 @@ class Wrap extends React.Component {
                  data:{},
                  success: function(data) {
                     this.setState({storItems:data.rows});
+                    var name = window.localStorage? localStorage.getItem("name"): Cookie.read("name");
+                    this.setState({name:name});
                  }.bind(this),
                  error: function(xhr, status, err) {
                  }.bind(this)
@@ -44,9 +46,18 @@ class Wrap extends React.Component {
             }
           }
           handlerClick1(id,name){
+            if (window.localStorage) {
+                localStorage.setItem("id", id);
+                localStorage.setItem("name", name);
+            } else {
+                Cookie.write("id", id);
+                Cookie.write("name", name);
+            }
+
             refreshData(id);
             $('.head_icon').removeAttr('id','animate');
             $('#store').css('display','none');
+
             this.setState({status:1,name:name});
           }
             render() {
@@ -85,8 +96,9 @@ class Wrap extends React.Component {
               });
             }
             componentDidMount() {
+              var id = window.localStorage? localStorage.getItem("id"): Cookie.read("id");
                 refreshData = this.loadData;
-                this.loadData("");
+                this.loadData(id);
             }
             render() {
                 return (

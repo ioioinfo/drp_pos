@@ -135,6 +135,8 @@ var Head = function (_React$Component2) {
                 data: {},
                 success: function (data) {
                     this.setState({ storItems: data.rows });
+                    var name = window.localStorage ? localStorage.getItem("name") : Cookie.read("name");
+                    this.setState({ name: name });
                 }.bind(this),
                 error: function (xhr, status, err) {}.bind(this)
             });
@@ -155,9 +157,18 @@ var Head = function (_React$Component2) {
     }, {
         key: "handlerClick1",
         value: function handlerClick1(id, name) {
+            if (window.localStorage) {
+                localStorage.setItem("id", id);
+                localStorage.setItem("name", name);
+            } else {
+                Cookie.write("id", id);
+                Cookie.write("name", name);
+            }
+
             refreshData(id);
             $('.head_icon').removeAttr('id', 'animate');
             $('#store').css('display', 'none');
+
             this.setState({ status: 1, name: name });
         }
     }, {
@@ -224,8 +235,9 @@ var Middle = function (_React$Component3) {
     }, {
         key: "componentDidMount",
         value: function componentDidMount() {
+            var id = window.localStorage ? localStorage.getItem("id") : Cookie.read("id");
             refreshData = this.loadData;
-            this.loadData("");
+            this.loadData(id);
         }
     }, {
         key: "render",
