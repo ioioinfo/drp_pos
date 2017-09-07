@@ -1398,6 +1398,7 @@
 			};
 			//清除支付信息
 			var init_pay_infos = function(){
+                ali_id = "";
 				pay_way_status = 0;
 				pay_way_change(pay_way_status);
 				order = {
@@ -2288,7 +2289,7 @@
 						"pay_amount":pay_amount
 					};
 					if (ali_id) {
-						alert("支付过了");
+						alert("支付过了:"+ali_id);
 					}else {
 						do_post_method("/ali_pay",params,function(data){
 							ali_id = data.order_id;
