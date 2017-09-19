@@ -919,8 +919,13 @@ exports.register = function(server, options, next){
 						if (store_info.length<=0) {
 							return reply({"succss":false,"messsage":"no store_info"});
 						}
-
-						return reply.view("pos",{"person_info":person_info,"store_info":store_info,"company_info":company_info,"service_info":service_info}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
+						var store;
+						for (var i = 0; i < store_info.length; i++) {
+							if (store_id == store_info[i].store_id) {
+								store = store_info[i];
+							}
+						}
+						return reply.view("pos",{"person_info":person_info,"store_info":store_info,"company_info":company_info,"service_info":service_info,"store":store}).state('cookie', cookie, {ttl:10*365*24*60*60*1000});
 				});
 
 				get_person_info(login_id, org_code, function(err,row){
