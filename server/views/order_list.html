@@ -251,18 +251,7 @@
                          type: 'GET',
                          data:{"order_id":order_id},
                          success: function(data) {
-                            this.setState({order_details:data.order_details,item:data.order});
-                         }.bind(this),
-                         error: function(xhr, status, err) {
-                         }.bind(this)
-                    });
-                    $.ajax({
-                         url: "/get_order_pay_infos",
-                         dataType: 'json',
-                         type: 'GET',
-                         data:{"order_id":order_id},
-                         success: function(data) {
-                            this.setState({payitem:data.rows});
+                            this.setState({order_details:data.order_details,item:data.order,payitem:data.pay_infos});
                          }.bind(this),
                          error: function(xhr, status, err) {
                          }.bind(this)
