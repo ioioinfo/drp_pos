@@ -205,6 +205,7 @@
         <div id="return"></div>
         <script type="text/javascript">
             var checkitem=[];
+            var status = 1;
         </script>
         <script type="text/javascript">
         </script>
@@ -238,7 +239,7 @@
                 this.onKeyPress = this.onKeyPress.bind(this);
                 this.handleClick = this.handleClick.bind(this);
                 this.state = {order_details:[],payitem:[],item:{},
-                              retdetail:[],products_map:{},status:"1"};
+                              retdetail:[],products_map:{}};
     		}
             // enter事件
             onKeyPress(e){
@@ -251,7 +252,15 @@
                          type: 'GET',
                          data:{"order_id":order_id},
                          success: function(data) {
-                            this.setState({order_details:data.order_details,item:data.order,payitem:data.pay_infos});
+                            if (data.success) {
+                                if (!data.order) {
+                                    alert('pos单不存在');
+                                    return;
+                                }
+                                this.setState({order_details:data.order_details,item:data.order,payitem:data.pay_infos});
+                            } else {
+                                alert('pos单不存在');
+                            }
                          }.bind(this),
                          error: function(xhr, status, err) {
                          }.bind(this)
@@ -307,7 +316,6 @@
                     var index = parseInt($(this).data("index"));
                     var item = order_details[index];
                     var return_num = $($(".return_product_num")[index]).val();
-                    console.log(return_num);
                     product_ids.push(item.product_id);
                     number_list.push(return_num);
                     if (!return_num) {
@@ -322,7 +330,8 @@
                     return;
                 }
 
-                if(this.state.status=="1"){
+                if(status == 1){
+                    status = 0;
                 $.ajax({
                     url: "/return_pos_order",
                     dataType: 'json',
@@ -332,8 +341,8 @@
                     success: function(data) {
                         if (data.success) {
                             alert("退款成功！");
-                            this.setState({status:"0"});
                         }else {
+                            status = 1;
                             alert("退款失败！");
                         }
                     }.bind(this),
@@ -341,7 +350,7 @@
                     }.bind(this)
 
                 });
-                }else if (this.state.status=="0") {
+            }else if (status== 0) {
                   alert("请勿多次点击退款操作");
                 }
             };
@@ -351,6 +360,7 @@
 
             }
             render() {
+
                 return (
                     <div className="middle">
                         <div className="input">
