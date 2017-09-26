@@ -286,9 +286,9 @@ var get_orders_pay_infos = function(order_ids,cb){
 	do_get_method(url,cb);
 }
 //find_pos_order
-var find_pos_order = function(order_id,cb){
+var find_pos_order = function(order_id,store_id,cb){
 	var url = "http://211.149.248.241:18010/find_pos_order?order_id=";
-	url = url + order_id;
+	url = url + order_id+"&store_id="+store_id;
 	do_get_method(url,cb);
 }
 //会员积分
@@ -1373,11 +1373,15 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/search_order_infos',
 			handler: function(request, reply){
+				var store_id = get_cookie_storeId(request);
+				if (!store_id) {
+					return reply({"succss":false,"messsage":"no store_id"});
+				}
 				var order_id = request.query.order_id;
 				if (!order_id) {
 					return reply({"success":true,"message":"order_id null","service_info":service_info});
 				}
-				find_pos_order(order_id,function(err,rows){
+				find_pos_order(order_id,store_id,function(err,rows){
 					if (!err) {
 						var ep = eventproxy.create("order","order_details","pay_infos",
 							function(order,order_details,pay_infos){
