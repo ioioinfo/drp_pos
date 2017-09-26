@@ -312,9 +312,9 @@ var get_all_orders = function(cb){
 	do_get_method(url,cb);
 }
 //根据日期查询订单
-var get_orders_byDate = function(date1,date2,cb){
+var get_orders_byDate = function(date1,date2,store_id, cb){
 	var url = "http://211.149.248.241:18010/get_orders_byDate?date1=";
-	url = url + date1 + "&date2=" + date2;
+	url = url + date1 + "&date2=" + date2 + "&store_id="+store_id;
 	do_get_method(url,cb);
 }
 //批量查询产品信息
@@ -1453,7 +1453,7 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/get_orders_byDate',
 			handler: function(request, reply){
-				var store_id = request.query.store_id;
+				var store_id = "";
 				var date,date1,date2;
 				if (request.query.date) {
 					date1 = request.query.date;
@@ -1464,8 +1464,9 @@ exports.register = function(server, options, next){
 					date2 = date1 +" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
 				}
 
-				get_orders_byDate(date1,date2,function(err,rows){
+				get_orders_byDate(date1,date2,store_id,function(err,rows){
 					if (!err) {
+						store_id = request.query.store_id;
 						var pay_map = {};
 						var pay_ways = [];
 						if (rows.rows.length == 0) {
@@ -1528,9 +1529,13 @@ exports.register = function(server, options, next){
 			handler: function(request, reply){
 				var date1 = request.query.date1;
 				var date2 = request.query.date2;
+				var store_id = request.query.store_id;
+				if (!store_id) {
+					store_id = "";
+				}
 				var data_map = {};
 				var data_list = [];
-				get_orders_byDate(date1,date2,function(err,rows){
+				get_orders_byDate(date1,date2,store_id,function(err,rows){
 					if (!err) {
 						if (rows.rows.length == 0) {
 							return reply({"success":true,"time":date2,"order_num":0,"total_sales":0,"total_products":0,"service_info":service_info});
