@@ -20,7 +20,7 @@
             }
             @media screen and (min-width:1024px){
                 .wrap{
-                    width: 62%;
+                    width: 90%;
                     margin: 0 auto;
                 }
             }
@@ -116,7 +116,6 @@
                 }
                 .btn-default{
                     width: 100%;
-                    margin-bottom: 17px;
                 }
                 .product_ul li:first-child{
                   width: 45px;
@@ -164,13 +163,14 @@
               this.handleClick=this.handleClick.bind(this);
               this.handleClick1=this.handleClick1.bind(this);
               this.handleClick2=this.handleClick2.bind(this);
+               this.handleClick3=this.handleClick3.bind(this);
               // 初始化一个空对象
               this.state = {rows:[],total:{},status:1,storItems:[],name:"选择门店"};
           }
 
           loadData(date1,date2,id) {
               $.ajax({
-               url: "/get_orders_byDate2?date1="+date1+"&"+"date2="+date2+"&"+"store_id="+id,
+               url: "/get_orders_byDate2?date1="+date1+"&date2="+date2+"&store_id="+id,
                dataType: 'json',
                type: 'GET',
                success: function(data) {
@@ -247,13 +247,19 @@
               this.setState({status:1});
             }
         }
+        handleClick3(e){
+            var date1 = $("#input1").val();
+            var date2 = $("#input2").val();
+            var id = window.localStorage? localStorage.getItem("id"): Cookie.read("id");
+            location.href =  "export_statistical_month?date1="+date1+"&date2="+date2+"&store_id="+id;
+        }
           render() {
               return (
                   <div className="wrapLeft col-sm-12">
                   <div className="container-fluid ">
                   <div className="row form-inline">
                     <input type="text" className="form-control  col-xs-12 col-sm-2 col-md-2" id="input1" />
-                    <input type="text" className="form-control  col-xs-12 col-sm-2 col-md-2 col-md-offset-1" id="input2" />
+                    <input type="text" className="form-control  col-xs-12 col-sm-2 col-md-2" id="input2" />
                     <div className="col-xs-12 col-sm-2 col-md-2 col-md-offset-1 mendian_style">
                         <i className="fa fa-caret-right head_icon" onClick={this.handleClick2}></i>
                         &nbsp;&nbsp;&nbsp;
@@ -265,6 +271,7 @@
                         ({this.state.name})
                     </div>
                     <button type="button" className="btn btn-default col-sm-2 col-md-1 col-md-offset-1" onClick={this.handleClick}>查 询</button>
+                    <button type="button" className="btn btn-default col-sm-2 col-md-1 col-md-offset-1" onClick={this.handleClick3}>导 出</button>
                   </div>
                   </div>
                     <div className="table_style">
