@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
         <title>月统计</title>
         <link rel="stylesheet" href="{{static_host}}/bootstrap.min.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
         <script src="{{static_host}}/react.min.js"></script>
         <script src="{{static_host}}/react-dom.min.js"></script>
         <script src="{{static_host}}/browser.min.js"></script>
@@ -69,6 +70,38 @@
             ul li:first-child{
               width: 130px;
             }
+            #animate{
+              transform: rotate(90deg);
+              -ms-transform: rotate(90deg);		/* IE 9 */
+              -webkit-transform: rotate(90deg);	/* Safari and Chrome */
+              -o-transform: rotate(90deg);		/* Opera */
+              -moz-transform: rotate(90deg);		/* Firefox */
+            }
+
+            #store{
+              position: absolute;
+              right: 17px;
+              top: 42px;
+              background: #000;
+              padding: 0 17px;
+              z-index: 999;
+              display: none;
+              border-radius: 4px;
+            }
+            #store p{
+              height: 27px;
+              line-height: 27px;
+              cursor: pointer;
+              text-align: left;
+              color: #fff;
+            }
+            #store p:hover{
+              color: blue;
+            }
+            .head_icon{
+                font-size: 28px;
+                vertical-align: middle;
+            }
             @media screen and (max-width:640px){
                 .wrap{
                     width:96%;
@@ -122,13 +155,15 @@
               super(props);
               this.loadData=this.loadData.bind(this);
               this.handleClick=this.handleClick.bind(this);
+              this.handleClick1=this.handleClick1.bind(this);
+              this.handleClick2=this.handleClick2.bind(this);
               // 初始化一个空对象
-              this.state = {rows:[],total:{}};
+              this.state = {rows:[],total:{},status:1,storItems:[],name:"选择门店"};
           }
 
-          loadData(date1,date2) {
+          loadData(date1,date2,id) {
               $.ajax({
-               url: "/get_orders_byDate2?date1="+date1+"&"+"date2="+date2,
+               url: "/get_orders_byDate2?date1="+date1+"&"+"date2="+date2+"&"+"store_id="+id,
                dataType: 'json',
                type: 'GET',
                success: function(data) {
@@ -154,16 +189,56 @@
             $("#input1").val(date1);
             $("#input2").val(date2);
 
-            this.loadData(date1,date2);
-
             $(".red").css("color","red");
-        }
+            this.setState({status:1});
+            $.ajax({
+                 url: "/store_list",
+                 dataType: 'json',
+                 type: 'GET',
+                 data:{},
+                 success: function(data) {
+                    this.setState({storItems:data.rows});
+                    var name = window.localStorage? localStorage.getItem("name"): Cookie.read("name");
+                    this.setState({name:name});
+                 }.bind(this),
+                 error: function(xhr, status, err) {
+                 }.bind(this)
+            });
 
+            var id = window.localStorage? localStorage.getItem("id"): Cookie.read("id");
+            this.loadData(date1,date2,id);
+        }
+        handleClick1(id,name){
+          if (window.localStorage) {
+              localStorage.setItem("id", id);
+              localStorage.setItem("name", name);
+          } else {
+              Cookie.write("id", id);
+              Cookie.write("name", name);
+          }
+
+          $('.head_icon').removeAttr('id','animate');
+          $('#store').css('display','none');
+
+          this.setState({status:1,name:name});
+        }
         handleClick(e){
             var date1 = $("#input1").val();
             var date2 = $("#input2").val();
 
-            this.loadData(date1,date2);
+            var id = window.localStorage? localStorage.getItem("id"): Cookie.read("id");
+            this.loadData(date1,date2,id);
+        }
+        handleClick2(e){
+            if(this.state.status==1){
+              $('.head_icon').attr('id','animate');
+              $('#store').css('display','block');
+              this.setState({status:2});
+            }else {
+              $('.head_icon').removeAttr('id','animate');
+              $('#store').css('display','none');
+              this.setState({status:1});
+            }
         }
           render() {
               return (
@@ -172,6 +247,16 @@
                   <div className="row form-inline">
                     <input type="text" className="form-control  col-xs-12 col-sm-2 col-md-2" id="input1" />
                     <input type="text" className="form-control  col-xs-12 col-sm-2 col-md-2 col-md-offset-1" id="input2" />
+                    <div className="col-xs-12 col-sm-2 col-md-2 col-md-offset-1">
+                        <i className="fa fa-caret-right head_icon" onClick={this.handleClick2}></i>
+                        &nbsp;&nbsp;&nbsp;
+                        <div id="store">
+                        {this.state.storItems.map(item => (
+                          <p onClick={this.handleClick1.bind(this,item.org_store_id,item.abbr)}>{item.abbr}</p>
+                          ))}
+                        </div>
+                        ({this.state.name})
+                    </div>
                     <button type="button" className="btn btn-default col-sm-2 col-md-1 col-md-offset-1" onClick={this.handleClick}>查 询</button>
                   </div>
                   </div>
