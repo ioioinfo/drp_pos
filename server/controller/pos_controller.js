@@ -1602,29 +1602,28 @@ exports.register = function(server, options, next){
 							var number = row.num;
 
 							if (!data_map[created_at_text]) {
-								var data = {
+								var data1 = {
 									"created_at_text":created_at_text,
 									"actual_price": 0,
 									"product_number": 0,
 									"number": 0
 								}
-								data_map[created_at_text] = data;
+								data_map[created_at_text] = data1;
 
-								data_list.push(data);
+								data_list.push(data1);
 							}
 							data_map[created_at_text].actual_price = parseFloat((data_map[created_at_text].actual_price + actual_price).toFixed(2));
 							data_map[created_at_text].number = data_map[created_at_text].number + 1;
 							data_map[created_at_text].product_number = data_map[created_at_text].product_number + number;
 						}
 						var xlsx = require('node-xlsx').default;
-
-						const data1 = [["日期","金额","件数","单数"]];
+						const data = [["日期","金额","件数","单数"]];
                         for (var i = 0; i < data_list.length; i++) {
                             var r = data_list[i];
-                            data1.push([r.created_at_text,r.actual_price,r.product_number,r.number]);
+                            data.push([r.created_at_text,r.actual_price,r.product_number,r.number]);
                         }
 
-						var buffer = xlsx.build([{name: "月统计", data1: data1}]);
+						var buffer = xlsx.build([{name: date1+'至'+date2, data: data}]);
                         return reply(buffer)
                         .header('Content-Type', 'application/octet-stream')
                         .header('content-disposition', 'attachment; filename=statistical_month.xlsx;');
