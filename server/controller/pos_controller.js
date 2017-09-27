@@ -1,6 +1,7 @@
 // Base routes for item..
 const uu_request = require('../utils/uu_request');
 const uuidV1 = require('uuid/v1');
+var xlsx = require('node-xlsx').default;
 var eventproxy = require('eventproxy');
 var org_code = "ioio";
 var service_info = "drp pos service"
@@ -1572,7 +1573,68 @@ exports.register = function(server, options, next){
 				});
 			}
 		},
+		//按日期查门店询导出订单情况
+		{
+			method: 'GET',
+			path: '/export_statistical_month',
+			handler: function(request, reply){
+				var date1 = request.query.date1;
+				var date2 = request.query.date2;
+				var store_id = request.query.store_id;
+				if (!store_id) {
+					store_id = "";
+				}
+				var data_map = {};
+				var data_list = [];
+				get_orders_byDate(date1,date2,store_id,function(err,rows){
+					if (!err) {
+						if (rows.rows.length == 0) {
+							return reply({"success":true,"time":date2,"order_num":0,"total_sales":0,"total_products":0,"service_info":service_info});
+						}
+						var order_num = 0;
+						var total_products =  rows.prducts_num;
+						var order_ids = [];
+						var sales = 0;
+						for (var i = 0; i < rows.rows.length; i++) {
+							var row = rows.rows[i];
+							var created_at_text = row.created_at_text;
+							var actual_price = row.actual_price;
+							var number = row.num;
 
+							if (!data_map[created_at_text]) {
+								var data = {
+									"created_at_text":created_at_text,
+									"actual_price": 0,
+									"product_number": 0,
+									"number": 0
+								}
+								data_map[created_at_text] = data;
+
+								data_list.push(data);
+							}
+							data_map[created_at_text].actual_price = parseFloat((data_map[created_at_text].actual_price + actual_price).toFixed(2));
+							data_map[created_at_text].number = data_map[created_at_text].number + 1;
+							data_map[created_at_text].product_number = data_map[created_at_text].product_number + number;
+						}
+						var xlsx = require('node-xlsx').default;
+
+						const data1 = [["日期","金额","件数","单数"]];
+                        for (var i = 0; i < data_list.length; i++) {
+                            var r = data_list[i];
+                            data1.push([r.created_at_text,r.actual_price,r.product_number,r.number]);
+                        }
+
+						var buffer = xlsx.build([{name: "月统计", data1: data1}]);
+                        return reply(buffer)
+                        .header('Content-Type', 'application/octet-stream')
+                        .header('content-disposition', 'attachment; filename=statistical_month.xlsx;');
+
+					}else {
+						return reply({"success":true,"rows":rows.message,"service_info":service_info});
+					}
+				});
+			}
+		},
 
 	]);
 
