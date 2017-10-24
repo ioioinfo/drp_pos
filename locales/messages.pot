@@ -13,3 +13,8 @@ msgstr ""
 # drp_pos service pos_controller
 msgid "vertify wrong"
 msgstr ""
+
+# stock message
+msgid "stock not enough"
+msgstr ""
+

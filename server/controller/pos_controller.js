@@ -1323,6 +1323,7 @@ exports.register = function(server, options, next){
 												order.products[i].quantity = order.products[i].product_number;
 											}
 											out_data.products = JSON.stringify(order.products);
+                                            //产品出库
 											outbound(out_data,function(err,content){
 												if (!err) {
 													if (order.member) {
@@ -1340,7 +1341,7 @@ exports.register = function(server, options, next){
 														return reply({"success":true});
 													}
 												}else {
-													return reply({"success":false,"message":content.message});
+													return reply({"success":false,"message":i18n._n(content.message)});
 												}
 											});
 										}else {
